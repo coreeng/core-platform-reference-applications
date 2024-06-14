@@ -26,6 +26,7 @@ jobs:
           extract: true
           out-file-path: corectl
       - run: |
+          ls -lR ./corectl
           all_templates=( $(./corectl template list --templates ./software-templates) )
           changed_templates = ( )
           for t in ${all_templates[@]}; do
