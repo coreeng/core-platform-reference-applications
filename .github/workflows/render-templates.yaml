@@ -31,6 +31,7 @@ jobs:
           changed_templates=()
           for t in ${all_templates[@]}; do
             rm -rf "./reference-apps/$t"
+            mkdir -p "./reference-apps/$t"
             corectl template render "$t" "./reference-apps/$t" --templates ./software-templates
           done
           
