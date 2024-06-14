@@ -38,8 +38,8 @@ jobs:
           done
           
           git -C "./reference-apps" rev-parse --abbrev-ref HEAD
-          git -C "./reference-apps" status
-          if [ -z $(git -C "./reference-apps" status -u --porcelain) ]; then
+          git -C "./reference-apps" status --porcelain
+          if [ -z "$(git -C "./reference-apps" status --untracked-files=no --porcelain)" ]; then
             echo "No changes detected"
           else
             git -C "./reference-apps" commit -m "Update rendered templates"
