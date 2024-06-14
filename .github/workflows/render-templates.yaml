@@ -38,8 +38,8 @@ jobs:
           
           cd reference-apps
           git rev-parse --abbrev-ref HEAD
-          
-          if git diff --exit-code $all_templates; then
+          git status
+          if git diff --exit-code; then
             echo "No changes detected"
           else
             git commit -m "Update rendered templates"
