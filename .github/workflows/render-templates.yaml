@@ -1,0 +1,41 @@
+name: Render templates
+on:
+  workflow_dispatch:
+    inputs: {}
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: ./reference-apps
+          fetch-depth: 0
+      - uses: actions/checkout@v2
+        with:
+          repository: coreeng/software-templates
+          path: ./software-templates
+      - uses: robinraju/release-downloader@v1.10
+        with:
+          repository: coreeng/corectl
+          latest: true
+          fileName: corectl_Linux_x86_64.tar.gz
+          extract: true
+          out-file-path: corectl
+      - run: |
+          all_templates=( $(corectl template list --templates ./software-templates) )
+          changed_templates = ( )
+          for t in ${all_templates[@]}; do
+            rm -rf "./reference-apps/$t"
+            corectl template render "$t" "./reference-apps/$t" --templates ./software-templates
+          done
+          
+          cd reference-apps
+          if git diff --exit-code --quiet $all_templates; then
+            echo "No changes detected"
+          else
+            git commit -m "Update rendered templates"
+            git push origin workflow-dev
+          fi
