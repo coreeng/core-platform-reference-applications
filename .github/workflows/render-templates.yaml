@@ -34,14 +34,14 @@ jobs:
             rm -rf "./reference-apps/$t"
             mkdir -p "./reference-apps/$t"
             corectl template render "$t" "./reference-apps/$t" --templates ./software-templates
+            git add "./$t" -C "./reference-apps"
           done
           
-          cd reference-apps
-          git rev-parse --abbrev-ref HEAD
-          git status
-          if git diff --exit-code; then
+          git rev-parse --abbrev-ref HEAD -C "./reference-apps"
+          git status -C "./reference-apps"
+          if git diff --exit-code -C "./reference-apps"; then
             echo "No changes detected"
           else
-            git commit -m "Update rendered templates"
-            git push origin workflow-dev
+            git commit -m "Update rendered templates" -C "./reference-apps"
+            git push origin workflow-dev  -C "./reference-apps"
           fi
