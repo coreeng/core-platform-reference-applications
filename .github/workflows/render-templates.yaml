@@ -40,7 +40,7 @@ jobs:
               changed_templates+=("$t")
             fi
           done
-          echo "changed_templates=$(echo $changed_templates | jq -Rc 'split(\" \")')" >> $GITHUB_OUTPUT
+          echo "changed_templates=$(echo $changed_templates | jq -Rc 'split(" ")')" >> $GITHUB_OUTPUT
           git -C "./reference-apps" status --porcelain
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
