@@ -35,7 +35,7 @@ jobs:
             mkdir -p "./reference-apps/$t"
             corectl template render "$t" "./reference-apps/$t" --templates ./software-templates
             git -C "./reference-apps" add "./$t"
-            if [ $(git -C './reference-apps' status './$t' --untracked-files=no --porcelain) ]; then
+            if [[ $(git -C './reference-apps' status './$t' --untracked-files=no --porcelain) ]]; then
               echo "Template '$t' has changed!"
               changed_templates += ( "$t" )
             fi
