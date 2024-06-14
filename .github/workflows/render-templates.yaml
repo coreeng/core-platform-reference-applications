@@ -28,7 +28,7 @@ jobs:
       - run: |
           export PATH="${PATH}:$(realpath ./corectl)"
           all_templates=( $(corectl template list --templates ./software-templates) )
-          changed_templates = ( )
+          changed_templates=()
           for t in ${all_templates[@]}; do
             rm -rf "./reference-apps/$t"
             corectl template render "$t" "./reference-apps/$t" --templates ./software-templates
