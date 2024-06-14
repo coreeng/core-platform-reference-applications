@@ -39,8 +39,7 @@ jobs:
           
           git -C "./reference-apps" rev-parse --abbrev-ref HEAD
           git -C "./reference-apps" status
-          git -C "./reference-apps" diff -r --exit-code
-          if git -C "./reference-apps" diff -r --exit-code; then
+          if [ -z $(git -C "./reference-apps" status -u --porcelain) ]; then
             echo "No changes detected"
           else
             git -C "./reference-apps" commit -m "Update rendered templates"
