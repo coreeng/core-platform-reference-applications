@@ -10,11 +10,11 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           path: ./reference-apps
           fetch-depth: 0
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           repository: coreeng/software-templates
           path: ./software-templates
@@ -30,12 +30,15 @@ jobs:
           all_templates=( $(corectl template list --templates ./software-templates) )
           changed_templates=()
           for t in ${all_templates[@]}; do
+            echo "Rendering template \'$t\'"
             rm -rf "./reference-apps/$t"
             mkdir -p "./reference-apps/$t"
             corectl template render "$t" "./reference-apps/$t" --templates ./software-templates
           done
           
           cd reference-apps
+          git rev-parse --abbrev-ref HEAD
+          echo $all_templates
           if git diff --exit-code --quiet $all_templates; then
             echo "No changes detected"
           else
