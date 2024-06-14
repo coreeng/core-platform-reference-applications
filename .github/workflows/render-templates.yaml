@@ -39,6 +39,7 @@ jobs:
           
           git -C "./reference-apps" rev-parse --abbrev-ref HEAD
           git -C "./reference-apps" status
+          git -C "./reference-apps" diff --exit-code
           if git -C "./reference-apps" diff --exit-code; then
             echo "No changes detected"
           else
