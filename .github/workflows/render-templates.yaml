@@ -54,7 +54,7 @@ jobs:
     needs: [render]
     strategy:
       matrix:
-        changed_template: ${{ needs.render.outputs.changed_templates }}
+        changed_template: ${{ fromJson(needs.render.outputs.changed_templates) }}
     steps:
       - uses: actions/checkout@v4
       - run: |
