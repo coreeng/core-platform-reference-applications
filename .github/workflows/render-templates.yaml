@@ -27,7 +27,8 @@ jobs:
           fileName: corectl_Linux_x86_64.tar.gz
           extract: true
           out-file-path: corectl
-      - run: |
+      - id: render
+        run: |
           export PATH="${PATH}:$(realpath ./corectl)"
           all_templates=( $(corectl template list --templates ./software-templates) )
           changed_templates=()
