@@ -1,11 +1,3 @@
-asdasd
-
-ad
-asd
-a
-ds
-asd
-
 projectDir := $(realpath $(dir $(firstword $(MAKEFILE_LIST))))
 os := $(shell uname)
 image_tag = $(VERSION)
