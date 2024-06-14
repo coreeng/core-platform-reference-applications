@@ -35,10 +35,26 @@ jobs:
             mkdir -p "./reference-apps/$t"
             corectl template render "$t" "./reference-apps/$t" --templates ./software-templates
             git -C "./reference-apps" add "./$t"
+            if [ -n "$(git -C './reference-apps' status './$t' --untracked-files=no --porcelain)" ]; then
+              echo "Template '$t' has changed!"
+              changed_templates += ( "$t" )
+            fi
           done
+          echo "changed_templates=$changed_templates" >> $GITHUB_OUTPUT
           git -C "./reference-apps" status --porcelain
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           repository: ./reference-apps
           commit_message: "chore: update templates"
+  test-deploy:
+    runs-on: ubuntu-latest
+    needs: [render]
+    strategy:
+      matrix:
+        changed_template: ${{ needs.render.outputs.changed_templates }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          echo "Deploying template '${{ matrix.changed_template }}'"
+
 
