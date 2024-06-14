@@ -7,6 +7,8 @@ on:
 jobs:
   render:
     runs-on: ubuntu-latest
+    outputs:
+      changed_templates: ${{ steps.render.outputs.changed_templates }}
     permissions:
       contents: write
     steps:
