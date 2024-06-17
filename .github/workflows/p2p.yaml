@@ -35,14 +35,14 @@ jobs:
       checkout-version: ${{ inputs.ref }}
       version: ${{ needs.version.outputs.version }}
   extendedtests:
-    needs: [fastfeedback, needs]
+    needs: [fastfeedback, version]
     uses: coreeng/p2p/.github/workflows/p2p-workflow-extended-test.yaml@multiapp-fixes
     with:
       main-branch: 'refs/heads/workflow-dev'
       version: ${{ needs.version.outputs.version }}
       version-prefix: '${{ inputs.lifecycle }}/v'
   prod:
-    needs: [extendedtests, needs]
+    needs: [extendedtests, version]
     uses: coreeng/p2p/.github/workflows/p2p-workflow-prod.yaml@multiapp-fixes
     with:
       main-branch: 'refs/heads/workflow-dev'
