@@ -52,7 +52,6 @@ jobs:
           repository: ./reference-apps
           commit_message: "chore: update templates"
   fast-feedback:
-    runs-on: ubuntu-latest
     needs: [render]
     if: needs.render.outputs.changed_templates != '[]'
     strategy:
