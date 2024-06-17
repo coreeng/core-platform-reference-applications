@@ -1,7 +1,6 @@
 projectDir := $(realpath $(dir $(firstword $(MAKEFILE_LIST))))
 os := $(shell uname)
 image_tag = $(VERSION)
-
 image_name = blank-app
 tenant_name = $(TENANT_NAME)
 
