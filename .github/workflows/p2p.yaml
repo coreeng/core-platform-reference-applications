@@ -13,19 +13,48 @@ on:
         required: true
 
 jobs:
-  fast-feedback:
-    uses: ./.github/workflows/fast-feedback.yaml
+  version:
+    uses: coreeng/p2p/.github/workflows/p2p-version.yaml@multiapp-fixes
     with:
-      lifecycle: ${{ inputs.lifecycle }}
-      ref: ${{ inputs.ref }}
-  extended-tests:
-    needs: [fast-feedback]
-    uses: ./.github/workflows/extended-test.yaml
+      # TODO replace with main
+      main-branch: 'refs/heads/workflow-dev'
+      checkout-version: ${{ inputs.ref }}
+      version-prefix: '${{ inputs.lifecycle }}/v'
+    secrets:
+      git-token: ${{ secrets.GITHUB_TOKEN }}
+  fastfeedback:
+    needs: [version]
+    uses: coreeng/p2p/.github/workflows/p2p-workflow-fastfeedback.yaml@multiapp-fixes
     with:
-      lifecycle: ${{ inputs.lifecycle }}
+      main-branch: 'refs/heads/workflow-dev'
+      checkout-version: ${{ inputs.ref }}
+      working-directory: './${{ inputs.lifecycle }}'
+      version: ${{ needs.version.outputs.version }}
+  extendedtests:
+    needs: [get-latest-version]
+    uses: coreeng/p2p/.github/workflows/p2p-workflow-extended-test.yaml@multiapp-fixes
+    with:
+      version: ${{ needs.version.outputs.version }}
   prod:
-    needs: [extended-tests]
-    uses: ./.github/workflows/prod.yaml
+    needs: [get-latest-version]
+    uses: coreeng/p2p/.github/workflows/p2p-workflow-prod.yaml@multiapp-fixes
     with:
-      lifecycle: ${{ inputs.lifecycle }}
+      version: ${{ needs.version.outputs.version }}
+
+
+#  fast-feedback:
+#    uses: ./.github/workflows/fast-feedback.yaml
+#    with:
+#      lifecycle: ${{ inputs.lifecycle }}
+#      ref: ${{ inputs.ref }}
+#  extended-tests:
+#    needs: [fast-feedback]
+#    uses: ./.github/workflows/extended-test.yaml
+#    with:
+#      lifecycle: ${{ inputs.lifecycle }}
+#  prod:
+#    needs: [extended-tests]
+#    uses: ./.github/workflows/prod.yaml
+#    with:
+#      lifecycle: ${{ inputs.lifecycle }}
 
