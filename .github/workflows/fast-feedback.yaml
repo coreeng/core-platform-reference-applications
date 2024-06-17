@@ -23,7 +23,7 @@ jobs:
 #      git-token: ${{ secrets.GITHUB_TOKEN }}
 
   fastfeedback:
-    needs: [version]
+#    needs: [version]
     uses: coreeng/p2p/.github/workflows/p2p-workflow-fastfeedback.yaml@v1
     with:
       main-branch: 'workflow-dev'
