@@ -22,7 +22,7 @@ jobs:
     uses: coreeng/p2p/.github/workflows/p2p-version.yaml@multiapp-fixes
     with:
       # TODO replace with main
-      main-branch: 'workflow-dev'
+      main-branch: 'ref/heads/workflow-dev'
       checkout-version: ${{ inputs.ref }}
       version-prefix: '${{ inputs.lifecycle }}/v'
     secrets:
@@ -40,7 +40,7 @@ jobs:
     needs: [version]
     uses: coreeng/p2p/.github/workflows/p2p-workflow-fastfeedback.yaml@multiapp-fixes
     with:
-      main-branch: 'workflow-dev'
+      main-branch: 'ref/heads/workflow-dev'
       checkout-version: ${{ inputs.ref }}
       working-directory: './${{ inputs.lifecycle }}'
       version: ${{ needs.version.outputs.version }}
