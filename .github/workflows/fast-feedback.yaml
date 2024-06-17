@@ -13,14 +13,14 @@ permissions:
   id-token: write
 
 jobs:
-  version:
-    uses: coreeng/p2p/.github/workflows/p2p-version.yaml@v1
-    with:
-      # TODO replace with main
-      main-branch: 'workflow-dev'
-      version-prefix: '${{ inputs.lifecycle }}/v'
-    secrets:
-      git-token: ${{ secrets.GITHUB_TOKEN }}
+#  version:
+#    uses: coreeng/p2p/.github/workflows/p2p-version.yaml@v1
+#    with:
+#      # TODO replace with main
+#      main-branch: 'workflow-dev'
+#      version-prefix: '${{ inputs.lifecycle }}/v'
+#    secrets:
+#      git-token: ${{ secrets.GITHUB_TOKEN }}
 
   fastfeedback:
     needs: [version]
@@ -28,4 +28,5 @@ jobs:
     with:
       main-branch: 'workflow-dev'
       working-directory: './${{ inputs.lifecycle }}'
-      version: ${{ needs.version.outputs.version }}
+      version: 'v0.0.1'
+#      version: ${{ needs.version.outputs.version }}
