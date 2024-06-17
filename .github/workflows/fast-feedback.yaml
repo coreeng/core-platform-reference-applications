@@ -3,6 +3,11 @@ name: Fast Feedback
 on:
   workflow_call:
     inputs:
+      ref:
+        description: 'Git ref'
+        type: string
+        required: false
+        default: ''
       lifecycle:
         description: 'The lifecycle to run'
         type: string
@@ -18,6 +23,7 @@ jobs:
     with:
       # TODO replace with main
       main-branch: 'workflow-dev'
+      checkout-version: ${{ inputs.ref }}
       version-prefix: '${{ inputs.lifecycle }}/v'
     secrets:
       git-token: ${{ secrets.GITHUB_TOKEN }}
@@ -27,6 +33,6 @@ jobs:
     uses: coreeng/p2p/.github/workflows/p2p-workflow-fastfeedback.yaml@v1
     with:
       main-branch: 'workflow-dev'
+      checkout-version: ${{ inputs.ref }}
       working-directory: './${{ inputs.lifecycle }}'
-#      version: 'v0.0.1'
       version: ${{ needs.version.outputs.version }}
