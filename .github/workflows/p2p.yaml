@@ -38,11 +38,13 @@ jobs:
     needs: [fastfeedback]
     uses: coreeng/p2p/.github/workflows/p2p-workflow-extended-test.yaml@multiapp-fixes
     with:
+      main-branch: 'refs/heads/workflow-dev'
       version: ${{ needs.version.outputs.version }}
   prod:
     needs: [extendedtests]
     uses: coreeng/p2p/.github/workflows/p2p-workflow-prod.yaml@multiapp-fixes
     with:
+      main-branch: 'refs/heads/workflow-dev'
       version: ${{ needs.version.outputs.version }}
 
 
