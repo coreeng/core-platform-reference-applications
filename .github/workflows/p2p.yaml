@@ -31,12 +31,12 @@ jobs:
       working-directory: './${{ inputs.lifecycle }}'
       version: ${{ needs.version.outputs.version }}
   extendedtests:
-    needs: [get-latest-version]
+    needs: [fastfeedback]
     uses: coreeng/p2p/.github/workflows/p2p-workflow-extended-test.yaml@multiapp-fixes
     with:
       version: ${{ needs.version.outputs.version }}
   prod:
-    needs: [get-latest-version]
+    needs: [extendedtests]
     uses: coreeng/p2p/.github/workflows/p2p-workflow-prod.yaml@multiapp-fixes
     with:
       version: ${{ needs.version.outputs.version }}
