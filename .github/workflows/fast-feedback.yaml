@@ -28,6 +28,14 @@ jobs:
     secrets:
       git-token: ${{ secrets.GITHUB_TOKEN }}
 
+  log:
+    needs: [version]
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Ref: '${{ github.ref }}'"
+          echo "RefType: '${{ github.ref_type }}'"
+
   fastfeedback:
     needs: [version]
     uses: coreeng/p2p/.github/workflows/p2p-workflow-fastfeedback.yaml@multiapp-fixes
