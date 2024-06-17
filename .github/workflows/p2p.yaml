@@ -31,21 +31,23 @@ jobs:
     uses: coreeng/p2p/.github/workflows/p2p-workflow-fastfeedback.yaml@multiapp-fixes
     with:
       main-branch: 'refs/heads/workflow-dev'
-      checkout-version: ${{ inputs.ref }}
       working-directory: './${{ inputs.lifecycle }}'
-      version: '${{ inputs.lifecycle }}/v${{ needs.version.outputs.version }}'
+      checkout-version: ${{ inputs.ref }}
+      version: ${{ needs.version.outputs.version }}
   extendedtests:
     needs: [fastfeedback]
     uses: coreeng/p2p/.github/workflows/p2p-workflow-extended-test.yaml@multiapp-fixes
     with:
       main-branch: 'refs/heads/workflow-dev'
-      version: '${{ inputs.lifecycle }}/v${{ needs.version.outputs.version }}'
+      version: ${{ needs.version.outputs.version }}
+      version-prefix: '${{ inputs.lifecycle }}/v'
   prod:
     needs: [extendedtests]
     uses: coreeng/p2p/.github/workflows/p2p-workflow-prod.yaml@multiapp-fixes
     with:
       main-branch: 'refs/heads/workflow-dev'
-      version: '${{ inputs.lifecycle }}/v${{ needs.version.outputs.version }}'
+      version: ${{ needs.version.outputs.version }}
+      version-prefix: '${{ inputs.lifecycle }}/v'
 
 
 #  fast-feedback:
