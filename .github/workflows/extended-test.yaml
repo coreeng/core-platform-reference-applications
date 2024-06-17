@@ -14,12 +14,12 @@ permissions:
 
 jobs:
   get-latest-version:
-    uses: coreeng/p2p/.github/workflows/p2p-get-latest-image-extended-test.yaml@v1
+    uses: coreeng/p2p/.github/workflows/p2p-get-latest-image-extended-test.yaml@multiapp-fixes
     with:
       image-name: ${{ inputs.lifecycle }}
 
   extendedtests:
     needs: [get-latest-version]
-    uses: coreeng/p2p/.github/workflows/p2p-workflow-extended-test.yaml@v1
+    uses: coreeng/p2p/.github/workflows/p2p-workflow-extended-test.yaml@multiapp-fixes
     with:
       version: ${{ needs.get-latest-version.outputs.version }}
