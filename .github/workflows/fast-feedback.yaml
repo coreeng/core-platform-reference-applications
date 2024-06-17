@@ -19,7 +19,7 @@ permissions:
 
 jobs:
   version:
-    uses: coreeng/p2p/.github/workflows/p2p-version.yaml@v1
+    uses: coreeng/p2p/.github/workflows/p2p-version.yaml@multiapp-fixes
     with:
       # TODO replace with main
       main-branch: 'workflow-dev'
@@ -30,7 +30,7 @@ jobs:
 
   fastfeedback:
     needs: [version]
-    uses: coreeng/p2p/.github/workflows/p2p-workflow-fastfeedback.yaml@v1
+    uses: coreeng/p2p/.github/workflows/p2p-workflow-fastfeedback.yaml@multiapp-fixes
     with:
       main-branch: 'workflow-dev'
       checkout-version: ${{ inputs.ref }}
