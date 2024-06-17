@@ -13,7 +13,7 @@ jobs:
   get-latest-version:
     uses: coreeng/p2p/.github/workflows/p2p-get-latest-image-extended-test.yaml@v1
     with:
-      image-name: go-reference-app
+      image-name: blank-app
 
   extendedtests:
     needs: [get-latest-version]
