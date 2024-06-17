@@ -63,6 +63,16 @@ jobs:
     with:
       lifecycle: ${{ matrix.changed_template }}
       ref: ${{ needs.render.outputs.latest_ref }}
+  extended-tests:
+    needs: [fast-feedback]
+    uses: ./.github/workflows/extended-test.yaml
+    with:
+      lifecycle: ${{ matrix.changed_template }}
+  prod:
+    needs: [extended-tests]
+    uses: ./.github/workflows/prod.yaml
+    with:
+      lifecycle: ${{ matrix.changed_template }}
   test-deploy:
     runs-on: ubuntu-latest
     needs: [render]

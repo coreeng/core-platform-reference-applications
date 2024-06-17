@@ -1,0 +1,25 @@
+name: Extended Test
+
+on:
+  workflow_call:
+    inputs:
+      lifecycle:
+        description: 'The lifecycle to run'
+        type: string
+        required: true
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  get-latest-version:
+    uses: coreeng/p2p/.github/workflows/p2p-get-latest-image-extended-test.yaml@v1
+    with:
+      image-name: ${{ inputs.lifecycle }}
+
+  extendedtests:
+    needs: [get-latest-version]
+    uses: coreeng/p2p/.github/workflows/p2p-workflow-extended-test.yaml@v1
+    with:
+      version: ${{ needs.get-latest-version.outputs.version }}
