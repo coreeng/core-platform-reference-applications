@@ -8,6 +8,7 @@ jobs:
   render:
     runs-on: ubuntu-latest
     outputs:
+      latest_ref: ${{ steps.push.outputs.commit_hash }}
       changed_templates: ${{ steps.render.outputs.changed_templates }}
     permissions:
       contents: write
@@ -48,6 +49,7 @@ jobs:
           echo "changed_templates=$changed_templates" >> $GITHUB_OUTPUT
           git -C "./reference-apps" status --porcelain
       - uses: stefanzweifel/git-auto-commit-action@v5
+        id: push
         with:
           repository: ./reference-apps
           commit_message: "chore: update templates"
@@ -69,6 +71,8 @@ jobs:
         changed_template: ${{ fromJson(needs.render.outputs.changed_templates) }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.render.outputs.latest_ref }}
       - env:
           template: ${{ matrix.changed_template }}
         working-directory: './${{ matrix.changed_template }}'
