@@ -1,0 +1,31 @@
+name: P2P
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: 'Git ref'
+        type: string
+        required: false
+        default: ''
+      lifecycle:
+        description: 'The lifecycle to run'
+        type: string
+        required: true
+
+jobs:
+  fast-feedback:
+    uses: ./.github/workflows/fast-feedback.yaml
+    with:
+      lifecycle: ${{ inputs.lifecycle }}
+      ref: ${{ inputs.ref }}
+  extended-tests:
+    needs: [fast-feedback]
+    uses: ./.github/workflows/extended-test.yaml
+    with:
+      lifecycle: ${{ inputs.lifecycle }}
+  prod:
+    needs: [extended-tests]
+    uses: ./.github/workflows/prod.yaml
+    with:
+      lifecycle: ${{ inputs.lifecycle }}
+

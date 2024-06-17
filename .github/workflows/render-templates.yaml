@@ -53,26 +53,16 @@ jobs:
         with:
           repository: ./reference-apps
           commit_message: "chore: update templates"
-  fast-feedback:
+  p2p:
     needs: [render]
     if: needs.render.outputs.changed_templates != '[]'
     strategy:
       matrix:
         changed_template: ${{ fromJson(needs.render.outputs.changed_templates) }}
-    uses: ./.github/workflows/fast-feedback.yaml
+    uses: ./.github/workflows/p2p.yaml
     with:
       lifecycle: ${{ matrix.changed_template }}
       ref: ${{ needs.render.outputs.latest_ref }}
-  extended-tests:
-    needs: [fast-feedback]
-    uses: ./.github/workflows/extended-test.yaml
-    with:
-      lifecycle: ${{ matrix.changed_template }}
-  prod:
-    needs: [extended-tests]
-    uses: ./.github/workflows/prod.yaml
-    with:
-      lifecycle: ${{ matrix.changed_template }}
   test-deploy:
     runs-on: ubuntu-latest
     needs: [render]
