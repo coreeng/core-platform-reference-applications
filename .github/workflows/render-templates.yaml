@@ -59,6 +59,7 @@ jobs:
       matrix:
         changed_template: ${{ fromJson(needs.render.outputs.changed_templates) }}
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/workflows/fast-feedback.yaml
         with:
           lifecycle: ${{ matrix.changed_template }}
