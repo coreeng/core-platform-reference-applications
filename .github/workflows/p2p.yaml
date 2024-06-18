@@ -1,6 +1,9 @@
 name: P2P
 on:
   workflow_call:
+    secrets:
+      SLACK_WEBHOOK_ALERT_URL:
+        required: true
     inputs:
       ref:
         description: 'Git ref'
@@ -57,7 +60,7 @@ jobs:
     steps:
       - uses: slackapi/slack-github-action@v1
         env:
-          SLACK_WEBHOOK_URL: ${{ vars.SLACK_WEBHOOK_ALERT_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_ALERT_URL }}
         with:
           payload: |
             {
