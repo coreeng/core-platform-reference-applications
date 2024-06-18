@@ -26,6 +26,10 @@ jobs:
         uses: tj-actions/changed-files@v44
         with:
           files_yaml: |
-            ${{ steps.generate-scan-config.outputs.files_yaml }}
+            blank:
+              - blank/**
+            go-web:
+              - go-web/**
+#            ${{ steps.generate-scan-config.outputs.files_yaml }}
       - run: |
           echo "Result: '${{ steps.changed-files.outputs.modified_keys }}'"
