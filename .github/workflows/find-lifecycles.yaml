@@ -19,7 +19,7 @@ jobs:
           # Directory is considered a lifecycle if under 1 nested directory from the repo root and it has Makefile with help-p2p target
           for MAKEFILE in $(find . -name Makefile -type f -maxdepth 2); do
             if make -f $MAKEFILE help-p2p >/dev/null 2>&1; then
-              lifecycles+=("$(dirname $MAKEFILE)")
+              lifecycles+=("$(dirname $MAKEFILE | sed 's|.\/\(.*\)|\1|')")
             fi
           done
           lifecycles_json="$(echo "${lifecycles[*]}" | jq -Rc 'split(" ")')"
