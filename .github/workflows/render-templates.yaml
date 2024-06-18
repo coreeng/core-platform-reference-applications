@@ -48,6 +48,7 @@ jobs:
               changed_templates+=("$t")
             fi
           done
+          echo "Changed templates: $changed_templates"
           ct_json=$(echo $changed_templates | jq -Rc 'split(" ")')
           echo "Changed templates: $ct_json"
           echo "changed_templates=$ct_json" >> $GITHUB_OUTPUT
