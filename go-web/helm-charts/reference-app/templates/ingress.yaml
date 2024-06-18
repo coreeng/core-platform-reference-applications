@@ -1,0 +1,21 @@
+{{- $domain := .Values.domain | required ".Values.domain is required." -}}
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: reference-app{{ .Values.appUrlSuffix }}.{{ $domain }}
+    external-dns.alpha.kubernetes.io/target: {{ $domain }}
+  name: reference-service
+spec:
+  ingressClassName: platform-ingress
+  rules:
+  - host: reference-app{{ .Values.appUrlSuffix }}.{{ $domain }}
+    http:
+      paths:
+      - backend:
+          service:
+            name: reference-service
+            port:
+              number: 80
+        path: /
+        pathType: ImplementationSpecific
