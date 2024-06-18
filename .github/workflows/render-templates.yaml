@@ -81,3 +81,4 @@ jobs:
       ref: ${{ needs.render.outputs.latest_ref }}
     secrets:
       SLACK_WEBHOOK_ALERT_URL: ${{ secrets.SLACK_WEBHOOK_ALERT_URL }}
+
