@@ -63,22 +63,3 @@ jobs:
     with:
       lifecycle: ${{ matrix.changed_template }}
       ref: ${{ needs.render.outputs.latest_ref }}
-  test-deploy:
-    runs-on: ubuntu-latest
-    needs: [render]
-    if: needs.render.outputs.changed_templates != '[]'
-    strategy:
-      matrix:
-        changed_template: ${{ fromJson(needs.render.outputs.changed_templates) }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ needs.render.outputs.latest_ref }}
-      - env:
-          template: ${{ matrix.changed_template }}
-        working-directory: './${{ matrix.changed_template }}'
-        run: |
-          echo "Deploying template '$template'"
-          pwd
-          ls -la
-          make p2p-build

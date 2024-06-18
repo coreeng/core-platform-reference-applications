@@ -51,20 +51,3 @@ jobs:
       version: ${{ needs.version.outputs.version }}
       version-prefix: '${{ inputs.lifecycle }}/v'
 
-
-#  fast-feedback:
-#    uses: ./.github/workflows/fast-feedback.yaml
-#    with:
-#      lifecycle: ${{ inputs.lifecycle }}
-#      ref: ${{ inputs.ref }}
-#  extended-tests:
-#    needs: [fast-feedback]
-#    uses: ./.github/workflows/extended-test.yaml
-#    with:
-#      lifecycle: ${{ inputs.lifecycle }}
-#  prod:
-#    needs: [extended-tests]
-#    uses: ./.github/workflows/prod.yaml
-#    with:
-#      lifecycle: ${{ inputs.lifecycle }}
-
