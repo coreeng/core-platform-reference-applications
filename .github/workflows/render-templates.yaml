@@ -34,7 +34,6 @@ jobs:
           out-file-path: corectl
       - id: render
         run: |
-          exit 1
           export PATH="${PATH}:$(realpath ./corectl)"
           all_templates=( $(corectl template list --templates ./software-templates) )
           changed_templates=()
@@ -81,4 +80,3 @@ jobs:
       ref: ${{ needs.render.outputs.latest_ref }}
     secrets:
       SLACK_WEBHOOK_ALERT_URL: ${{ secrets.SLACK_WEBHOOK_ALERT_URL }}
-
