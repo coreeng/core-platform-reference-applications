@@ -1,11 +1,15 @@
-name: Render templates
+name: Refresh templates
 on:
   push:
+    branches:
+      - workflow-dev
+  schedule:
+    - cron: '0 6 * * *'
   workflow_dispatch:
     inputs: {}
 
 jobs:
-  render:
+  update-templates:
     runs-on: ubuntu-latest
     outputs:
       latest_ref: ${{ steps.push.outputs.commit_hash }}
@@ -30,6 +34,7 @@ jobs:
           out-file-path: corectl
       - id: render
         run: |
+          exit 1
           export PATH="${PATH}:$(realpath ./corectl)"
           all_templates=( $(corectl template list --templates ./software-templates) )
           changed_templates=()
@@ -53,6 +58,17 @@ jobs:
         with:
           repository: ./reference-apps
           commit_message: "chore: update templates"
+      - name: Failure Alert
+        if: failure()
+        uses: slackapi/slack-github-action@v1
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_ALERT_URL }}
+        with:
+          payload: |
+            {
+              "notification": "❌ Failed rendering software templates!",
+              "workflow_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            }
   p2p:
     needs: [render]
     if: needs.render.outputs.changed_templates != '[]'

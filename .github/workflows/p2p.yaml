@@ -50,4 +50,15 @@ jobs:
       working-directory: './${{ inputs.lifecycle }}'
       version: ${{ needs.version.outputs.version }}
       version-prefix: '${{ inputs.lifecycle }}/v'
-
+  failure-alert:
+    needs: [version, fastfeedback, extendedtests, prod]
+    if: failure()
+    uses: slackapi/slack-github-action@v1
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_ALERT_URL }}
+    with:
+      payload: |
+        {
+          "notification": "❌ P2P for '${{ inputs.lifecycle }}' is failed!",
+          "workflow_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        }
