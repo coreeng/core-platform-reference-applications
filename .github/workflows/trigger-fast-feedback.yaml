@@ -4,15 +4,16 @@ on:
       - workflow-dev
 
 jobs:
+  find-lifecycles:
+    uses: ./.github/workflows/find-lifecycles.yaml
   detect-changed-lifecycles:
+    needs: [find-lifecycles]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - id: find-lifecycles
-        uses: ./.github/workflows/find-lifecycles.yaml
       - id: generate-scan-config
         env:
-          LIFECYCLES: ${{ steps.find-lifecycles.outputs.lifecycles }}
+          LIFECYCLES: ${{ needs.find-lifecycles.outputs.lifecycles }}
         run: |
           files_yaml="$(echo "${LIFECYCLES[*]}" | jq 'map({(.): [(.) + "/**"]}) | add' | yq -P)')"
           echo "files_yaml=\n$files_yaml"
