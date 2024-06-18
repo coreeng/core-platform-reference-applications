@@ -1,0 +1,4 @@
+.github/*
+helm-charts/*
+nft/*
+resources/*

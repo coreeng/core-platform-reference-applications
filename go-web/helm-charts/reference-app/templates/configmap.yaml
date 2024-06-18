@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wiremock-mappings
+data:
+  static.json: |-
+    {
+      "request": {
+        "method": "GET",
+        "url": "/static"
+      },
+      "response": {
+        "status": 200,
+        "jsonBody": {
+          "data": "static"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      }
+    }
