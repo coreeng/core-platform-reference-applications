@@ -34,7 +34,6 @@ jobs:
           out-file-path: corectl
       - id: render
         run: |
-          exit 1
           export PATH="${PATH}:$(realpath ./corectl)"
           all_templates=( $(corectl template list --templates ./software-templates) )
           changed_templates=()
