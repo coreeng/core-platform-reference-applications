@@ -1,0 +1,18 @@
+{{- $domain := .Values.domain | required ".Values.domain is required." -}}
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "reference-app-functional-test"
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: functional-tests
+      image: {{ .Values.registry }}/{{ .Values.functional.image }}:{{ .Values.tag }}
+      env:
+        - name: SERVICE_ENDPOINT
+          value: "http://reference-service"
+        - name: INGRESS_ENDPOINT
+          value: https://reference-app{{ .Values.appUrlSuffix }}.{{ $domain }}
+  restartPolicy: Never
