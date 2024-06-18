@@ -77,6 +77,6 @@ jobs:
     uses: ./.github/workflows/p2p.yaml
     with:
       lifecycle: ${{ matrix.changed_template }}
-      ref: ${{ needs.render.outputs.latest_ref }}
+      ref: ${{ needs.update-templates.outputs.latest_ref }}
     secrets:
       SLACK_WEBHOOK_ALERT_URL: ${{ secrets.SLACK_WEBHOOK_ALERT_URL }}
