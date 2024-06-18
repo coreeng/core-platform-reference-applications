@@ -73,7 +73,7 @@ jobs:
     if: needs.render.outputs.changed_templates != '[]'
     strategy:
       matrix:
-        changed_template: ${{ fromJson(needs.render.outputs.changed_templates) }}
+        changed_template: ${{ fromJson(needs.update-templates.outputs.changed_templates) }}
     uses: ./.github/workflows/p2p.yaml
     with:
       lifecycle: ${{ matrix.changed_template }}
