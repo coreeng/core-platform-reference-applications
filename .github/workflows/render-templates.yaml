@@ -79,4 +79,4 @@ jobs:
       lifecycle: ${{ matrix.changed_template }}
       ref: ${{ needs.render.outputs.latest_ref }}
     secrets:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_ALERT_URL }}
+      SLACK_WEBHOOK_ALERT_URL: ${{ secrets.SLACK_WEBHOOK_ALERT_URL }}
