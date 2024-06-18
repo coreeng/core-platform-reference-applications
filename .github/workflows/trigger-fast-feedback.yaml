@@ -20,7 +20,7 @@ jobs:
           echo "$files_yaml"
           
           echo 'files_yaml<<EOF' >> $GITHUB_OUTPUT
-          echo '$files_yaml' >> $GITHUB_OUTPUT
+          echo "$files_yaml" >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
       - id: changed-files
         uses: tj-actions/changed-files@v44
