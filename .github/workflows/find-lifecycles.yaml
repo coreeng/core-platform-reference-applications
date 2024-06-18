@@ -1,0 +1,27 @@
+name: find-lifecycles
+on:
+  workflow_call:
+    outputs:
+      lifecycles:
+        description: "Lifecycles in the repository"
+        value: ${{ jobs.find-lifecycles.outputs.lifecycles }}
+
+jobs:
+  find-lifecycles:
+    runs-on: ubuntu-latest
+    outputs:
+      lifecycles: ${{ steps.find-lifecycles.outputs.lifecycles }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: find-lifecycles
+        run: |
+          lifecycles=()
+          # Directory is considered a lifecycle if under 1 nested directory from the repo root and it has Makefile with help-p2p target
+          for MAKEFILE in $(find . -depth 2 -name Makefile); do
+            if make -f $MAKEFILE help-p2p >/dev/null 2>&1; then
+              lifecycles+=("$(dirname $MAKEFILE)")
+            fi
+          done
+          lifecycles_json="$(echo "${lifecycles[*]}" | jq -Rc 'split(" ")')"
+          echo "Found lifecycles: $lifecycles_json"
+          echo "lifecycles=$lifecycles_json" >> $GITHUB_OUTPUTS
