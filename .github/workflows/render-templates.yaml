@@ -37,8 +37,8 @@ jobs:
           export PATH="${PATH}:$(realpath ./corectl)"
           all_templates=( $(corectl template list --templates ./software-templates) )
           changed_templates=()
-          for t in ${all_templates[@]}; do
-            echo "Rendering template \'$t\'"
+          for t in "${all_templates[@]}"; do
+            echo "Rendering template '$t'"
             rm -rf "./reference-apps/$t"
             mkdir -p "./reference-apps/$t"
             corectl template render "$t" "./reference-apps/$t" --templates ./software-templates
@@ -48,8 +48,7 @@ jobs:
               changed_templates+=("$t")
             fi
           done
-          echo "Changed templates: $changed_templates"
-          ct_json=$(echo $changed_templates | jq -Rc 'split(" ")')
+          ct_json=$(echo "${changed_templates[*]}" | jq -Rc 'split(" ")')
           echo "Changed templates: $ct_json"
           echo "changed_templates=$ct_json" >> $GITHUB_OUTPUT
           git -C "./reference-apps" status --porcelain
