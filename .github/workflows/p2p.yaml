@@ -52,10 +52,10 @@ jobs:
       version-prefix: '${{ inputs.lifecycle }}/v'
   failure-alert:
     needs: [version, fastfeedback, extendedtests, prod]
+    if: failure()
     runs-on: ubuntu-latest
     steps:
-      - if: failure()
-        uses: slackapi/slack-github-action@v1
+      - uses: slackapi/slack-github-action@v1
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_ALERT_URL }}
         with:
