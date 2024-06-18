@@ -1,0 +1,15 @@
+registry:
+domain:
+appUrlSuffix:
+tag: latest
+functional:
+  image: go-reference-app-functional
+nft:
+  image: go-reference-app-nft
+service:
+  image: go-reference-app
+  replicas: 1
+wiremock:
+  image: wiremock/wiremock:latest
+  replicas: 1
+
