@@ -12,8 +12,8 @@ jobs:
     uses: ./.github/workflows/extended-test.yaml
     with:
       lifecycle: ${{ matrix.lifecycle }}
-    continue-on-error: 'true'
     if: needs.detect-changed-lifecycles.outputs.changed-lifecycles!= '[]'
     strategy:
+      fail-fast: false
       matrix:
         lifecycle: ${{ fromJSON(needs.find-lifecycles.outputs.lifecycles) }}
