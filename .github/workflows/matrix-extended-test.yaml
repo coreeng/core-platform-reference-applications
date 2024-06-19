@@ -9,8 +9,8 @@ jobs:
     uses: ./.github/workflows/find-lifecycles.yaml
   extended-tests:
     continue-on-error: true
-    needs: [find-lifecycles]
     uses: ./.github/workflows/extended-test.yaml
+    needs: [find-lifecycles]
     if: needs.detect-changed-lifecycles.outputs.changed-lifecycles!= '[]'
     strategy:
       matrix:
