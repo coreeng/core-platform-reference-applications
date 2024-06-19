@@ -1,0 +1,17 @@
+name: Prod deployment
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 5 * * 1,5'
+
+jobs:
+  find-lifecycles:
+    uses: ./.github/workflows/find-lifecycles.yaml
+  extended-tests:
+    needs: [find-lifecycles]
+    uses: ./.github/workflows/prod.yaml
+    strategy:
+      matrix:
+        lifecycle: ${{ needs.find-lifecycles.outputs.lifecycles }}
+    with:
+      lifecycle: ${{ matrix.lifecycle }}

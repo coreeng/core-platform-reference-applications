@@ -7,16 +7,32 @@ on:
         description: 'The lifecycle to run'
         type: string
         required: true
+      image-name:
+        type: string
+        required: true
 
 permissions:
   contents: read
   id-token: write
 
 jobs:
+  get-image-name:
+    runs-on: ubuntu-latest
+    outputs:
+      image-name: ${{ steps.image-name.outputs.image_name }}
+    steps:
+      - uses: actions/checkout@v2
+      - id: image-name
+        env:
+          MAKEFILE: ./${{ inputs.lifecycle }}/Makefile
+        run: |
+          image="$(make -f "$MAKEFILE" p2p-image)"
+          echo "image_name=$image" >> $GITHUB_OUTPUT
   get-latest-version:
+    needs: [get-image-name]
     uses: coreeng/p2p/.github/workflows/p2p-get-latest-image-extended-test.yaml@multiapp-fixes
     with:
-      image-name: ${{ inputs.lifecycle }}
+      image-name: ${{ needs.get-image-name.outputs.image-name }}
 
   extendedtests:
     needs: [get-latest-version]

@@ -33,6 +33,7 @@ jobs:
         env:
           changed_lifecycles: ${{ steps.changed-files.outputs.modified_keys }}
         run: |
+          echo "Detected changed lifecycles: '$changed_lifecycles'"
           echo "changed_lifecycles=$(echo "${changed_lifecycles[*]}" | jq -Rc 'split(" ")')" >> $GITHUB_OUTPUT
   fast-feedback:
     needs: [detect-changed-lifecycles]
