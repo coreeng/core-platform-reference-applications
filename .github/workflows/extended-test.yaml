@@ -32,7 +32,6 @@ jobs:
     uses: coreeng/p2p/.github/workflows/p2p-get-latest-image-extended-test.yaml@multiapp-fixes
     with:
       main-branch: 'refs/heads/workflow-dev'
-      working-directory: './${{ inputs.lifecycle }}'
       image-name: ${{ needs.get-image-name.outputs.image-name }}
 
   extendedtests:
@@ -40,6 +39,5 @@ jobs:
     uses: coreeng/p2p/.github/workflows/p2p-workflow-extended-test.yaml@multiapp-fixes
     with:
       main-branch: 'refs/heads/workflow-dev'
-      working-directory: './${{ inputs.lifecycle }}'
       version: ${{ needs.get-latest-version.outputs.version }}
       version-prefix: '${{ inputs.lifecycle }}/v'
