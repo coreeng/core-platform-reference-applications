@@ -30,10 +30,15 @@ jobs:
     needs: [get-image-name]
     uses: coreeng/p2p/.github/workflows/p2p-get-latest-image-prod.yaml@multiapp-fixes
     with:
+      main-branch: 'refs/heads/workflow-dev'
+      working-directory: './${{ inputs.lifecycle }}'
       image-name: ${{ needs.get-image-name.outputs.image-name }}
 
   prod:
     needs: [get-latest-version]
     uses: coreeng/p2p/.github/workflows/p2p-workflow-prod.yaml@multiapp-fixes
     with:
+      main-branch: 'refs/heads/workflow-dev'
+      working-directory: './${{ inputs.lifecycle }}'
       version: ${{ needs.get-latest-version.outputs.version }}
+      version-prefix: '${{ inputs.lifecycle }}/v'
