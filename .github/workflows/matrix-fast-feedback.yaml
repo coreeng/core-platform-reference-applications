@@ -39,6 +39,7 @@ jobs:
     needs: [detect-changed-lifecycles]
     if: needs.detect-changed-lifecycles.outputs.changed-lifecycles!= '[]'
     strategy:
+      fail-fast: false
       matrix:
         lifecycle: ${{ fromJSON(needs.detect-changed-lifecycles.outputs.changed-lifecycles) }}
     uses: ./.github/workflows/fast-feedback.yaml
