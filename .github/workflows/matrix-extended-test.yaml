@@ -14,5 +14,6 @@ jobs:
     strategy:
       matrix:
         lifecycle: ${{ fromJSON(needs.find-lifecycles.outputs.lifecycles) }}
+    continue-on-error: true
     with:
       lifecycle: ${{ matrix.lifecycle }}
