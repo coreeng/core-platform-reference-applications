@@ -7,9 +7,6 @@ on:
         description: 'The lifecycle to run'
         type: string
         required: true
-      image-name:
-        type: string
-        required: true
 
 permissions:
   contents: read
