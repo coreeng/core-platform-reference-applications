@@ -18,6 +18,10 @@ help-all:
 
 # P2P tasks
 
+.PHONY: p2p-image
+p2p-image:
+	@echo $(image_name)
+
 .PHONY: p2p-build
 p2p-build: lint service-build service-push ## Builds the service image and pushes it to the registry
 
