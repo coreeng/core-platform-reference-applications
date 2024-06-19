@@ -10,6 +10,7 @@ jobs:
   extended-tests:
     needs: [find-lifecycles]
     uses: ./.github/workflows/prod.yaml
+    if: needs.detect-changed-lifecycles.outputs.changed-lifecycles!= '[]'
     strategy:
       matrix:
         lifecycle: ${{ fromJSON(needs.find-lifecycles.outputs.lifecycles) }}
