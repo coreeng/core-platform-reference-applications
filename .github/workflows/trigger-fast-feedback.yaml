@@ -9,6 +9,8 @@ jobs:
   detect-changed-lifecycles:
     needs: [find-lifecycles]
     runs-on: ubuntu-latest
+    outputs:
+      changed-lifecycles: ${{ steps.generate-matrix.outputs.changed-lifecycles }}
     steps:
       - uses: actions/checkout@v4
       - id: generate-scan-config
@@ -27,5 +29,16 @@ jobs:
         with:
           files_yaml: |
             ${{ steps.generate-scan-config.outputs.files_yaml }}
-      - run: |
-          echo "Result: '${{ steps.changed-files.outputs.modified_keys }}'"
+      - id: generate-matrix
+        env:
+          changed_lifecycles: ${{ steps.changed-files.outputs.modified_keys }}
+        run: |
+          echo "changed_lifecycles=$(echo "${changed_lifecycles[*]}" | jq -Rc 'split(" ")')" >> $GITHUB_OUTPUT
+  fast-feedback:
+    needs: [detect-changed-lifecycles]
+    strategy:
+      matrix:
+        lifecycle: ${{ fromJSON(needs.detect-changed-lifecycles.outputs.changed-lifecycles) }}
+    uses: ./.github/workflows/fast-feedback.yaml
+    with:
+      lifecycle: ${{ matrix.lifecycle }}
