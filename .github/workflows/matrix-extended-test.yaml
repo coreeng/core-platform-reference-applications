@@ -8,7 +8,7 @@ jobs:
   find-lifecycles:
     uses: ./.github/workflows/find-lifecycles.yaml
   extended-tests:
-    continue-on-error: true
+    continue-on-error: "true"
     uses: ./.github/workflows/extended-test.yaml
     with:
       lifecycle: ${{ matrix.lifecycle }}
