@@ -10,7 +10,7 @@ jobs:
     needs: [find-lifecycles]
     runs-on: ubuntu-latest
     outputs:
-      changed-lifecycles: ${{ steps.generate-matrix.outputs.changed-lifecycles }}
+      changed-lifecycles: ${{ steps.generate-matrix.outputs.changed_lifecycles }}
     steps:
       - uses: actions/checkout@v4
       - id: generate-scan-config
@@ -36,6 +36,7 @@ jobs:
           echo "changed_lifecycles=$(echo "${changed_lifecycles[*]}" | jq -Rc 'split(" ")')" >> $GITHUB_OUTPUT
   fast-feedback:
     needs: [detect-changed-lifecycles]
+    if: needs.detect-changed-lifecycles.outputs.changed-lifecycles!= '[]'
     strategy:
       matrix:
         lifecycle: ${{ fromJSON(needs.detect-changed-lifecycles.outputs.changed-lifecycles) }}
