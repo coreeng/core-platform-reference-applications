@@ -12,6 +12,6 @@ jobs:
     uses: ./.github/workflows/prod.yaml
     strategy:
       matrix:
-        lifecycle: ${{ needs.find-lifecycles.outputs.lifecycles }}
+        lifecycle: ${{ fromJSON(needs.find-lifecycles.outputs.lifecycles) }}
     with:
       lifecycle: ${{ matrix.lifecycle }}
