@@ -24,7 +24,9 @@ jobs:
           MAKEFILE: ./${{ inputs.lifecycle }}/Makefile
         run: |
           image="$(make -f "$MAKEFILE" p2p-image)"
+          echo "Image name: '$image'"
           echo "image_name=$image" >> $GITHUB_OUTPUT
+
   get-latest-version:
     needs: [get-image-name]
     uses: coreeng/p2p/.github/workflows/p2p-get-latest-image-extended-test.yaml@multiapp-fixes
