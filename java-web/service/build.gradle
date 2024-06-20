@@ -1,0 +1,38 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.1'
+	id 'io.spring.dependency-management' version '1.1.5'
+}
+
+group = 'io.cecg'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = JavaVersion.VERSION_21
+targetCompatibility = JavaVersion.VERSION_21
+
+repositories {
+	mavenCentral()
+}
+
+configurations {
+	implementations.exclude module: "spring-boot-starter-tomcat"
+}
+dependencies {
+	implementation('org.springframework.boot:spring-boot-starter-web') {
+		exclude module: 'spring-boot-starter-tomcat'
+	}
+	implementation('org.springframework.boot:spring-boot-starter-jetty')
+	implementation('org.springframework.boot:spring-boot-starter-actuator')
+	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+	implementation('com.google.guava:guava:33.2.1-jre')
+	implementation('io.springfox:springfox-boot-starter:3.0.0')
+	implementation('com.zaxxer:HikariCP:5.1.0')
+	implementation('org.flywaydb:flyway-core:10.15.0')
+	implementation('org.flywaydb:flyway-database-postgresql:10.15.0')
+	implementation('org.postgresql:postgresql:42.7.3')
+
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

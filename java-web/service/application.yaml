@@ -1,0 +1,43 @@
+management:
+  server:
+    port: 8081
+  endpoints:
+    web:
+      base-path: /internal
+      exposure:
+        include: status
+  endpoint:
+    status.enabled: true
+    shutdown.enabled: false
+  metrics.export.graphite.enabled: false
+
+server:
+  shutdown: GRACEFUL
+  grace-period: 30s
+  drainingMs: 0
+
+downstream:
+  url: http://${DOWNSTREAM_HOST:localhost}
+  port: 9898
+  readTimeoutMs: 5000
+  conenctTimeoutMs: 1000
+
+database:
+  datasource:
+    jdbcUrl: &db_url jdbc:postgresql://${POSTGRES_HOST:localhost}:5432/postgres?useServerPrepStmts=false&rewriteBatchedStatements=true
+    username: &db_user postgres
+    password: &db_pass password
+    maximumPoolSize: 10
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+  flyway:
+    enabled: true
+    url: *db_url
+    password: *db_pass
+    user: *db_user
+    locations: classpath:db/migrations

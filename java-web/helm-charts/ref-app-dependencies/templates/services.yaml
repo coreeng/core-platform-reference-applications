@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: reference-db-service
+spec:
+  selector:
+    app.kubernetes.io/name: reference-db
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reference-podinfo-service
+spec:
+  selector:
+    app.kubernetes.io/name: pod-info
+  ports:
+    - protocol: TCP
+      port: 9898
+      targetPort: 9898

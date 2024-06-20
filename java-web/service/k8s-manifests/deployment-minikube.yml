@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reference-service
+  namespace: reference-service-showcase
+  labels:
+    app.kubernetes.io/name: reference-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: reference-service
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: reference-service
+    spec:
+      containers:
+        - name: reference-service
+          image: minikube:5000/reference-service:latest
+          env:
+            - name: POSTGRES_HOST
+              value: "reference-db-service.reference-service-showcase.svc.cluster.local"
+            - name: DOWNSTREAM_HOST
+              value: "reference-podinfo-service.reference-service-showcase.svc.cluster.local"
+          ports:
+            - containerPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reference-db
+  namespace: reference-service-showcase
+  labels:
+    app.kubernetes.io/name: reference-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: reference-db
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: reference-db
+    spec:
+      containers:
+        - name: reference-db
+          image: postgres:16-bullseye
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: password
+                  optional: false
+          volumeMounts:
+            - name: db-data
+              mountPath: /var/lib/postgresql/data/
+      volumes:
+        - name: db-data
+          persistentVolumeClaim:
+            claimName: pvc-dbdata
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-info
+  namespace: reference-service-showcase
+  labels:
+    app.kubernetes.io/name: pod-info
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pod-info
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: pod-info
+    spec:
+      containers:
+        - name: pod-info
+          image: stefanprodan/podinfo:6.2.2
+          ports:
+            - containerPort: 9898
