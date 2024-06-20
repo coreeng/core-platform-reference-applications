@@ -31,7 +31,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "Prometheus"
+        "uid": "prometheus-{{ .Values.tenantName }}"
       },
       "fieldConfig": {
         "defaults": {
@@ -94,7 +94,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "Prometheus"
+            "uid": "prometheus-{{ .Values.tenantName }}"
           },
           "expr": "k6_http_req_duration_p95{test_name=~\"$test_name\",expected_response=\"true\"}\n",
           "refId": "A"
@@ -106,7 +106,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "Prometheus"
+        "uid": "prometheus-{{ .Values.tenantName }}"
       },
       "fieldConfig": {
         "defaults": {
@@ -169,7 +169,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "Prometheus"
+            "uid": "prometheus-{{ .Values.tenantName }}"
           },
           "expr": "sum(rate(k6_http_reqs{test_name=~\"$test_name\"}[1s]))",
           "refId": "A"
@@ -181,7 +181,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "Prometheus"
+        "uid": "prometheus-{{ .Values.tenantName }}"
       },
       "fieldConfig": {
         "defaults": {
@@ -244,7 +244,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "Prometheus"
+            "uid": "prometheus-{{ .Values.tenantName }}"
           },
           "expr": "k6_vus{test_name=~\"$test_name\"}",
           "refId": "A"
@@ -256,7 +256,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "Prometheus"
+        "uid": "prometheus-{{ .Values.tenantName }}"
       },
       "fieldConfig": {
         "defaults": {
@@ -317,7 +317,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "Prometheus"
+            "uid": "prometheus-{{ .Values.tenantName }}"
           },
           "expr": "count(k6_http_reqs{test_name=~\"$test_name\",expected_response=\"false\"})",
           "refId": "A"
@@ -329,7 +329,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "Prometheus"
+        "uid": "prometheus-{{ .Values.tenantName }}"
       },
       "fieldConfig": {
         "defaults": {
@@ -390,7 +390,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "Prometheus"
+            "uid": "prometheus-{{ .Values.tenantName }}"
           },
           "expr": "count(k6_http_reqs{test_name=~\"$test_name\",expected_response=\"true\"})",
           "refId": "A"
@@ -402,7 +402,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "Prometheus"
+        "uid": "prometheus-{{ .Values.tenantName }}"
       },
       "description": "Breakdown of response time into its constituent parts.",
       "fieldConfig": {
@@ -484,7 +484,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "Prometheus"
+            "uid": "prometheus-{{ .Values.tenantName }}"
           },
           "editorMode": "code",
           "expr": "sum(k6_http_req_blocked_avg{test_name=~\"$test_name\"})",
@@ -495,7 +495,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "Prometheus"
+            "uid": "prometheus-{{ .Values.tenantName }}"
           },
           "editorMode": "code",
           "expr": "sum(k6_http_req_waiting_avg{test_name=~\"$test_name\"})",
@@ -507,7 +507,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "Prometheus"
+            "uid": "prometheus-{{ .Values.tenantName }}"
           },
           "editorMode": "code",
           "expr": "sum(k6_http_req_ending_avg{test_name=~\"$test_name\"})",
@@ -519,7 +519,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "Prometheus"
+            "uid": "prometheus-{{ .Values.tenantName }}"
           },
           "editorMode": "code",
           "expr": "sum(k6_http_req_receiving_avg{test_name=~\"$test_name\"})",
@@ -531,7 +531,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "Prometheus"
+            "uid": "prometheus-{{ .Values.tenantName }}"
           },
           "editorMode": "code",
           "expr": "sum(k6_http_tls_handshaking_avg{test_name=~\"$test_name\"})",
@@ -547,7 +547,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "Prometheus"
+        "uid": "prometheus-{{ .Values.tenantName }}"
       },
       "description": "Data sent and received per second.",
       "fieldConfig": {
@@ -645,7 +645,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "Prometheus"
+            "uid": "prometheus-{{ .Values.tenantName }}"
           },
           "editorMode": "code",
           "expr": "rate(k6_data_received{test_name=~\"$test_name\"}[10s])",
@@ -656,7 +656,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "Prometheus"
+            "uid": "prometheus-{{ .Values.tenantName }}"
           },
           "editorMode": "code",
           "expr": "rate(k6_data_sent{test_name=~\"$test_name\"}[10s])",
@@ -672,7 +672,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "Prometheus"
+        "uid": "prometheus-{{ .Values.tenantName }}"
       },
       "description": "The 95th percentile response time of the target system, with success responses separated from error responses.",
       "fieldConfig": {
@@ -770,7 +770,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "Prometheus"
+            "uid": "prometheus-{{ .Values.tenantName }}"
           },
           "editorMode": "code",
           "expr": "avg(k6_http_req_duration_p95{test_name=~\"$test_name\",expected_response=\"true\"})\n",
@@ -781,7 +781,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "Prometheus"
+            "uid": "prometheus-{{ .Values.tenantName }}"
           },
           "editorMode": "code",
           "expr": "avg(k6_http_req_duration_p95{test_name=~\"$test_name\",expected_response=\"false\"})\n",
@@ -797,7 +797,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "Prometheus"
+        "uid": "prometheus-{{ .Values.tenantName }}"
       },
       "fieldConfig": {
         "defaults": {
@@ -907,7 +907,7 @@
           "alias": "",
           "datasource": {
             "type": "prometheus",
-            "uid": "Prometheus"
+            "uid": "prometheus-{{ .Values.tenantName }}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -972,7 +972,7 @@
         },
         "datasource": {
           "type": "prometheus",
-          "uid": "Prometheus"
+          "uid": "prometheus-{{ .Values.tenantName }}"
         },
         "definition": "label_values(test_name)",
         "hide": 0,

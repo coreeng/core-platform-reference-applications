@@ -1,8 +1,11 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+	"go.opentelemetry.io/otel/sdk/metric"
 	"io"
 	"net/http"
 	"os"
@@ -12,10 +15,15 @@ type downstreamHandler struct {
 	httpClient *http.Client
 }
 
-func newDownstreamHandler() *downstreamHandler {
-	return &downstreamHandler{
-		httpClient: setupHTTPClient(),
+func newDownstreamHandler(provider *metric.MeterProvider) (*downstreamHandler, error) {
+	httpClient, err := setupHTTPClientWith100MaxIdleConnsPerHost(provider)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create http client: %w", err)
 	}
+
+	return &downstreamHandler{
+		httpClient: httpClient,
+	}, nil
 }
 
 func (h *downstreamHandler) handleDownstream(c *gin.Context) {
@@ -43,16 +51,16 @@ func (h *downstreamHandler) handleDownstream(c *gin.Context) {
 	c.Data(r.StatusCode, r.Header.Get("Content-Type"), b)
 }
 
-func setupHTTPClient() *http.Client {
-	return &http.Client{
-		Transport: &http.Transport{
-			//https://pkg.go.dev/net/http#Transport
-			// MaxIdleConnsPerHost, if non-zero, controls the maximum idle
-			// (keep-alive) connections to keep per-host. If zero,
-			// DefaultMaxIdleConnsPerHost(2) is used.
-			MaxIdleConnsPerHost: 100,
-		},
+func setupHTTPClientWith100MaxIdleConnsPerHost(provider *metric.MeterProvider) (*http.Client, error) {
+	t := &http.Transport{
+		MaxIdleConnsPerHost: 100,
 	}
+
+	client := &http.Client{
+		Transport: otelhttp.NewTransport(t, otelhttp.WithMeterProvider(provider)),
+	}
+
+	return client, nil
 }
 
 func downstreamEndpoint() string {

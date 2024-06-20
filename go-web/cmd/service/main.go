@@ -4,6 +4,9 @@ package main
 import (
 	"context"
 	"errors"
+	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+	"go.opentelemetry.io/otel/exporters/prometheus"
+	"go.opentelemetry.io/otel/sdk/metric"
 	"net/http"
 	"os"
 	"os/signal"
@@ -16,9 +19,24 @@ import (
 )
 
 func main() {
+	exporter, err := prometheus.New()
+	if err != nil {
+		log.Fatalf("failed to create prometheus exporter: %v", err)
+	}
+	provider := metric.NewMeterProvider(metric.WithReader(exporter))
+
+	router, err := handler.Router(provider)
+	if err != nil {
+		log.Fatalf("Failed to create router: %+v", err)
+	}
+
 	httpServer := &http.Server{
-		Addr:    ":8080",
-		Handler: handler.Router(),
+		Addr: ":8080",
+		Handler: otelhttp.NewHandler(
+			router,
+			"gin",
+			otelhttp.WithMeterProvider(provider),
+		),
 	}
 
 	internalServer := &http.Server{

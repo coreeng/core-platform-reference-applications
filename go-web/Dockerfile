@@ -12,6 +12,6 @@ FROM alpine:3.18
 
 COPY --from=builder /app/reference-app-go ./
 
-RUN apk add curl
+RUN apk --no-cache add curl
 
 CMD ["./reference-app-go"]

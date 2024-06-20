@@ -1,0 +1,10 @@
+{{- if .Values.wiremock.enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wiremock-mappings
+data:
+  static.json: |-
+{{ .Files.Get "wiremock-mappings/static.json" | indent 4 }}
+{{- end }}

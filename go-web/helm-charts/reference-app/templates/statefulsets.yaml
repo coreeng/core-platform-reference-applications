@@ -1,0 +1,50 @@
+{{- if .Values.wiremock.enabled }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: wiremock
+  labels:
+    app.kubernetes.io/name: wiremock
+spec:
+  serviceName: wiremocks
+  replicas: {{ .Values.wiremock.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: wiremock
+  template:
+    metadata:
+      annotations:
+        timestamp: {{ now | quote }}
+      labels:
+        app.kubernetes.io/name: wiremock
+    spec:
+      containers:
+        - name: wiremock
+          image: {{ .Values.wiremock.image }}
+          args: 
+            - "--no-request-journal"
+            - "--disable-request-logging"
+            - "--async-response-enabled" 
+            - "true"
+            - "--port"
+            - "{{ .Values.wiremock.port }}"
+          volumeMounts:
+            - name: wiremock-mappings
+              mountPath: /home/wiremock/mappings
+          resources: {{ .Values.wiremock.resources | toJson }}
+          livenessProbe:
+            httpGet:
+              port: {{ .Values.wiremock.port }}
+              path: /static
+          readinessProbe:
+            httpGet:
+              port: {{ .Values.wiremock.port }}
+              path: /static
+          ports:
+            - containerPort: {{ .Values.wiremock.port }}
+      volumes:
+        - name: wiremock-mappings
+          configMap:
+            name: wiremock-mappings
+{{- end }}
