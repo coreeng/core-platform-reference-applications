@@ -1,7 +1,8 @@
 projectDir := $(realpath $(dir $(firstword $(MAKEFILE_LIST))))
 os := $(shell uname)
+app_name = java-web
 image_tag = $(VERSION)
-image_name = java-web
+image_name = $(app_name)
 tenant_name = $(TENANT_NAME)
 
 FAST_FEEDBACK_PATH = fast-feedback
@@ -27,7 +28,7 @@ p2p-build: lint service-build service-push ## Builds the service image and pushe
 
 .PHONY: p2p-functional
 p2p-functional: build-functional push-functional create-ns-functional deploy-functional ## Runs only functional helm tests
-	helm test reference-app -n $(tenant_name)-functional --filter name=reference-app-functional-test
+	helm test $(app_name) -n $(app_name)-functional --filter name=reference-app-functional-test
 	kubectl logs reference-app-functional-test -n $(tenant_name)-functional
 
 .PHONY: p2p-nft
@@ -44,17 +45,17 @@ p2p-prod: deploy-prod ## Deploy helm chart of the reference app to production na
 
 .PHONY: create-ns-functional
 create-ns-functional: ## Create namespace for functional tests
-	awk -v NAME="$(tenant_name)" -v ENV="functional" '{ \
-		sub(/{tenant_name}/, NAME);  \
-		sub(/{env}/, ENV);  \
+	awk -v NAME="$(tenant_name)" -v ENV="$(app_name)-functional" '{ \
+		sub(/{parent}/, NAME);  \
+		sub(/{child}/, ENV);  \
 		print;  \
 	}' resources/subns-anchor.yaml | kubectl apply -f -
 
 .PHONY: create-ns-nft
 create-ns-nft: ## Create namespace for NF tests
-	awk -v NAME="$(tenant_name)" -v ENV="nft" '{ \
-		sub(/{tenant_name}/, NAME);  \
-		sub(/{env}/, ENV);  \
+	awk -v NAME="$(tenant_name)" -v ENV="$(app_name)-nft" '{ \
+		sub(/{parent}/, NAME);  \
+		sub(/{child}/, ENV);  \
 		print;  \
 	}' resources/subns-anchor.yaml | kubectl apply -f -
 
@@ -62,7 +63,7 @@ create-ns-nft: ## Create namespace for NF tests
 
 .PHONY: lint
 lint: ## Linting go code
-	docker run -v "$$(pwd)":/var/app ghcr.io/mgechev/revive:v1.3.7  -config /var/app/revive.toml -formatter stylish  ./var/app/cmd/service ./var/app/cmd/handler
+	echo '### LINT ###'
 
 .PHONY: service-build
 service-build:
@@ -82,6 +83,7 @@ build-functional: ## Build the functional reference application, and package as 
 .PHONY: build-nft
 build-nft: ## Build the non-functional-tests reference application, and package as a Docker image
 	docker build --file nft/Dockerfile --tag $(REGISTRY)/$(FAST_FEEDBACK_PATH)/$(image_name)-nft:$(image_tag) .
+
 .PHONY: push-functional
 push-functional: ## Push the Functional Docker image to an image registry
 	docker image push $(REGISTRY)/$(FAST_FEEDBACK_PATH)/$(image_name)-functional:$(image_tag)
@@ -92,25 +94,25 @@ push-nft: ## Push the NFT Docker image to an image registry
 
 .PHONY: deploy-functional
 deploy-functional: ## Deploy helm chart of the reference app to functional namespace
-	helm upgrade --install reference-app helm-charts/reference-app -n $(tenant_name)-functional --set registry=$(REGISTRY)/$(FAST_FEEDBACK_PATH) --set domain=$(BASE_DOMAIN) --set appUrlSuffix="-functional" --set tag=$(image_tag) --atomic
-	helm list -n $(tenant_name)-functional ## list installed charts in the given tenant namespace
+	helm upgrade --install $(app_anme) helm-charts/reference-app -n $(app_name)-functional --set registry=$(REGISTRY)/$(FAST_FEEDBACK_PATH) --set domain=$(BASE_DOMAIN) --set appUrlSuffix="-functional" --set tag=$(image_tag) --atomic
+	helm list -n $(app_name)-functional ## list installed charts in the given tenant namespace
 
 .PHONY: deploy-nft
 deploy-nft:  ## Deploy helm chart of the reference app to nft namespace
-	helm upgrade --install reference-app helm-charts/reference-app -n $(tenant_name)-nft --set registry=$(REGISTRY)/$(FAST_FEEDBACK_PATH) --set domain=$(BASE_DOMAIN) --set appUrlSuffix="-nft" --set tag=$(image_tag) --atomic
-	helm list -n $(tenant_name)-nft ## list installed charts in the given tenant namespace
+	helm upgrade --install $(app_name) helm-charts/reference-app -n $(app_name)-nft --set registry=$(REGISTRY)/$(FAST_FEEDBACK_PATH) --set domain=$(BASE_DOMAIN) --set appUrlSuffix="-nft" --set tag=$(image_tag) --atomic
+	helm list -n $(app_name)-nft ## list installed charts in the given tenant namespace
 
 .PHONY: deploy-dev
 deploy-dev:  ## Deploy helm chart of the reference app to dev namespace
-	helm upgrade --install reference-app helm-charts/reference-app -n $(tenant_name)-dev --set registry=$(REGISTRY)/$(FAST_FEEDBACK_PATH)  --set domain=$(ENVIRONMENT).$(BASE_URL) --set appUrlSuffix="-dev" --atomic
-	helm list -n $(tenant_name)-dev ## list installed charts in the given tenant namespace
+	helm upgrade --install $(app_name) helm-charts/reference-app -n $(app_name)-dev --set registry=$(REGISTRY)/$(FAST_FEEDBACK_PATH)  --set domain=$(ENVIRONMENT).$(BASE_URL) --set appUrlSuffix="-dev" --atomic
+	helm list -n $(app_name)-dev ## list installed charts in the given tenant namespace
 
 .PHONY: deploy-prod
 deploy-prod: ## Deploy helm chart of the reference app to production namespace
 	@echo $(image_tag)
 	@echo $(REGISTRY)/release
-	helm upgrade --install reference-app helm-charts/reference-app -n $(tenant_name) --set registry=$(REGISTRY)/$(PROD_PATH) --set domain=$(BASE_DOMAIN)  --set tag=$(image_tag) --atomic
-	helm list -n $(tenant_name) ## list installed charts in the given tenant namespace
+	helm upgrade --install $(app_name) helm-charts/reference-app -n $(app_name) --set registry=$(REGISTRY)/$(PROD_PATH) --set domain=$(BASE_DOMAIN)  --set tag=$(image_tag) --atomic
+	helm list -n $(app_name) ## list installed charts in the given tenant namespace
 
 .PHONY: p2p-promote-generic
 p2p-promote-generic:  ## Generic promote functionality
