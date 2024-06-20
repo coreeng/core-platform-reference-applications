@@ -94,7 +94,7 @@ push-nft: ## Push the NFT Docker image to an image registry
 
 .PHONY: deploy-functional
 deploy-functional: ## Deploy helm chart of the reference app to functional namespace
-	helm upgrade --install $(app_anme) helm-charts/reference-app -n $(app_name)-functional --set registry=$(REGISTRY)/$(FAST_FEEDBACK_PATH) --set domain=$(BASE_DOMAIN) --set appUrlSuffix="-functional" --set tag=$(image_tag) --atomic
+	helm upgrade --install $(app_name) helm-charts/reference-app -n $(app_name)-functional --set registry=$(REGISTRY)/$(FAST_FEEDBACK_PATH) --set domain=$(BASE_DOMAIN) --set appUrlSuffix="-functional" --set tag=$(image_tag) --atomic
 	helm list -n $(app_name)-functional ## list installed charts in the given tenant namespace
 
 .PHONY: deploy-nft
