@@ -39,7 +39,7 @@ p2p-extended-test:  ## Runs extended tests
 	echo "### EXTENDED TESTS RUN ###"
 
 .PHONY: p2p-prod
-p2p-prod: deploy-prod ## Deploy helm chart of the reference app to production namespace
+p2p-prod: create-ns-prod deploy-prod ## Deploy helm chart of the reference app to production namespace
 
 ## Namespace creation
 
@@ -58,6 +58,15 @@ create-ns-nft: ## Create namespace for NF tests
 		sub(/{child}/, ENV);  \
 		print;  \
 	}' resources/subns-anchor.yaml | kubectl apply -f -
+
+.PHONY: create-ns-prod
+create-ns-prod: ## Create namespace for production
+	awk -v NAME="$(tenant_name)" -v ENV="$(app_name)" '{ \
+		sub(/{parent}/, NAME);  \
+		sub(/{child}/, ENV);  \
+		print;  \
+	}' resources/subns-anchor.yaml | kubectl apply -f -
+
 
 ## Internal Tasks, not part of the P2P
 
