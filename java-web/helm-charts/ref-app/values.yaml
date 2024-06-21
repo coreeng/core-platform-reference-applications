@@ -1,11 +1,12 @@
 registry:
+tag:
 
 functional:
   image: java-web-functional:latest
 nft:
   image: java-web-nft:latest
 service:
-  image: java-web:latest
+  image: java-web
   environmentVariables:
     POSTGRES_HOST: reference-db-service
     DOWNSTREAM_HOST: reference-podinfo-service
