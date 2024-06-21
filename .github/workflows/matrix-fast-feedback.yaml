@@ -1,7 +1,13 @@
+name: "Fast Feedback: Matrix"
+
 on:
+  workflow_dispatch:
   push:
     branches:
-      - workflow-dev
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   find-lifecycles:

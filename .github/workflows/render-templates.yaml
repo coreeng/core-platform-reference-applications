@@ -1,10 +1,7 @@
-name: Refresh templates
+name: Rerender Templates
 on:
-  push:
-    branches:
-      - workflow-dev
-  schedule:
-    - cron: '0 6 * * *'
+  workflow_call:
+    inputs: {}
   workflow_dispatch:
     inputs: {}
 

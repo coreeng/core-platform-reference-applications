@@ -1,5 +1,0 @@
-rootProject.name = 'java-web'
-
-include 'functional'
-include 'nft'
-include 'service'

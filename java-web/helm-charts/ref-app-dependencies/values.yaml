@@ -1,7 +1,0 @@
-registry:
-
-service:
-  environmentVariables:
-    POSTGRES_HOST: reference-db-service
-    DOWNSTREAM_HOST: reference-podinfo-service
-

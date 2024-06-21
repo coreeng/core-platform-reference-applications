@@ -1,7 +1,13 @@
-name: Extended Test
+run-name: "Extended Test: ${{ inputs.lifecycle }}"
 
 on:
   workflow_call:
+    inputs:
+      lifecycle:
+        description: 'The lifecycle to run'
+        type: string
+        required: true
+  workflow_dispatch:
     inputs:
       lifecycle:
         description: 'The lifecycle to run'
@@ -29,16 +35,14 @@ jobs:
 
   get-latest-version:
     needs: [get-image-name]
-    uses: coreeng/p2p/.github/workflows/p2p-get-latest-image-extended-test.yaml@multiapp-fixes
+    uses: coreeng/p2p/.github/workflows/p2p-get-latest-image-extended-test.yaml@v1
     with:
-      main-branch: 'refs/heads/workflow-dev'
       image-name: ${{ needs.get-image-name.outputs.image-name }}
 
   extendedtests:
     needs: [get-latest-version]
-    uses: coreeng/p2p/.github/workflows/p2p-workflow-extended-test.yaml@multiapp-fixes
+    uses: coreeng/p2p/.github/workflows/p2p-workflow-extended-test.yaml@v1
     with:
-      main-branch: 'refs/heads/workflow-dev'
       working-directory: './${{ inputs.lifecycle }}'
       version: ${{ needs.get-latest-version.outputs.version }}
       version-prefix: '${{ inputs.lifecycle }}/v'

@@ -1,4 +1,4 @@
-name: P2P
+name: Full P2P
 on:
   workflow_call:
     secrets:
@@ -14,6 +14,12 @@ on:
         description: 'The lifecycle to run'
         type: string
         required: true
+  workflow_dispatch:
+    inputs:
+      lifecycle:
+        description: 'The lifecycle to run'
+        type: string
+        required: true
 
 permissions:
   contents: write
@@ -21,35 +27,30 @@ permissions:
 
 jobs:
   version:
-    uses: coreeng/p2p/.github/workflows/p2p-version.yaml@multiapp-fixes
+    uses: coreeng/p2p/.github/workflows/p2p-version.yaml@v1
     with:
-      # TODO replace with main
-      main-branch: 'refs/heads/workflow-dev'
       checkout-version: ${{ inputs.ref }}
       version-prefix: '${{ inputs.lifecycle }}/v'
     secrets:
       git-token: ${{ secrets.GITHUB_TOKEN }}
   fastfeedback:
     needs: [version]
-    uses: coreeng/p2p/.github/workflows/p2p-workflow-fastfeedback.yaml@multiapp-fixes
+    uses: coreeng/p2p/.github/workflows/p2p-workflow-fastfeedback.yaml@v1
     with:
-      main-branch: 'refs/heads/workflow-dev'
       working-directory: './${{ inputs.lifecycle }}'
       checkout-version: ${{ inputs.ref }}
       version: ${{ needs.version.outputs.version }}
   extendedtests:
     needs: [fastfeedback, version]
-    uses: coreeng/p2p/.github/workflows/p2p-workflow-extended-test.yaml@multiapp-fixes
+    uses: coreeng/p2p/.github/workflows/p2p-workflow-extended-test.yaml@v1
     with:
-      main-branch: 'refs/heads/workflow-dev'
       working-directory: './${{ inputs.lifecycle }}'
       version: ${{ needs.version.outputs.version }}
       version-prefix: '${{ inputs.lifecycle }}/v'
   prod:
     needs: [extendedtests, version]
-    uses: coreeng/p2p/.github/workflows/p2p-workflow-prod.yaml@multiapp-fixes
+    uses: coreeng/p2p/.github/workflows/p2p-workflow-prod.yaml@v1
     with:
-      main-branch: 'refs/heads/workflow-dev'
       working-directory: './${{ inputs.lifecycle }}'
       version: ${{ needs.version.outputs.version }}
       version-prefix: '${{ inputs.lifecycle }}/v'

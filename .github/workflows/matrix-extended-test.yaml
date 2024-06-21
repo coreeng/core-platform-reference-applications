@@ -1,4 +1,4 @@
-name: Extended tests
+name: "Extended Tests: Matrix"
 on:
   workflow_dispatch:
   schedule:

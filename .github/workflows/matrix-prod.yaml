@@ -1,4 +1,4 @@
-name: Prod deployment
+name: "Prod Deployment: Matrix"
 on:
   workflow_dispatch:
   schedule:
@@ -7,7 +7,7 @@ on:
 jobs:
   find-lifecycles:
     uses: ./.github/workflows/find-lifecycles.yaml
-  extended-tests:
+  prod:
     needs: [find-lifecycles]
     uses: ./.github/workflows/prod.yaml
     with:
