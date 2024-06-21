@@ -29,7 +29,7 @@ p2p-build: lint service-build service-push ## Builds the service image and pushe
 .PHONY: p2p-functional
 p2p-functional: build-functional push-functional create-ns-functional deploy-functional ## Runs only functional helm tests
 	helm test $(app_name) -n $(app_name)-functional --filter name=reference-app-functional-test
-	kubectl logs reference-app-functional-test -n $(tenant_name)-functional
+	kubectl logs reference-app-functional-test -n $(app_name)-functional
 
 .PHONY: p2p-nft
 p2p-nft: build-nft push-nft create-ns-nft deploy-nft ## Runs only NFT helm tests
