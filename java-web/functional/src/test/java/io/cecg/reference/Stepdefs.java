@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
 public class Stepdefs {
     private static final Logger LOG = LoggerFactory.getLogger(Stepdefs.class);
 
-    private final String baseUri = SystemUtils.getEnvironmentVariable("SERVICE_ENDPOINT", "http://service:8080");
+    private final String baseUri = SystemUtils.getEnvironmentVariable("SERVICE_ENDPOINT", "http://localhost:8080");
     private RequestSpecification request;
     private Response response;
     private String unique_id;
@@ -68,7 +68,7 @@ public class Stepdefs {
     @When("^I call the swagger endpoint$")
     public void i_call_the_swagger_endpoint() {
         System.out.printf("Hitting endpoint: %s%n", baseUri);
-        response = request.when().get("/swagger-ui/");
+        response = request.when().get("/swagger-ui/index.html");
     }
 
     @When("^I call the downstream endpoint with (\\d+) seconds of response delay$")
@@ -103,6 +103,6 @@ public class Stepdefs {
 
     @Then("^the response body is$")
     public void a_response_is_returned(String body) throws JSONException {
-        JSONAssert.assertEquals(response.getBody().asPrettyString(), body, JSONCompareMode.STRICT);
+        JSONAssert.assertEquals(body, response.getBody().asPrettyString(), JSONCompareMode.STRICT);
     }
 }

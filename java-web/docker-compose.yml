@@ -21,7 +21,7 @@ services:
       - DOWNSTREAM_HOST=podinfo
       - POSTGRES_HOST=database
     build:
-      dockerfile: ./Dockerfile.service
+      dockerfile: ./Dockerfile
     ports:
       - "8080:8080"
     healthcheck:

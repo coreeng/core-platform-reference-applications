@@ -18,7 +18,7 @@ test {
     testLogging {
         events "passed", "skipped", "failed"
     }
-    systemProperty 'serviceEndpoint', System.getenv("SERVICE_ENDPOINT") ? System.getenv("SERVICE_ENDPOINT")  : "http://localhost"
+    systemProperty 'serviceEndpoint', System.getenv("SERVICE_ENDPOINT") ? System.getenv("SERVICE_ENDPOINT")  : "http://localhost:8080"
 
     // Print test summary details
     afterSuite { desc, result ->

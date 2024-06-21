@@ -58,6 +58,7 @@ Feature: Calling a status endpoint
       | 429    |
       | 431    |
       | 451    |
+      | 490    |
       | 500    |
       | 501    |
       | 502    |
@@ -69,14 +70,3 @@ Feature: Calling a status endpoint
       | 508    |
       | 510    |
       | 511    |
-
-  Scenario: Calling status with a non existing code
-    Given a rest service
-    When I call the status endpoint with 490 status code
-    Then an '500' response is returned
-    And the response body is
-    """json
-{
-    "message": "Client failed because of unknown status code requested"
-}
-    """
