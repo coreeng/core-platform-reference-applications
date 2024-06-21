@@ -7,7 +7,7 @@ metadata:
 spec:
   containers:
     - name: functional-tests
-      image: {{ .Values.registry }}/{{ .Values.functional.image }}
+      image: "{{ .Values.registry }}/{{ .Values.functional.image }}:{{ .Values.tag }}"
       env:
         - name: SERVICE_ENDPOINT
           value: "http://reference-service"

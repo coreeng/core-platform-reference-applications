@@ -2,9 +2,9 @@ registry:
 tag:
 
 functional:
-  image: java-web-functional:latest
+  image: java-web-functional
 nft:
-  image: java-web-nft:latest
+  image: java-web-nft
 service:
   image: java-web
   environmentVariables:
