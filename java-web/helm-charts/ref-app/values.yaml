@@ -1,11 +1,11 @@
 registry:
 
 functional:
-  image: reference-service-functional:latest
+  image: java-web-functional:latest
 nft:
-  image: reference-service-nft:latest
+  image: java-web-nft:latest
 service:
-  image: reference-service:latest
+  image: java-web:latest
   environmentVariables:
     POSTGRES_HOST: reference-db-service
     DOWNSTREAM_HOST: reference-podinfo-service
