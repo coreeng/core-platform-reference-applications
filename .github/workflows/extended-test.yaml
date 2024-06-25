@@ -39,7 +39,7 @@ jobs:
     with:
       image-name: ${{ needs.get-image-name.outputs.image-name }}
 
-  extendedtests:
+  extended-tests:
     needs: [get-latest-version]
     uses: coreeng/p2p/.github/workflows/p2p-workflow-extended-test.yaml@v1
     with:

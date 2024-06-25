@@ -16,13 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: find-lifecycles
         run: |
-          lifecycles=()
-          # Directory is considered a lifecycle if under 1 nested directory from the repo root and it has Makefile with help-p2p target
-          for MAKEFILE in $(find . -name Makefile -type f -maxdepth 2); do
-            if make -f $MAKEFILE help-p2p >/dev/null 2>&1; then
-              lifecycles+=("$(dirname $MAKEFILE | sed 's|.\/\(.*\)|\1|')")
-            fi
-          done
-          lifecycles_json="$(echo "${lifecycles[*]}" | jq -Rc 'split(" ")')"
+          ./.github/scripts/find_lifecycles.sh -d . -o lifecycles.json
+          lifecycles_json="$(cat lifecycles.json)"
           echo "Found lifecycles: $lifecycles_json"
           echo "lifecycles=$lifecycles_json" >> $GITHUB_OUTPUT

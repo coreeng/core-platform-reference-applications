@@ -1,4 +1,4 @@
-name: Rerender Templates
+name: Render Templates
 on:
   workflow_call:
     inputs: {}
@@ -32,20 +32,11 @@ jobs:
       - id: render
         run: |
           export PATH="${PATH}:$(realpath ./corectl)"
-          all_templates=( $(corectl template list --templates ./software-templates) )
-          changed_templates=()
-          for t in "${all_templates[@]}"; do
-            echo "Rendering template '$t'"
-            rm -rf "./reference-apps/$t"
-            mkdir -p "./reference-apps/$t"
-            corectl template render "$t" "./reference-apps/$t" --templates ./software-templates
-            git -C "./reference-apps" add "./$t"
-            if [[ "$(git -C './reference-apps' status "./$t" --untracked-files=no --porcelain)" ]]; then
-              echo "Template '$t' has changed!"
-              changed_templates+=("$t")
-            fi
-          done
-          ct_json=$(echo "${changed_templates[*]}" | jq -Rc 'split(" ")')
+          ./reference-apps/.github/scripts/collect_changed_templates.sh \
+            -t ./software-templates \
+            -r ./reference-apps \
+            -o ./changed_templates.json
+          ct_json="$(cat ./changed_templates.json)"
           echo "Changed templates: $ct_json"
           echo "changed_templates=$ct_json" >> $GITHUB_OUTPUT
           git -C "./reference-apps" status --porcelain
