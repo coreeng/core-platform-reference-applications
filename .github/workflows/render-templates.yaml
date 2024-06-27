@@ -20,7 +20,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/checkout@v4
         with:
-          repository: coreeng/software-templates
+          repository: coreeng/core-platform-software-templates
           path: ./software-templates
       - uses: robinraju/release-downloader@v1.10
         with:

@@ -1,14 +1,14 @@
 # Reference Apps
 
-This repository contains rendered templates from [software-templates](https://github.com/coreeng/software-templates) repository.
+This repository contains rendered templates from [core-platform-software-templates](https://github.com/coreeng/core-platform-software-templates) repository.
 Every time any template is changed `render-templates.yaml` workflow is triggered.
 This workflow will render all templates, commit the changes and run the whole P2P for updated templates.
 Here is a quick diagram describing with an example of the process:
 ```mermaid
 sequenceDiagram
     actor C as Client
-    participant ST as software-templates
-    box reference-apps
+    participant ST as core-platform-software-templates
+    box core-platform-reference-applications
       participant RT as render-templates.yaml
       participant P2P as p2p.yaml
     end
@@ -24,7 +24,7 @@ sequenceDiagram
 Hence, changes to applications are happening automatically
 and any application update made directly to this repository will be overwritten.
 If you want to update an application, please make a PR
-to [software-templates](https://github.com/coreeng/software-templates) repository.
+to [core-platform-software-templates](https://github.com/coreeng/core-platform-software-templates) repository.
 
 # Quick Start
 _*Prerequisite*_: it is assumed that you have `corectl` installed and initialized.
@@ -50,7 +50,7 @@ git push
 ## Template rendering
 These are used to render templates. Should be deleted after forking.
 - [render-template.yaml](.github/workflows/render-templates.yaml) -
-  fetches all the templates from [software-templates](https://github.com/coreeng/software-templates) repo, 
+  fetches all the templates from [core-platform-software-templates](https://github.com/coreeng/core-platform-software-templates) repo, 
     renders it and collect ids of changed templates.
   For each changed template, it calls `p2p.yaml`. 
 - [p2p.yaml](.github/workflows/p2p.yaml) - runs the whole Path To Production (P2P) in one go.
