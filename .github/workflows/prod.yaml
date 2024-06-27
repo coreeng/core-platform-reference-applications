@@ -9,9 +9,10 @@ on:
         required: true
   workflow_dispatch:
     inputs:
-      description: 'The lifecycle to run'
-      type: string
-      required: true
+      lifecycle:
+        description: 'The lifecycle to run'
+        type: string
+        required: true
 
 permissions:
   contents: read
