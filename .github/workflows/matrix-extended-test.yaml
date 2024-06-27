@@ -12,7 +12,7 @@ jobs:
     uses: ./.github/workflows/extended-test.yaml
     with:
       lifecycle: ${{ matrix.lifecycle }}
-    if: needs.detect-changed-lifecycles.outputs.changed-lifecycles!= '[]'
+    if: needs.find-lifecycles.outputs.lifecycles != '[]'
     strategy:
       fail-fast: false
       matrix:
