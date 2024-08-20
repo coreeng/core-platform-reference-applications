@@ -1,4 +1,4 @@
-rootProject.name = java-web
+rootProject.name = 'java-web'
 
 include 'functional'
 include 'service'
