@@ -13,11 +13,12 @@ The P2P uses GitHub Actions to interact with the platform.
 As part of the P2P, using Hierarchical Namespace Controller, child namespaces will be created:
 - `<tenant-name>-functional`
 - `<tenant-name>-nft`
+- `<tenant-name>-integration`
 - `<tenant-name>-extended`
 
 The application is deployed to each of this following the shape:
 ```
-| Build Service | -> | Functional testing | -> | NF testing | -> | Promote image to Extended tests |
+| Build Service | -> | Functional testing | -> | NF testing | -> -> | Integration testing | -> | Promote image to Extended tests |
 ```
 
 The tests are executed as helm tests. For that to work, each test phase is packaged in a docker image and pushed to a registry. 
@@ -101,6 +102,14 @@ This namespace is used to test how the service behaves under load, e.g. 1_000 TP
 
 There are 1 endpoint available for testing:
 - `/hello` - simply returns `Hello world`.
+
+## Integration Testing
+
+Integration Tests are using [Cucumber Godog](https://github.com/cucumber/godog)
+
+This namespace is used to test that the individual parts of the system as well as service-to-service communication 
+of the app works correctly against real dependencies. Currently, using BDD (Behaviour driven development)
+
 
 #### Load Generation
 

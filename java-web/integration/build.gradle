@@ -1,0 +1,32 @@
+apply plugin: 'java'
+
+dependencies {
+    testImplementation(platform('org.junit:junit-bom:5.9.0'))
+    testImplementation('org.junit.jupiter:junit-jupiter:5.9.0')
+    testImplementation('io.cucumber:cucumber-java:7.18.+')
+    testImplementation('io.cucumber:cucumber-junit:7.18.+')
+    testImplementation('io.rest-assured:rest-assured:5.2.+')
+    testImplementation('org.junit.vintage:junit-vintage-engine:5.9.0')
+    testImplementation('org.skyscreamer:jsonassert:1.5.1')
+
+}
+
+// Test will be called from make target stubbed-functional
+// You can also run it manually if you have the app started
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    systemProperty 'serviceEndpoint', System.getenv("SERVICE_ENDPOINT") ? System.getenv("SERVICE_ENDPOINT")  : "http://localhost:8080"
+
+    // Print test summary details
+    afterSuite { desc, result ->
+        if (!desc.parent) {
+            def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)"
+            def startItem = '|  ', endItem = '  |'
+            def repeatLength = startItem.length() + output.length() + endItem.length()
+            println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+        }
+    }
+}

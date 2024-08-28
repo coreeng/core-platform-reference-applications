@@ -25,6 +25,9 @@ p2p-functional:
 .PHONY: p2p-nft
 p2p-nft:
 
+.PHONY: p2p-integration
+p2p-integration:
+
 .PHONY: p2p-extended-test
 p2p-extended-test:  
 	
