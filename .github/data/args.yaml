@@ -1,0 +1,4 @@
+name: rendered-template
+tenant: test-tenant
+working_directory: ./
+version_prefix: v

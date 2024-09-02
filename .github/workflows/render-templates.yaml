@@ -35,7 +35,8 @@ jobs:
           ./reference-apps/.github/scripts/collect_changed_templates.sh \
             -t ./software-templates \
             -r ./reference-apps \
-            -o ./changed_templates.json
+            -o ./changed_templates.json \
+            -a ./reference-apps/.github/data/args.yaml
           ct_json="$(cat ./changed_templates.json)"
           echo "Changed templates: $ct_json"
           echo "changed_templates=$ct_json" >> $GITHUB_OUTPUT

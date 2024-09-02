@@ -21,6 +21,10 @@ while [ $# -gt 0 ]; do
       output_file="$2"
       shift
       ;;
+    -a | --args-file )
+      args_file="$2"
+      shift
+      ;;
     *)
       echo "Invalid option: $1" >&2
       exit 1
@@ -39,7 +43,7 @@ for t in "${all_templates[@]}"; do
   echo "Rendering template '$t'"
   rm -rf "./$reference_apps_dir/$t"
   mkdir -p "./$reference_apps_dir/$t"
-  corectl template render "$t" "./$reference_apps_dir/$t" --templates "$templates_dir"
+  corectl template render "$t" "./$reference_apps_dir/$t" --templates "$templates_dir" --args-file "$args_file"
   git -C "./$reference_apps_dir" add "./$t"
   if [[ "$(git -C "$reference_apps_dir" status "./$t" --untracked-files=no --porcelain)" ]]; then
     echo "Template '$t' has changed!"
