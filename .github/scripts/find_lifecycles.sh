@@ -30,7 +30,7 @@ arg_required "output_file" "$output_file"
 
 lifecycles=()
 # Directory is considered to be a lifecycle if under 1 nested directory from the repo root and it has Makefile with help-p2p target
-while IFS= read -r -d '' MAKEFILE; do
+while IFS= read -r MAKEFILE; do
    if make -f "$MAKEFILE" help-p2p >/dev/null 2>&1; then
      # Strip the leading ./ from the path
      lifecycles+=("$(dirname "$MAKEFILE" | sed 's|.\/\(.*\)|\1|')")
