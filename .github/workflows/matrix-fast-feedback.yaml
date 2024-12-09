@@ -14,7 +14,7 @@ jobs:
     uses: ./.github/workflows/find-lifecycles.yaml
   detect-changed-lifecycles:
     needs: [find-lifecycles]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       changed-lifecycles: ${{ steps.generate-matrix.outputs.changed_lifecycles }}
     steps:

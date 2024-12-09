@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   get-image-name:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       image-name: ${{ steps.image-name.outputs.image_name }}
     steps:

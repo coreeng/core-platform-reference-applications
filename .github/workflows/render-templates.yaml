@@ -7,7 +7,7 @@ on:
 
 jobs:
   update-templates:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       latest_ref: ${{ steps.push.outputs.commit_hash }}
       changed_templates: ${{ steps.render.outputs.changed_templates }}
