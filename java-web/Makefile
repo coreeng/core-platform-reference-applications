@@ -3,8 +3,12 @@ os := $(shell uname)
 app_name = java-web
 tenant_name = $(TENANT_NAME)
 image_name = $(app_name)
+VERSION ?= $(shell git rev-parse --short HEAD)
 image_tag = $(VERSION)
 helm_test_timeout_duration = 2m
+
+## Default to local registry unless it is set
+REGISTRY ?= local
 
 FAST_FEEDBACK_PATH = fast-feedback
 EXTENDED_TEST_PATH = extended-test
