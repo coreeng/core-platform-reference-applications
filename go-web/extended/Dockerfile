@@ -1,5 +1,6 @@
 FROM golang:1.22-alpine3.18 AS builder
 WORKDIR $GOPATH/src/go.k6.io/k6
+
 RUN apk --no-cache add git
 RUN go install go.k6.io/xk6/cmd/xk6@v0.11.0
 RUN xk6 build --with github.com/coreeng/xk6-prometheus@v1.0.2 --output /tmp/k6
@@ -16,7 +17,7 @@ COPY --from=prometheus /bin/promtool /usr/bin/promtool
 USER 12345
 WORKDIR /home/k6
 
-ADD ./resources/load-testing/ /home/k6/load-testing
+COPY ./resources/load-testing/ /home/k6/load-testing
 
 ENV K6_OUT=prometheus
 

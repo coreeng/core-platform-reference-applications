@@ -41,21 +41,21 @@ p2p-build: lint service-build service-push ## Builds the service image and pushe
 
 .PHONY: p2p-functional
 p2p-functional: namespace_environment=functional
-p2p-functional: build-functional push-functional create-ns-functional deploy-functional ## Runs only functional helm tests
+p2p-functional: build-functional push-functional create-ns-functional deploy-functional ## Runs only functional tests
 	$(MAKE) helm-test-$(namespace_environment) scale_down=true
 
 .PHONY: p2p-nft
 p2p-nft: namespace_environment=nft
-p2p-nft: build-nft push-nft create-ns-nft deploy-nft ## Runs only NFT helm tests
+p2p-nft: build-nft push-nft create-ns-nft deploy-nft ## Runs only NFT tests
 	$(MAKE) helm-test-$(namespace_environment) scale_down=true
 
 .PHONY: p2p-integration
 p2p-integration: namespace_environment=integration
-p2p-integration: build-integration push-integration create-ns-integration deploy-integration ## Runs only Integration helm tests
+p2p-integration: build-integration push-integration create-ns-integration deploy-integration ## Runs only integration tests
 	$(MAKE) helm-test-$(namespace_environment) scale_down=false
 
 .PHONY: p2p-extended-test
-p2p-extended-test: build-extended push-extended create-ns-extended deploy-extended  ## Runs extended tests
+p2p-extended-test: build-extended push-extended create-ns-extended deploy-extended ## Runs extended tests
 	@if [ "$(RUN_EXTENDED_TEST)" != "true" ] ; then \
 		echo "Skipping extended test" ; \
 	else \
@@ -63,7 +63,7 @@ p2p-extended-test: build-extended push-extended create-ns-extended deploy-extend
 	fi
 
 .PHONY: p2p-prod
-p2p-prod: deploy-prod ## Deploy helm chart of the app to production namespace
+p2p-prod: deploy-prod ## Deploy to production
 
 ## Namespace creation
 
@@ -89,14 +89,14 @@ create-ns-extended: create-namespace
 .PHONY: create-namespace
 create-namespace:
 	awk -v NAME="$(tenant_name)" -v ENV="$(env)" '{ \
-		sub(/{tenant_name}/, NAME);  \
-		sub(/{env}/, ENV);  \
-		print;  \
+		sub(/{tenant_name}/, NAME); \
+		sub(/{env}/, ENV); \
+		print; \
 	}' resources/subns-anchor.yaml | kubectl apply -f -
 
 .PHONY: lint
-lint: ## Linting go code
-	@echo '### LINTING ###'
+lint: ## Linting code
+	@echo '### $@ not implemented ###'
 
 .PHONY: service-build
 service-build:
@@ -105,9 +105,6 @@ service-build:
 .PHONY: service-push
 service-push: ## Push the service image
 	docker image push $(REGISTRY)/$(FAST_FEEDBACK_PATH)/$(image_name):$(image_tag)
-
-p2p-build: lint
-	docker build --file Dockerfile --tag $(REGISTRY)/$(image_name):$(image_tag) .
 
 .PHONY: build-functional
 build-functional: ## Build the functional application, and package as a Docker image
@@ -157,7 +154,7 @@ deploy-functional: ## Deploy helm chart of the app to functional namespace
 	helm list -n $(tenant_name)-functional ## list installed charts in the given tenant namespace
 
 .PHONY: deploy-nft
-deploy-nft:  ## Deploy helm chart of the app to nft namespace
+deploy-nft: ## Deploy helm chart of the app to nft namespace
 	helm upgrade --install $(app_name) helm-charts/app -n $(tenant_name)-nft \
 		--set registry=$(REGISTRY)/$(FAST_FEEDBACK_PATH) \
 		--set domain=$(BASE_DOMAIN) \
@@ -173,7 +170,7 @@ deploy-nft:  ## Deploy helm chart of the app to nft namespace
 	helm list -n $(tenant_name)-nft ## list installed charts in the given tenant namespace
 
 .PHONY: deploy-integration
-deploy-integration:  ## Deploy helm chart of the app to integration namespace
+deploy-integration: ## Deploy helm chart of the app to integration namespace
 	helm upgrade --install $(app_name) helm-charts/app -n $(tenant_name)-integration \
 		--set registry=$(REGISTRY)/$(FAST_FEEDBACK_PATH) \
 		--set domain=$(BASE_DOMAIN) \
@@ -227,21 +224,21 @@ deploy-prod: ## Deploy helm chart of the app to production namespace
 	helm list -n $(tenant_name) ## list installed charts in the given tenant namespace
 
 .PHONY: p2p-promote-generic
-p2p-promote-generic:  ## Generic promote functionality
+p2p-promote-generic:
 	corectl p2p promote $(image_name):${image_tag} \
-        		--source-stage $(source_repo_path) \
-        		--dest-registry $(REGISTRY) \
-        		--dest-stage $(dest_repo_path)
+		--source-stage $(source_repo_path) \
+		--dest-registry $(REGISTRY) \
+		--dest-stage $(dest_repo_path)
 
 .PHONY: p2p-promote-to-extended-test
 p2p-promote-to-extended-test: source_repo_path=$(FAST_FEEDBACK_PATH)
 p2p-promote-to-extended-test: dest_repo_path=$(EXTENDED_TEST_PATH)
-p2p-promote-to-extended-test:  p2p-promote-generic
+p2p-promote-to-extended-test: p2p-promote-generic
 
 .PHONY: p2p-promote-to-prod
-p2p-promote-to-prod:  source_repo_path=$(EXTENDED_TEST_PATH)
-p2p-promote-to-prod:  dest_repo_path=$(PROD_PATH)
-p2p-promote-to-prod:  p2p-promote-generic
+p2p-promote-to-prod: source_repo_path=$(EXTENDED_TEST_PATH)
+p2p-promote-to-prod: dest_repo_path=$(PROD_PATH)
+p2p-promote-to-prod: p2p-promote-generic
 
 .PHONY: chmod-scripts
 chmod-scripts:

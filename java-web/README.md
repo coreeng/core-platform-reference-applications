@@ -18,7 +18,7 @@ As part of the P2P, using Hierarchical Namespace Controller, child namespaces wi
 
 The application is deployed to each of this following the shape:
 ```
-| Build Service | -> | Functional testing | -> | NF testing | -> | Promote image to Extended tests |
+| Build Service | -> | Functional testing | -> | NF testing | -> | Integration testing | -> | Promote image to Extended tests |
 ```
 
 The tests are executed as helm tests. For that to work, each test phase is packaged in a docker image and pushed to a registry.
@@ -78,7 +78,7 @@ This reference app assumes `<environment>.<domain>`, check with your deployment 
 This will construct the base URL as `<environment>.<domain>`, for example, `gcp-dev.cecg.platform.cecg.io`.
 
 ```
-export BASE_DOMAIN=gcp-dev.cecg.platform.cecg.io 
+export BASE_DOMAIN=gcp-dev.cecg.platform.cecg.io
 ```
 
 Read [more](https://docs.gcp-prod.cecg.platform.cecg.io/app/ingress/) about Ingress.
@@ -90,7 +90,7 @@ You may find the results of the test runs in Grafana. The pipeline generates a l
 To generate a correct link to Grafana you need to make sure you have `INTERNAL_SERVICES_DOMAIN` set up.
 
 ```
-export INTERNAL_SERVICES_DOMAIN=gcp-dev-internal.cecg.platform.cecg.io 
+export INTERNAL_SERVICES_DOMAIN=gcp-dev-internal.cecg.platform.cecg.io
 ```
 
 ## Functional Testing

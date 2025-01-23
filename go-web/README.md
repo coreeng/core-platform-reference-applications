@@ -21,7 +21,7 @@ The application is deployed to each of this following the shape:
 | Build Service | -> | Functional testing | -> | NF testing | -> | Integration testing | -> | Promote image to Extended tests |
 ```
 
-The tests are executed as helm tests. For that to work, each test phase is packaged in a docker image and pushed to a registry. 
+The tests are executed as helm tests. For that to work, each test phase is packaged in a docker image and pushed to a registry.
 It's then executed after the deployment of the respective environment to ensure the service is working correctly.
 
 You can run `make help-p2p` to list the available p2p functions or `help-all` to see all available functions.
@@ -44,16 +44,16 @@ for instructions.
 
 #### Image Versioning
 
-The version is automatically generated when running the pipeline in GitHub Actions, but when you build the image 
-locally using `p2p-build` you may need to specify `VERSION` when running `make` command. 
+The version is automatically generated when running the pipeline in GitHub Actions, but when you build the image
+locally using `p2p-build` you may need to specify `VERSION` when running `make` command.
 
 ```
 make VERSION=1.0.0 p2p-build
 ```
 
-#### Building on arm64 
+#### Building on arm64
 
-If you are on `arm64` you may find that your Docker image is not starting on the target host. This may be because of 
+If you are on `arm64` you may find that your Docker image is not starting on the target host. This may be because of
 the incompatible target platform architecture. You may explicitly require that the image is built for `linux/amd64` platform:
 
 ```
@@ -69,8 +69,8 @@ export REGISTRY=europe-west2-docker.pkg.dev/<project_id>/tenant
 
 #### Ingress URL construction
 
-For ingress to be configured correctly, 
-you'll need to set up the environment that you want to deploy to, as well as the base url to be used. 
+For ingress to be configured correctly,
+you'll need to set up the environment that you want to deploy to, as well as the base url to be used.
 This must match one of the `ingress_domains` configured for that environment. For example, inside CECG we have an environment called `gcp-dev` that's ingress domain is set to `gcp-dev.cecg.platform.cecg.io`.
 
 This reference app assumes `<environment>.<domain>`, check with your deployment of the Core Platform if this is the case.
@@ -78,19 +78,19 @@ This reference app assumes `<environment>.<domain>`, check with your deployment 
 This will construct the base URL as `<environment>.<domain>`, for example, `gcp-dev.cecg.platform.cecg.io`.
 
 ```
-export BASE_DOMAIN=gcp-dev.cecg.platform.cecg.io 
+export BASE_DOMAIN=gcp-dev.cecg.platform.cecg.io
 ```
 
 Read [more](https://docs.gcp-prod.cecg.platform.cecg.io/app/ingress/) about Ingress.
 
 #### Logs
 
-You may find the results of the test runs in Grafana. The pipeline generates a link with the specific time range. 
+You may find the results of the test runs in Grafana. The pipeline generates a link with the specific time range.
 
 To generate a correct link to Grafana you need to make sure you have `INTERNAL_SERVICES_DOMAIN` set up.
 
 ```
-export INTERNAL_SERVICES_DOMAIN=gcp-dev-internal.cecg.platform.cecg.io 
+export INTERNAL_SERVICES_DOMAIN=gcp-dev-internal.cecg.platform.cecg.io
 ```
 
 ## Functional Testing
@@ -183,10 +183,10 @@ make DASHBOARDING=true p2p-nft
 
 or change `DASHBOARDING` to `true` in `Makefile`.
 
-The reference app comes with `10k TPS Reference App` dashboard that shows the TPS and latency 
-for the load generator, ingress, API server and its downstream dependency. 
+The reference app comes with `10k TPS Reference App` dashboard that shows the TPS and latency
+for the load generator, ingress, API server and its downstream dependency.
 
-This feature depends on metrics collected by `Service Monitor`. 
+This feature depends on metrics collected by `Service Monitor`.
 
 ### K6 Operator
 
@@ -200,7 +200,7 @@ betaFeatures:
 
 ## Limiting the CPU usage
 
-When running load tests it is important that we define CPU resource limits. This will allow us to have stable results between runs. 
+When running load tests it is important that we define CPU resource limits. This will allow us to have stable results between runs.
 
 If we don't apply the limits then the performance of the Pods will depend on the CPU utilization of the node that is running the container.
 
