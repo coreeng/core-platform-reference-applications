@@ -1,0 +1,26 @@
+name: blank Extended Test
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 22 * * *'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  get-latest-version:
+    uses: coreeng/p2p/.github/workflows/p2p-get-latest-image-extended-test.yaml@v1
+    with:
+      image-name: blank
+
+  extendedtests:
+    needs: [get-latest-version]
+    uses: coreeng/p2p/.github/workflows/p2p-workflow-extended-test.yaml@v1
+    secrets:
+      env_vars: ${{ secrets.env_vars }}
+    with:
+      version: ${{ needs.get-latest-version.outputs.version }}
+      version-prefix: v
+      working-directory: ./
