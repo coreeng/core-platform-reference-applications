@@ -1,6 +1,6 @@
-# Go Web
+# Docker Web
 
-Go application for the Core Platform.
+Docker application for the Core Platform.
 
 # Parameters
 Update main parameters of templates in `Makefile`:
@@ -95,7 +95,7 @@ export INTERNAL_SERVICES_DOMAIN=gcp-dev-internal.cecg.platform.cecg.io
 
 ## Functional Testing
 
-Stubbed Functional Tests using [Cucumber Godog](https://github.com/cucumber/godog)
+Stubbed Functional Tests
 
 This namespace is used to test the functionality of the app. Currently, using BDD (Behaviour driven development)
 
