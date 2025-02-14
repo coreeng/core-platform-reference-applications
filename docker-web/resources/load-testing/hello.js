@@ -28,9 +28,9 @@ export const options = {
 };
 
 export default function () {
-    const res = http.get(`${SERVICE_ENDPOINT}/hello`);
+    const res = http.get(`${SERVICE_ENDPOINT}/healthz`);
     check(res, {
         'status is 200': (r) => r.status === 200,
-        'response body is correct': (r) => r.body.includes("Hello World!"),
+        'response body is correct': (r) => r.body.includes("OK"),
     });
 }
