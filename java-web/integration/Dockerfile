@@ -1,5 +1,5 @@
 FROM gradle:8.6.0-jdk21
-ADD . /opt/app
+COPY . /opt/app
 WORKDIR /opt/app
 
 ENTRYPOINT ["gradle"]

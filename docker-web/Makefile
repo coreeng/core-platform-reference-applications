@@ -96,7 +96,11 @@ create-namespace:
 
 .PHONY: lint
 lint: ## Linting code
-	@echo '### $@ not implemented ###'
+	docker run --rm -i docker.io/hadolint/hadolint < Dockerfile
+	docker run --rm -i docker.io/hadolint/hadolint < functional/Dockerfile
+	docker run --rm -i docker.io/hadolint/hadolint < nft/Dockerfile
+	docker run --rm -i docker.io/hadolint/hadolint < integration/Dockerfile
+	docker run --rm -i docker.io/hadolint/hadolint < extended/Dockerfile
 
 .PHONY: service-build
 service-build:
