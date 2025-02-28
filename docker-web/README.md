@@ -24,7 +24,7 @@ The application is deployed to each of this following the shape:
 The tests are executed as helm tests. For that to work, each test phase is packaged in a docker image and pushed to a registry.
 It's then executed after the deployment of the respective environment to ensure the service is working correctly.
 
-You can run `make help-p2p` to list the available p2p functions or `help-all` to see all available functions.
+You can run `make p2p-help` to list the available make targets.
 
 #### Requirements
 
