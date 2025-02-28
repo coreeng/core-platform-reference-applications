@@ -1,14 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
-subenv=$1
-tenant_name=$2
-app_name=${3:-$tenant_name}
+type=$1
+namespace=$2
+app_name=$3
 scale_down=${4:-false}
 timeout=${5:-"3m"}
-test_name=${6:-$tenant_name-$subenv-test}
-
-namespace="${tenant_name}-${subenv}"
+test_name=${6:-$app_name-$type-test}
 
 printLogs() {
 	current_timestamp=$(date +%s)
@@ -19,10 +17,10 @@ printLogs() {
 
 scaleDownApp() {
 	if [ "${scale_down}" = "true" ] ; then
-		echo "Scaling down apps on namespace ${tenant_name}-${subenv}"
-		kubectl -n "${tenant_name}-${subenv}" scale --replicas=0 deployments,statefulsets --all || echo "Failed to scale down deployments/statefulsets"
+		echo "Scaling down apps on namespace ${namespace}"
+		kubectl -n "${namespace}" scale --replicas=0 deployments,statefulsets --all || echo "Failed to scale down deployments/statefulsets"
 	else
-		echo "Not scaling down apps on namespace ${tenant_name}-${subenv}"
+		echo "Not scaling down apps on namespace ${namespace}"
 	fi
 }
 

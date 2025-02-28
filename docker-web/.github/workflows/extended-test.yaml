@@ -21,6 +21,7 @@ jobs:
     secrets:
       env_vars: ${{ secrets.env_vars }}
     with:
+      app-name: docker-web
       version: ${{ needs.get-latest-version.outputs.version }}
       version-prefix: v
       working-directory: ./

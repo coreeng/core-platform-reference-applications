@@ -1,6 +1,8 @@
 FROM gradle:jdk21 AS build
-WORKDIR /build/
-COPY . .
+WORKDIR /build
+
+COPY settings.gradle .
+COPY service service
 
 RUN gradle service:build --no-daemon
 

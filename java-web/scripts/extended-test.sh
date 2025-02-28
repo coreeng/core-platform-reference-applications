@@ -1,17 +1,15 @@
 #!/bin/bash
 set -euo pipefail
 
-subenv=$1
-tenant_name=$2
-app_name=${3:-$tenant_name}
+type=$1
+namespace=$2
+app_name=$3
 scale_down=${4:-false}
-timeout=${5:-"15m"}
-test_name=${app_name}-${subenv}-test
+timeout=${5:-"3m"}
+test_name=${6:-$app_name-$type-test}
 
-namespace="${tenant_name}-${subenv}"
-
-./scripts/helm-test.sh "${subenv}" "${tenant_name}" "${app_name}" false "${timeout}" "${test_name}"
+bash scripts/helm-test.sh "${type}" "${namespace}" "${app_name}" false "${timeout}" "${test_name}"
 
 kubectl wait --for=jsonpath='{.status.stage}'=finished "testrun/${test_name}" -n "${namespace}" --timeout "${timeout}"
 
-./scripts/helm-test.sh "${subenv}" "${tenant_name}" "${app_name}" "${scale_down}" "${timeout}" "${test_name}-validate"
+bash scripts/helm-test.sh "${type}" "${namespace}" "${app_name}" "${scale_down}" "${timeout}" "${test_name}-validate"

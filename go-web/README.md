@@ -131,14 +131,6 @@ There is `nft.endpoint` parameter in `values.yaml` that can be set to `ingress` 
 
 This is similar to NFT, but generates much higher load and runs longer, e.g. 10_000 TPS, P99 latency < 500 ms for 10 minutes run.
 
-By default, the extended test is disabled. In order to enable it, you need to explicitly override the variable
-
-```
-make RUN_EXTENDED_TEST=true p2p-extended-test
-```
-
-or change `RUN_EXTENDED_TEST` to `true` in `Makefile`.
-
 #### Load Generation
 
 We are using [K6](https://k6.io/) to generate the load.

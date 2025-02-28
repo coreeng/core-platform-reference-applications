@@ -1,254 +1,95 @@
-projectDir := $(realpath $(dir $(firstword $(MAKEFILE_LIST))))
-os := $(shell uname)
-app_name = docker-web
-tenant_name = $(TENANT_NAME)
-image_name = $(app_name)
-VERSION ?= $(shell git rev-parse --short HEAD)
-image_tag = $(VERSION)
-helm_test_timeout_duration = 2m
+# Set tenant and app name
+P2P_TENANT_NAME ?= $(TENANT_NAME)
+P2P_APP_NAME ?= docker-web
 
-## Default to local registry unless it is set
-REGISTRY ?= local
+# Download and include p2p makefile
+$(shell curl -fsSL "https://raw.githubusercontent.com/coreeng/p2p/v1/p2p.mk" -o ".p2p.mk")
+include .p2p.mk
 
-FAST_FEEDBACK_PATH = fast-feedback
-EXTENDED_TEST_PATH = extended-test
-PROD_PATH = prod
-
-MONITORING=false
-DASHBOARDING=false
-RUN_EXTENDED_TEST=false
-
-prometheusUrl=http://prometheus-$(tenant_name).$(tenant_name):9090
-extended_test_replicas = 0 # until we have autoscaling working
-extended_test_wait_timeout = 15m
-
-.PHONY: help-p2p
-help-p2p:
-	@grep -E '^[a-zA-Z1-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | grep p2p | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
-
-.PHONY: help-all
-help-all:
-	@grep -E '^[a-zA-Z1-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
-
-# P2P tasks
-
-.PHONY: p2p-image
-p2p-image:
-	@echo $(image_name)
-
-.PHONY: p2p-build
-p2p-build: lint service-build service-push ## Builds the service image and pushes it to the registry
-
-.PHONY: p2p-functional
-p2p-functional: namespace_environment=functional
-p2p-functional: build-functional push-functional create-ns-functional deploy-functional ## Runs only functional tests
-	$(MAKE) helm-test-$(namespace_environment) scale_down=true
-
-.PHONY: p2p-nft
-p2p-nft: namespace_environment=nft
-p2p-nft: build-nft push-nft create-ns-nft deploy-nft ## Runs only NFT tests
-	$(MAKE) helm-test-$(namespace_environment) scale_down=true
-
-.PHONY: p2p-integration
-p2p-integration: namespace_environment=integration
-p2p-integration: build-integration push-integration create-ns-integration deploy-integration ## Runs only integration tests
-	$(MAKE) helm-test-$(namespace_environment) scale_down=false
-
-.PHONY: p2p-extended-test
-p2p-extended-test: build-extended push-extended create-ns-extended deploy-extended ## Runs extended tests
-	@if [ "$(RUN_EXTENDED_TEST)" != "true" ] ; then \
-		echo "Skipping extended test" ; \
-	else \
-		$(MAKE) run-extended ; \
-	fi
-
-.PHONY: p2p-prod
-p2p-prod: deploy-prod ## Deploy to production
-
-## Namespace creation
-
-.PHONY: create-ns-functional
-create-ns-functional: env=functional
-create-ns-functional: create-namespace
-
-.PHONY: create-ns-nft
-create-ns-nft: env=nft
-create-ns-nft: create-namespace
-
-.PHONY: create-ns-integration
-create-ns-integration: env=integration
-create-ns-integration: create-namespace
-
-.PHONY: create-ns-extended
-create-ns-extended: env=extended
-create-ns-extended: create-namespace
+# Define required p2p targets
+p2p-build:         build-app           push-app
+p2p-functional:    build-functional    push-functional    deploy-functional    run-functional
+p2p-nft:           build-nft           push-nft           deploy-nft           run-nft
+p2p-integration:   build-integration   push-integration   deploy-integration   run-integration
+p2p-extended-test: build-extended-test push-extended-test deploy-extended-test run-extended-test
+p2p-prod:                                                 deploy-prod
 
 
-## Internal Tasks, not part of the P2P
-
-.PHONY: create-namespace
-create-namespace:
-	awk -v NAME="$(tenant_name)" -v ENV="$(env)" '{ \
-		sub(/{tenant_name}/, NAME); \
-		sub(/{env}/, ENV); \
-		print; \
-	}' resources/subns-anchor.yaml | kubectl apply -f -
 
 .PHONY: lint
-lint: ## Linting code
+lint: ## Run lint checks
 	docker run --rm -i docker.io/hadolint/hadolint < Dockerfile
 	docker run --rm -i docker.io/hadolint/hadolint < functional/Dockerfile
 	docker run --rm -i docker.io/hadolint/hadolint < nft/Dockerfile
 	docker run --rm -i docker.io/hadolint/hadolint < integration/Dockerfile
 	docker run --rm -i docker.io/hadolint/hadolint < extended/Dockerfile
 
-.PHONY: service-build
-service-build:
-	docker build --file Dockerfile --tag $(REGISTRY)/$(FAST_FEEDBACK_PATH)/$(image_name):$(image_tag) .
 
-.PHONY: service-push
-service-push: ## Push the service image
-	docker image push $(REGISTRY)/$(FAST_FEEDBACK_PATH)/$(image_name):$(image_tag)
+
+.PHONY: build-app
+build-app: lint ## Build app
+	docker buildx build $(p2p_image_cache) --tag "$(p2p_image_tag)" --file Dockerfile .
 
 .PHONY: build-functional
-build-functional: ## Build the functional application, and package as a Docker image
-	docker build --file functional/Dockerfile --tag $(REGISTRY)/$(FAST_FEEDBACK_PATH)/$(image_name)-functional:$(image_tag) .
+build-functional:
+	docker buildx build $(p2p_image_cache) --tag "$(p2p_image_tag)" --file functional/Dockerfile .
 
 .PHONY: build-nft
-build-nft: ## Build the non-functional-tests application, and package as a Docker image
-	docker build --file nft/Dockerfile --tag $(REGISTRY)/$(FAST_FEEDBACK_PATH)/$(image_name)-nft:$(image_tag) .
+build-nft:
+	docker buildx build $(p2p_image_cache) --tag "$(p2p_image_tag)" --file nft/Dockerfile .
 
 .PHONY: build-integration
-build-integration: ## Build the integration tests application, and package as a Docker image
-	docker build --file integration/Dockerfile --tag $(REGISTRY)/$(FAST_FEEDBACK_PATH)/$(image_name)-integration:$(image_tag) .
+build-integration:
+	docker buildx build $(p2p_image_cache) --tag "$(p2p_image_tag)" --file integration/Dockerfile .
 
-.PHONY: build-extended
-build-extended:
-	docker build --file extended/Dockerfile --tag $(REGISTRY)/$(EXTENDED_TEST_PATH)/$(image_name)-extended:$(image_tag) .
+.PHONY: build-extended-test
+build-extended-test:
+	docker buildx build $(p2p_image_cache) --tag "$(p2p_image_tag)" --file extended/Dockerfile .
 
-.PHONY: push-functional
-push-functional: ## Push the Functional Docker image to an image registry
-	docker image push $(REGISTRY)/$(FAST_FEEDBACK_PATH)/$(image_name)-functional:$(image_tag)
 
-.PHONY: push-nft
-push-nft: ## Push the NFT Docker image to an image registry
-	docker image push $(REGISTRY)/$(FAST_FEEDBACK_PATH)/$(image_name)-nft:$(image_tag)
 
-.PHONY: push-integration
-push-integration: ## Push the Integration test Docker image to an image registry
-	docker image push $(REGISTRY)/$(FAST_FEEDBACK_PATH)/$(image_name)-integration:$(image_tag)
+.PHONY: push-%
+push-%:
+	docker image push "$(p2p_image_tag)"
 
-.PHONY: push-extended
-push-extended:
-	docker image push $(REGISTRY)/$(EXTENDED_TEST_PATH)/$(image_name)-extended:$(image_tag)
 
-.PHONY: deploy-functional
-deploy-functional: ## Deploy helm chart of the app to functional namespace
-	helm upgrade --install $(app_name) helm-charts/app -n $(tenant_name)-functional \
-		--set registry=$(REGISTRY)/$(FAST_FEEDBACK_PATH) \
-		--set domain=$(BASE_DOMAIN) \
-		--set appUrlSuffix="-$(tenant_name)-functional" \
-		--set tag=$(image_tag) \
-		--set service.image=$(image_name) \
-		--set functional.image=$(image_name)-functional \
-		--set tenantName=$(tenant_name) \
-		--set appName=$(app_name) \
-		--set service.resources.requests.cpu=0m \
+
+.PHONY: deploy-%
+deploy-%:
+	helm upgrade --install "$(p2p_app_name)" helm-charts/app -n "$(p2p_namespace)" \
+		--set appUrlSuffix="$(p2p_app_url_suffix)" \
+		--set registry="$(p2p_registry)" \
+		--set tenantName="$(p2p_tenant_name)" \
+		--set appName="$(p2p_app_name)" \
+		--set domain="$(BASE_DOMAIN)" \
+		--set tag="$(p2p_version)" \
+		--set service.image="$(p2p_app_name)" \
+		--set functional.image="$(p2p_app_name)-functional" \
+		--set nft.image="$(p2p_app_name)-nft" \
+		--set integration.image="$(p2p_app_name)-integration" \
+		--set extended.image="$(p2p_app_name)-extended" \
 		--atomic
-	helm list -n $(tenant_name)-functional ## list installed charts in the given tenant namespace
 
-.PHONY: deploy-nft
-deploy-nft: ## Deploy helm chart of the app to nft namespace
-	helm upgrade --install $(app_name) helm-charts/app -n $(tenant_name)-nft \
-		--set registry=$(REGISTRY)/$(FAST_FEEDBACK_PATH) \
-		--set domain=$(BASE_DOMAIN) \
-		--set appUrlSuffix="-$(tenant_name)-nft" \
-		--set tag=$(image_tag) \
-		--set service.image=$(image_name) \
-		--set nft.image=$(image_name)-nft \
-		--set monitoring=$(MONITORING) \
-		--set dashboarding=$(DASHBOARDING) \
-		--set tenantName=$(tenant_name) \
-		--set appName=$(app_name) \
-		--atomic
-	helm list -n $(tenant_name)-nft ## list installed charts in the given tenant namespace
 
-.PHONY: deploy-integration
-deploy-integration: ## Deploy helm chart of the app to integration namespace
-	helm upgrade --install $(app_name) helm-charts/app -n $(tenant_name)-integration \
-		--set registry=$(REGISTRY)/$(FAST_FEEDBACK_PATH) \
-		--set domain=$(BASE_DOMAIN) \
-		--set appUrlSuffix="-$(tenant_name)-integration" \
-		--set tag=$(image_tag) \
-		--set service.image=$(image_name) \
-		--set integration.image=$(image_name)-integration \
-		--set monitoring=$(MONITORING) \
-		--set dashboarding=$(DASHBOARDING) \
-		--set tenantName=$(tenant_name) \
-		--set appName=$(app_name) \
-		--set service.resources.requests.cpu=0m \
-		--atomic
-	helm list -n $(tenant_name)-integration ## list installed charts in the given tenant namespace
 
-.PHONY: deploy-extended
-deploy-extended:
-	helm upgrade --install $(app_name) helm-charts/app -n $(tenant_name)-extended \
-		--set registry=$(REGISTRY)/$(EXTENDED_TEST_PATH) \
-		--set domain=$(BASE_DOMAIN) \
-		--set appUrlSuffix="-$(tenant_name)-extended" \
-		--set tag=$(image_tag) \
-		--set prometheusEndpoint=$(prometheusEndpoint) \
-		--set service.replicas=$(extended_test_replicas) \
-		--set service.image=$(image_name) \
-		--set extended.image=$(image_name)-extended \
-		--set monitoring=$(MONITORING) \
-		--set dashboarding=$(DASHBOARDING) \
-		--set tenantName=$(tenant_name) \
-		--set appName=$(app_name) \
-		--atomic
-	helm list -n $(tenant_name)-extended
+.PHONY: run-app
+run-app: ## Run app
+	docker run --rm -P --name "$(p2p_app_name)" "$(p2p_image_tag)"
 
-.PHONY: run-extended
-run-extended: namespace = $(tenant_name)-extended
-run-extended: chmod-scripts
-	./scripts/extended-test.sh extended $(tenant_name) $(app_name) true $(extended_test_wait_timeout)
+.PHONY: run-functional
+run-functional:
+	bash scripts/helm-test.sh functional "$(p2p_namespace)" "$(p2p_app_name)" true
 
-.PHONY: deploy-prod
-deploy-prod: ## Deploy helm chart of the app to production namespace
-	@echo $(image_tag)
-	@echo $(REGISTRY)/release
-	helm upgrade --install $(app_name) helm-charts/app -n $(tenant_name) \
-		--set registry=$(REGISTRY)/$(PROD_PATH) \
-		--set domain=$(BASE_DOMAIN) \
-		--set tag=$(image_tag) \
-		--set tenantName=$(tenant_name) \
-		--set appName=$(app_name) \
-		--set service.image=$(image_name) \
-		--atomic
-	helm list -n $(tenant_name) ## list installed charts in the given tenant namespace
+.PHONY: run-nft
+run-nft:
+	bash scripts/helm-test.sh nft "$(p2p_namespace)" "$(p2p_app_name)" true
 
-.PHONY: p2p-promote-generic
-p2p-promote-generic:
-	corectl p2p promote $(image_name):${image_tag} \
-		--source-stage $(source_repo_path) \
-		--dest-registry $(REGISTRY) \
-		--dest-stage $(dest_repo_path)
+.PHONY: run-integration
+run-integration:
+	bash scripts/helm-test.sh integration "$(p2p_namespace)" "$(p2p_app_name)" false
 
-.PHONY: p2p-promote-to-extended-test
-p2p-promote-to-extended-test: source_repo_path=$(FAST_FEEDBACK_PATH)
-p2p-promote-to-extended-test: dest_repo_path=$(EXTENDED_TEST_PATH)
-p2p-promote-to-extended-test: p2p-promote-generic
-
-.PHONY: p2p-promote-to-prod
-p2p-promote-to-prod: source_repo_path=$(EXTENDED_TEST_PATH)
-p2p-promote-to-prod: dest_repo_path=$(PROD_PATH)
-p2p-promote-to-prod: p2p-promote-generic
-
-.PHONY: chmod-scripts
-chmod-scripts:
-	chmod -R +x ./scripts
-
-.PHONY: helm-test-%
-helm-test-%: chmod-scripts
-	echo "### helm $* tests run ###"
-	./scripts/helm-test.sh $* $(tenant_name) $(app_name) $(scale_down) $(helm_test_timeout_duration)
+.PHONY: run-extended-test
+run-extended-test:
+#	bash scripts/extended-test.sh extended "$(p2p_namespace)" "$(p2p_app_name)" true 15m
+	@echo "WARNING: extended test not implemented"
+	kubectl -n "$(p2p_namespace)" scale --replicas=0 deployments,statefulsets --all

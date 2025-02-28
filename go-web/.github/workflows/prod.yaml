@@ -3,7 +3,7 @@ name: go-web Prod
 on:
   workflow_dispatch:
   schedule:
-    - cron: '30 5 * * 1,5'
+    - cron: '30 5 * * 1-5'
 
 permissions:
   contents: read
@@ -21,6 +21,7 @@ jobs:
     secrets:
       env_vars: ${{ secrets.env_vars }}
     with:
+      app-name: go-web
       version: ${{ needs.get-latest-version.outputs.version }}
       version-prefix: v
       working-directory: ./

@@ -6,5 +6,5 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions( plugin = { "json:build/cucumber-reports/functional-test-report.json" } )
-public class Tests {
+public class RunCucumberTests {
 }
