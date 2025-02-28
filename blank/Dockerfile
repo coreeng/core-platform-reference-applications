@@ -1,3 +1,3 @@
-FROM busybox
+FROM stefanprodan/podinfo:6.7.1
 
-CMD [ "ps", "faux" ]
+EXPOSE 9898

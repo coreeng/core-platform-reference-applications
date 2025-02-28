@@ -1,71 +1,53 @@
-projectDir := $(realpath $(dir $(firstword $(MAKEFILE_LIST))))
-os := $(shell uname)
-app_name = blank
-tenant_name = $(TENANT_NAME)
-image_name = $(app_name)
-VERSION ?= $(shell git rev-parse --short HEAD)
-image_tag = $(VERSION)
-helm_test_timeout_duration = 2m
+# Set tenant and app name
+P2P_TENANT_NAME ?= $(TENANT_NAME)
+P2P_APP_NAME ?= blank
 
-## Default to local registry unless it is set
-REGISTRY ?= local
+# Download and include p2p makefile
+$(shell curl -fsSL "https://raw.githubusercontent.com/coreeng/p2p/v1/p2p.mk" -o ".p2p.mk")
+include .p2p.mk
 
-FAST_FEEDBACK_PATH = fast-feedback
-EXTENDED_TEST_PATH = extended-test
-PROD_PATH = prod
+# Define required p2p targets
+p2p-build:         build-app           push-app
+p2p-functional:    build-functional    push-functional    deploy-functional    run-functional
+p2p-nft:           build-nft           push-nft           deploy-nft           run-nft
+p2p-integration:   build-integration   push-integration   deploy-integration   run-integration
+p2p-extended-test: build-extended-test push-extended-test deploy-extended-test run-extended-test
+p2p-prod:                                                 deploy-prod
 
-.PHONY: help-p2p
-help-p2p:
-	@grep -E '^[a-zA-Z1-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | grep p2p | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: help-all
-help-all:
-	@grep -E '^[a-zA-Z1-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-# P2P tasks
+.PHONY: lint
+lint: ## Run lint checks
+	docker run --rm -i docker.io/hadolint/hadolint < Dockerfile
 
-.PHONY: p2p-image
-p2p-image:
-	@echo $(image_name)
 
-.PHONY: p2p-build
-p2p-build: ## Builds the service image and pushes it to the registry
-	docker build --file Dockerfile --tag $(REGISTRY)/$(FAST_FEEDBACK_PATH)/$(image_name):$(image_tag) .
-	docker image push $(REGISTRY)/$(FAST_FEEDBACK_PATH)/$(image_name):$(image_tag)
 
-.PHONY: p2p-functional
-p2p-functional: ## Runs only functional tests
-	@echo '### $@ not implemented ###'
+.PHONY: build-app
+build-app: lint ## Build app
+	docker buildx build $(p2p_image_cache) --tag "$(p2p_image_tag)" --file Dockerfile .
 
-.PHONY: p2p-nft
-p2p-nft: ## Runs only NFT tests
-	@echo '### $@ not implemented ###'
+.PHONY: build-%
+build-%:
+	@echo 'WARNING: $@ not implemented'
 
-.PHONY: p2p-integration
-p2p-integration: ## Runs only integration tests
-	@echo '### $@ not implemented ###'
 
-.PHONY: p2p-extended-test
-p2p-extended-test: ## Runs extended tests
-	@echo '### $@ not implemented ###'
-	
-.PHONY: p2p-prod
-p2p-prod: ## Deploy to production
-	@echo '### $@ not implemented ###'
 
-.PHONY: p2p-promote-generic
-p2p-promote-generic:
-	corectl p2p promote $(image_name):${image_tag} \
-		--source-stage $(source_repo_path) \
-		--dest-registry $(REGISTRY) \
-		--dest-stage $(dest_repo_path)
+.PHONY: push-app
+push-app:
+	docker image push "$(p2p_image_tag)"
 
-.PHONY: p2p-promote-to-extended-test
-p2p-promote-to-extended-test: source_repo_path=$(FAST_FEEDBACK_PATH)
-p2p-promote-to-extended-test: dest_repo_path=$(EXTENDED_TEST_PATH)
-p2p-promote-to-extended-test: p2p-promote-generic
+.PHONY: push-%
+push-%:
+	@echo 'WARNING: $@ not implemented'
 
-.PHONY: p2p-promote-to-prod
-p2p-promote-to-prod: source_repo_path=$(EXTENDED_TEST_PATH)
-p2p-promote-to-prod: dest_repo_path=$(PROD_PATH)
-p2p-promote-to-prod: p2p-promote-generic
+
+
+.PHONY: deploy-%
+deploy-%:
+	@echo 'WARNING: $@ not implemented'
+
+
+
+.PHONY: run-%
+run-%:
+	@echo 'WARNING: $@ not implemented'
