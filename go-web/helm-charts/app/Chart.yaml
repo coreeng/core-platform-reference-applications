@@ -1,6 +1,0 @@
-apiVersion: v2
-name: go-web
-description: Chart of the go-web
-type: application
-version: 0.1.0
-appVersion: "1.16.0"

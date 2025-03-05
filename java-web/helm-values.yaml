@@ -1,0 +1,40 @@
+replicaCount: 2 
+
+resources:
+  requests:
+    cpu: 1000m
+    memory: 1024Mi
+  limits:
+    cpu: 1000m
+    memory: 1024Mi
+
+livenessProbe:
+  failureThreshold: 3
+  httpGet:
+    port: 8081
+    path: /health
+  periodSeconds: 20
+  successThreshold: 1
+  timeoutSeconds: 1
+readinessProbe:
+  failureThreshold: 3
+  httpGet:
+    port: 8081
+    path: /health
+  periodSeconds: 20
+  successThreshold: 1
+  timeoutSeconds: 1
+
+ingress:
+  enabled: true
+  hosts:
+    - paths:
+        - path: "/"
+          pathType: "ImplementationSpecific"
+
+service:
+  port: 8080
+
+metrics:
+  enabled: true
+  port: 8081

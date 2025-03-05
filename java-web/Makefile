@@ -56,18 +56,15 @@ push-%:
 
 .PHONY: deploy-%
 deploy-%:
-	helm upgrade --install "$(p2p_app_name)" helm-charts/app -n "$(p2p_namespace)" \
-		--set appUrlSuffix="$(p2p_app_url_suffix)" \
-		--set registry="$(p2p_registry)" \
+	helm repo add core-platform-assets https://coreeng.github.io/core-platform-assets
+	helm upgrade --install "$(p2p_app_name)" core-platform-assets/core-platform-app -n "$(p2p_namespace)" \
+		-f helm-values.yaml \
+		--set nameOverride="$(p2p_app_name)" \
 		--set tenantName="$(p2p_tenant_name)" \
-		--set appName="$(p2p_app_name)" \
-		--set domain="$(BASE_DOMAIN)" \
-		--set tag="$(p2p_version)" \
-		--set service.image="$(p2p_app_name)" \
-		--set functional.image="$(p2p_app_name)-functional" \
-		--set nft.image="$(p2p_app_name)-nft" \
-		--set integration.image="$(p2p_app_name)-integration" \
-		--set extended.image="$(p2p_app_name)-extended" \
+		--set image.repository="$(p2p_registry)/$(p2p_app_name)" \
+		--set image.tag="$(p2p_version)" \
+		--set ingress.appUrlSuffix="$(p2p_app_url_suffix)" \
+		--set ingress.domain="$(BASE_DOMAIN)" \
 		--atomic
 
 

@@ -101,7 +101,7 @@ This namespace is used to test the functionality of the app. Currently, using BD
 
 ## NFT
 
-This namespace is used to test how the service behaves under load, e.g. 1_000 TPS, P99 latency < 500 ms for 3 minutes run.
+This namespace is used to test how the service behaves under load, e.g. 1k TPS, P99 latency < 1000 ms for 3 minutes run.
 
 There are 1 endpoint available for testing:
 - `/hello` - simply returns `Hello world`.
@@ -129,7 +129,7 @@ There is `nft.endpoint` parameter in `values.yaml` that can be set to `ingress` 
 
 ## Extended test
 
-This is similar to NFT, but generates much higher load and runs longer, e.g. 10_000 TPS, P99 latency < 500 ms for 10 minutes run.
+This is similar to NFT, but generates much higher load and runs longer, e.g. 10k TPS, P99 latency < 1000 ms for 10 minutes run.
 
 #### Load Generation
 

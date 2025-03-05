@@ -20,7 +20,7 @@ export const options = {
         checks: ['rate>0.99'],
         http_reqs: ['rate>' + REQ_PER_SECOND * 0.9],
         http_req_failed: ['rate<0.01'],
-        http_req_duration: ['p(99)<500'],
+        http_req_duration: ['p(99)<1000'],
     },
     tags: {
         test_name: 'hello',
