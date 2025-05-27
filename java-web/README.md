@@ -37,9 +37,9 @@ For everything to work for you locally you need to ensure you have the following
 
 #### Prerequisites for local run
 To run the P2P locally, you need to connect to a cloud development environment.
-The easiest way to [do that is using `corectl`](https://docs.gcp-prod.cecg.platform.cecg.io/platform/#using-corectl).
+The easiest way to [do that is using `corectl`](https://docs.coreplatform.io/platform#using-corectl).
 
-Once connected, export all env variables required to run Makefile targets, see [Executing P2P targets Locally](https://docs.gcp-prod.cecg.platform.cecg.io/p2p/p2p-locally/)
+Once connected, export all env variables required to run Makefile targets, see [Executing P2P targets Locally](https://docs.coreplatform.io/p2p/reference/p2p-locally)
 for instructions.
 
 #### Image Versioning
@@ -81,7 +81,7 @@ This will construct the base URL as `<environment>.<domain>`, for example, `gcp-
 export BASE_DOMAIN=gcp-dev.cecg.platform.cecg.io
 ```
 
-Read [more](https://docs.gcp-prod.cecg.platform.cecg.io/app/ingress/) about Ingress.
+Read [more](https://docs.coreplatform.io/application/ingress) about Ingress.
 
 #### Logs
 
