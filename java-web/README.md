@@ -95,7 +95,7 @@ export INTERNAL_SERVICES_DOMAIN=gcp-dev-internal.cecg.platform.cecg.io
 
 ## Functional Testing
 
-Stubbed Functional Tests using [Cucumber Java](https://cucumber.io/docs/installation/java/)
+Stubbed Functional Tests using [Cucumber Java](https://cucumber.io/docs/installation/java)
 
 This namespace is used to test the functionality of the app. Currently, using BDD (Behaviour driven development)
 
@@ -108,7 +108,7 @@ There are 1 endpoint available for testing:
 
 ## Integration Testing
 
-Integration Tests are using [Cucumber Godog](https://github.com/cucumber/godog)
+Integration Tests are using [Cucumber Java](https://cucumber.io/docs/installation/java)
 
 This namespace is used to test that the individual parts of the system as well as service-to-service communication
 of the app works correctly against real dependencies. Currently, using BDD (Behaviour driven development)

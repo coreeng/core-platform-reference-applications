@@ -1,0 +1,40 @@
+replicaCount: 2
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: 250m
+    memory: 512Mi
+
+livenessProbe:
+  failureThreshold: 3
+  httpGet:
+    port: 9898
+    path: /healthz
+  periodSeconds: 20
+  successThreshold: 1
+  timeoutSeconds: 1
+readinessProbe:
+  failureThreshold: 3
+  httpGet:
+    port: 9898
+    path: /readyz
+  periodSeconds: 20
+  successThreshold: 1
+  timeoutSeconds: 1
+
+ingress:
+  enabled: true
+  hosts:
+    - paths:
+        - path: "/"
+          pathType: "ImplementationSpecific"
+
+service:
+  port: 9898
+
+metrics:
+  enabled: false
+  port: 8081

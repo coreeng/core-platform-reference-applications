@@ -1,3 +1,3 @@
-FROM stefanprodan/podinfo:6.7.1
+FROM stefanprodan/podinfo:6.8.0
 
 EXPOSE 9898

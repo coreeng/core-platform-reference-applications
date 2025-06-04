@@ -1,4 +1,4 @@
-FROM golang:1.24.1-alpine3.21 AS builder
+FROM golang:1.24.3-alpine3.22 AS builder
 WORKDIR /app
 COPY ./cmd /app/cmd
 COPY go.mod /app
@@ -6,7 +6,7 @@ COPY go.sum /app
 
 RUN go build -o service /app/cmd/service/main.go
 
-FROM alpine:3.21
+FROM alpine:3.22
 WORKDIR /app
 COPY --from=builder /app/service ./
 
