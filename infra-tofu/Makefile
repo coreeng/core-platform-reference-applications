@@ -47,10 +47,6 @@ push-%:
 
 
 
-.PHONY: deploy-nft
-deploy-nft:
-	@echo "WARNING: $@ not implemented"
-
 .PHONY: deploy-%
 deploy-%:
 	if [ -n "$(CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE)" ] ; then \
