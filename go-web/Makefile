@@ -16,14 +16,24 @@ p2p-prod:                                                 deploy-prod
 
 
 
-.PHONY: lint
-lint: ## Run lint checks
-	docker run --rm -i docker.io/hadolint/hadolint < Dockerfile
+.PHONY: lint-config
+lint-config: ## Run config lint checks
+	docker run --rm --mount type=bind,source=./p2p/config,target=/data docker.io/cytopia/yamllint -s .
+
+.PHONY: lint-dockerfile
+lint-dockerfile: ## Run dockerfile lint checks
 	docker run --rm -i docker.io/hadolint/hadolint < p2p/tests/functional/Dockerfile
 	docker run --rm -i docker.io/hadolint/hadolint < p2p/tests/nft/Dockerfile
 	docker run --rm -i docker.io/hadolint/hadolint < p2p/tests/integration/Dockerfile
 	docker run --rm -i docker.io/hadolint/hadolint < p2p/tests/extended/Dockerfile
-	docker run -v "$$(pwd)":/var/app ghcr.io/mgechev/revive -config /var/app/revive.toml -formatter stylish ./var/app/cmd/service ./var/app/cmd/handler
+	docker run --rm -i docker.io/hadolint/hadolint < Dockerfile
+
+.PHONY: lint-app
+lint-app: ## Run app lint checks
+	docker run --rm --mount type=bind,source=.,target=/var/app ghcr.io/mgechev/revive -config /var/app/revive.toml -formatter stylish ./var/app/cmd/service ./var/app/cmd/handler
+
+.PHONY: lint
+lint: lint-config lint-dockerfile lint-app ## Run all lint checks
 
 
 

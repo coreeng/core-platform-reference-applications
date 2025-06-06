@@ -1,3 +1,3 @@
-FROM stefanprodan/podinfo:6.8.0
+FROM docker.io/stefanprodan/podinfo:6.9.0
 
 EXPOSE 9898

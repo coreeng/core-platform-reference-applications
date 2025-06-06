@@ -1,4 +1,4 @@
-FROM gradle:8.14.0-jdk21 AS build
+FROM docker.io/gradle:8.14.2-jdk21-alpine AS build
 WORKDIR /build
 
 COPY settings.gradle .

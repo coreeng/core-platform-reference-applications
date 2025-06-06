@@ -1,4 +1,4 @@
-FROM docker.io/ubuntu:24.04
+FROM docker.io/ubuntu:noble
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 

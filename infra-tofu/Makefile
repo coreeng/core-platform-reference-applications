@@ -16,11 +16,21 @@ p2p-prod:                                                 deploy-prod
 
 
 
-.PHONY: lint
-lint: ## Run lint checks
+.PHONY: lint-config
+lint-config: ## Run config lint checks
+	docker run --rm --mount type=bind,source=./p2p/config,target=/data docker.io/cytopia/yamllint -s .
+
+.PHONY: lint-dockerfile
+lint-dockerfile: ## Run dockerfile lint checks
 	docker run --rm -i docker.io/hadolint/hadolint < Dockerfile
+
+.PHONY: lint-app
+lint-app: ## Run app lint checks
 	docker run --rm --workdir=/srv/workspace --mount type=bind,source=.,target=/srv/workspace ghcr.io/opentofu/opentofu:1.9.1 fmt -check -diff -recursive
 	docker run --rm --workdir=/srv/workspace --mount type=bind,source=.,target=/srv/workspace alpine/terragrunt:latest terragrunt hcl fmt --check
+
+.PHONY: lint
+lint: lint-config lint-dockerfile lint-app ## Run all lint checks
 
 
 
