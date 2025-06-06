@@ -25,7 +25,7 @@ jobs:
       - uses: robinraju/release-downloader@v1.10
         with:
           repository: coreeng/corectl
-          latest: true
+          tag: 'v0.30.3'
           fileName: corectl_Linux_x86_64.tar.gz
           extract: true
           out-file-path: corectl
