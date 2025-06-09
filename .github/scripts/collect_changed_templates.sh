@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 function arg_required {
   if [[ -z "$2" ]]; then
     echo "Missing required argument: $1" >&2
@@ -36,6 +37,8 @@ done
 arg_required "templates_dir" "$templates_dir"
 arg_required "reference_apps_dir" "$reference_apps_dir"
 arg_required "output_file" "$output_file"
+
+set -euo pipefail
 
 mapfile -t all_templates < <(corectl template list --templates "$templates_dir")
 changed_templates=()
