@@ -89,7 +89,7 @@ deploy-%:
 
 .PHONY: run-app
 run-app: ## Run app
-	docker run --rm -p 3000:3000 --name "$(p2p_app_name)" "$(p2p_image_tag)" 
+	docker run --rm -p 3000:3000 --name "$(p2p_app_name)" "$(p2p_image_tag)"
 
 .PHONY: run-functional
 run-functional:
