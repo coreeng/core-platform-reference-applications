@@ -1,10 +1,10 @@
-FROM node:22.16.0-alpine3.22
+FROM mcr.microsoft.com/playwright:v1.52.0-noble
 
 WORKDIR /app
 
 # Install dependencies
-COPY package.json yarn.lock*  ./
-RUN  yarn --frozen-lockfile;
+COPY package.json yarn.lock* ./
+RUN yarn --frozen-lockfile;
 
 # Copy only the needed files and folders individually
 COPY tsconfig.json cucumber.json ./

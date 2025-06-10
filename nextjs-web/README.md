@@ -95,7 +95,7 @@ export INTERNAL_SERVICES_DOMAIN=gcp-dev-internal.cecg.platform.cecg.io
 
 ## Functional Testing
 
-Stubbed Functional Tests using [Cucumber JS](https://cucumber.io/docs/installation/javascript) 
+Stubbed Functional Tests using [Cucumber JS](https://cucumber.io/docs/installation/javascript)
 
 This namespace is used to test the functionality of the app. Currently, using BDD (Behaviour driven development)
 

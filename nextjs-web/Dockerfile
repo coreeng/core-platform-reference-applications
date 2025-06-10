@@ -13,7 +13,7 @@ RUN yarn --frozen-lockfile;
 FROM base AS build
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY package.json yarn.lock* eslint.config.mjs next.config.ts postcss.config.mjs tsconfig.json components.json jest.config.ts jest.setup.ts ./
+COPY package.json yarn.lock* eslint.config.mjs next.config.ts postcss.config.mjs tsconfig.json jest.config.ts jest.setup.ts components.json ./
 COPY public ./public
 COPY src ./src
 
