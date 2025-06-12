@@ -3,7 +3,7 @@
 
 provider "registry.opentofu.org/hashicorp/google" {
   version     = "6.39.0"
-  constraints = "6.39.0"
+  constraints = ">= 3.43.0, 6.39.0, < 7.0.0"
   hashes = [
     "h1:3L8/JYZol5UEhK53PL2196T2LdRJV9STLdAslEbOb3g=",
     "zh:07cb55d572aaa5d929af125c3f43fdba68d9363b186d1c1d22871c8800f78e30",
@@ -21,7 +21,7 @@ provider "registry.opentofu.org/hashicorp/google" {
 
 provider "registry.opentofu.org/hashicorp/google-beta" {
   version     = "6.39.0"
-  constraints = "6.39.0"
+  constraints = ">= 3.43.0, 6.39.0, < 7.0.0"
   hashes = [
     "h1:1SVRiSe0+S5LaaIRgF2gzCGyfvkFPhF1aQGGJOMsX4o=",
     "zh:018a2ed53defc61b8d7322455553508855b6389ebf85634a1888e9cd0aaca7e3",

@@ -27,6 +27,10 @@ inputs = {
   infrastructure_project_id = try(local.config.infrastructure_project_id, null)
   platform_project_id       = try(local.config.platform_project_id, null)
   environment               = local.environment
+  urlrouter = try(local.config.urlrouter, {
+    enabled = false
+    routes  = []
+  })
 }
 
 remote_state {

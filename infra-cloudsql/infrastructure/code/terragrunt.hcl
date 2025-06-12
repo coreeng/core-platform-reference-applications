@@ -27,6 +27,11 @@ inputs = {
   infrastructure_project_id = try(local.config.infrastructure_project_id, null)
   platform_project_id       = try(local.config.platform_project_id, null)
   environment               = local.environment
+  cloudsql = try(local.config.cloudsql, {
+    enabled           = false
+    allowed_ip_ranges = []
+    clusters          = {}
+  })
 }
 
 remote_state {
