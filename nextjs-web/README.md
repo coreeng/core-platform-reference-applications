@@ -3,7 +3,9 @@
 Next.js application for the Core Platform.
 
 # Parameters
+
 Update main parameters of templates in `Makefile`:
+
 - `app_name` - name of the application. it defines the name of the images produced by the Makefile targets, kubernetes resources, etc.
 
 # Path to Production (P2P)
@@ -11,12 +13,14 @@ Update main parameters of templates in `Makefile`:
 The P2P uses GitHub Actions to interact with the platform.
 
 As part of the P2P, using Hierarchical Namespace Controller, child namespaces will be created:
+
 - `<tenant-name>-functional`
 - `<tenant-name>-nft`
 - `<tenant-name>-integration`
 - `<tenant-name>-extended`
 
 The application is deployed to each of this following the shape:
+
 ```
 | Build Service | -> | Functional testing | -> | NF testing | -> | Integration testing | -> | Promote image to Extended tests |
 ```
@@ -30,12 +34,14 @@ You can run `make p2p-help` to list the available make targets.
 
 The interface between the P2P and the application is `Make`.
 For everything to work for you locally you need to ensure you have the following tools installed on your machine:
-* Make
-* Docker
-* Kubectl
-* Helm
+
+- Make
+- Docker
+- Kubectl
+- Helm
 
 #### Prerequisites for local run
+
 To run the P2P locally, you need to connect to a cloud development environment.
 The easiest way to [do that is using `corectl`](https://docs.coreplatform.io/platform#using-corectl).
 
@@ -63,6 +69,7 @@ DOCKER_DEFAULT_PLATFORM="linux/amd64" make p2p-build
 #### Push the image
 
 There's a shared tenant registry created `europe-west2-docker.pkg.dev/<project_id>/tenant`. You'll need to set your project_id and export this string as an environment variable called `REGISTRY`, for example:
+
 ```
 export REGISTRY=europe-west2-docker.pkg.dev/<project_id>/tenant
 ```
@@ -104,6 +111,7 @@ This namespace is used to test the functionality of the app. Currently, using BD
 This namespace is used to test how the service behaves under load, e.g. 1k TPS, P99 latency < 1000 ms for 3 minutes run.
 
 There are 1 endpoint available for testing:
+
 - `/hello` - simply returns `Hello world`.
 
 ## Integration Testing
@@ -185,6 +193,7 @@ This feature depends on metrics collected by `Service Monitor`.
 > K6 Operator must be enabled for the tenant to run the extended test
 
 You can enable it by enabling the beta feature in the tenant.yaml file:
+
 ```yaml
 betaFeatures:
   - k6-operator
@@ -195,4 +204,3 @@ betaFeatures:
 When running load tests it is important that we define CPU resource limits. This will allow us to have stable results between runs.
 
 If we don't apply the limits then the performance of the Pods will depend on the CPU utilization of the node that is running the container.
-
