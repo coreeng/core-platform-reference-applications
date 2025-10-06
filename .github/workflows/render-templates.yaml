@@ -54,7 +54,7 @@ jobs:
           webhook-type: webhook-trigger
           payload: |
             notification: "❌ Failed to render software templates"
-            workflow_link: "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>"
+            workflow_link: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
   p2p:
     needs: [update-templates]

@@ -68,4 +68,4 @@ jobs:
           webhook-type: webhook-trigger
           payload: |
             notification: "❌ P2P for '${{ inputs.lifecycle }}' failed"
-            workflow_link: "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>"
+            workflow_link: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
