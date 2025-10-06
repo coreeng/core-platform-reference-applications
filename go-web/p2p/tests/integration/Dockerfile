@@ -1,4 +1,4 @@
-FROM docker.io/golang:1.24.4-alpine3.22 AS build
+FROM docker.io/golang:1.25.1-alpine3.22 AS build
 
 # hadolint ignore=DL3018
 RUN apk --no-cache add build-base && \
