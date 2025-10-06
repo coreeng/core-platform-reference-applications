@@ -25,7 +25,7 @@ RUN --mount=type=cache,target=/var/cache/apt \
  && rm -rf /var/lib/apt/lists/*
 
 # Install opentofu
-ARG OPENTOFU_VERSION=1.9.1
+ARG OPENTOFU_VERSION=1.10.6
 RUN curl -Lso opentofu.zip "https://github.com/opentofu/opentofu/releases/download/v${OPENTOFU_VERSION}/tofu_${OPENTOFU_VERSION}_linux_$(uname -m | sed -e "s/aarch64/arm64/" -e "s/x86_64/amd64/").zip" \
  && unzip -q opentofu.zip tofu \
  && install -o root -g root -m 0755 tofu /usr/local/bin/ \
@@ -33,14 +33,14 @@ RUN curl -Lso opentofu.zip "https://github.com/opentofu/opentofu/releases/downlo
  && tofu version
 
 # Install terragrunt
-ARG TERRAGRUNT_VERSION=0.81.0
+ARG TERRAGRUNT_VERSION=0.88.1
 RUN curl -Lso terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_$(uname -m | sed -e "s/aarch64/arm64/" -e "s/x86_64/amd64/")" \
  && install -o root -g root -m 0755 terragrunt /usr/local/bin/ \
  && rm terragrunt \
  && terragrunt -version
 
 # Install yq
-ARG YQ_VERSION=4.45.4
+ARG YQ_VERSION=4.47.2
 RUN curl -Lso yq "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_$(uname -m | sed -e "s/aarch64/arm64/" -e "s/x86_64/amd64/")" \
  && install -o root -g root -m 0755 yq /usr/local/bin/ \
  && rm yq \
