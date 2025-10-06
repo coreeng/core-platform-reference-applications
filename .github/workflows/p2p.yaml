@@ -65,8 +65,7 @@ jobs:
       - uses: slackapi/slack-github-action@v2
         with:
           webhook:  ${{ secrets.SLACK_WEBHOOK_ALERT_URL }}
-          webhook-type: incoming-webhook
+          webhook-type: webhook-trigger
           payload: |
-            text: |
-              ❌ P2P for '${{ inputs.lifecycle }}' failed!
-              <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Run>
+            Message: "❌ P2P for '${{ inputs.lifecycle }}' failed"
+            Link: "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>"

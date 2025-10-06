@@ -48,15 +48,14 @@ jobs:
           commit_message: "chore: update templates"
       - name: Failure Alert
         if: failure()
-
         uses: slackapi/slack-github-action@v2
         with:
           webhook:  ${{ secrets.SLACK_WEBHOOK_ALERT_URL }}
-          webhook-type: incoming-webhook
+          webhook-type: webhook-trigger
           payload: |
-            text: |
-              ❌ Failed rendering software templates!
-              <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Run>
+            Message: "❌ Failed to render software templates"
+            Link: "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>"
+
   p2p:
     needs: [update-templates]
     if: needs.update-templates.outputs.changed_templates != '[]'
