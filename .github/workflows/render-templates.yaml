@@ -14,15 +14,15 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           path: ./reference-apps
           fetch-depth: 0
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: coreeng/core-platform-software-templates
           path: ./software-templates
-      - uses: robinraju/release-downloader@v1.10
+      - uses: robinraju/release-downloader@v1
         with:
           repository: coreeng/corectl
           latest: true
@@ -41,14 +41,14 @@ jobs:
           echo "Changed templates: $ct_json"
           echo "changed_templates=$ct_json" >> $GITHUB_OUTPUT
           git -C "./reference-apps" status --porcelain
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: stefanzweifel/git-auto-commit-action@v6
         id: push
         with:
           repository: ./reference-apps
           commit_message: "chore: update templates"
       - name: Failure Alert
         if: failure()
-        uses: slackapi/slack-github-action@v1
+        uses: slackapi/slack-github-action@v2
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_ALERT_URL }}
         with:

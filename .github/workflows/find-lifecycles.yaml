@@ -13,7 +13,7 @@ jobs:
     outputs:
       lifecycles: ${{ steps.find-lifecycles.outputs.lifecycles }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - id: find-lifecycles
         run: |
           ./.github/scripts/find_lifecycles.sh -d . -o lifecycles.json
