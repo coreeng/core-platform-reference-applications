@@ -53,8 +53,8 @@ jobs:
           webhook:  ${{ secrets.SLACK_WEBHOOK_ALERT_URL }}
           webhook-type: webhook-trigger
           payload: |
-            Message: "❌ Failed to render software templates"
-            Link: "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>"
+            notification: "❌ Failed to render software templates"
+            workflow_link: "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>"
 
   p2p:
     needs: [update-templates]

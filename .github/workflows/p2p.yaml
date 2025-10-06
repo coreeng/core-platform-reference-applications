@@ -67,5 +67,5 @@ jobs:
           webhook:  ${{ secrets.SLACK_WEBHOOK_ALERT_URL }}
           webhook-type: webhook-trigger
           payload: |
-            Message: "❌ P2P for '${{ inputs.lifecycle }}' failed"
-            Link: "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>"
+            notification: "❌ P2P for '${{ inputs.lifecycle }}' failed"
+            workflow_link: "<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}>"
