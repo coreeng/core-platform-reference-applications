@@ -63,11 +63,10 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: slackapi/slack-github-action@v2
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_ALERT_URL }}
         with:
+          webhook:  ${{ secrets.SLACK_WEBHOOK_ALERT_URL }}
+          webhook-type: incoming-webhook
           payload: |
-            {
-              "notification": "❌ P2P for '${{ inputs.lifecycle }}' failed!",
-              "workflow_link": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-            }
+            text: |
+              ❌ P2P for '${{ inputs.lifecycle }}' failed!
+              <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Run>
