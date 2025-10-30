@@ -26,7 +26,7 @@ lint-dockerfile: ## Run dockerfile lint checks
 
 .PHONY: lint-app
 lint-app: ## Run app lint checks
-	docker run --rm --workdir=/srv/workspace --mount type=bind,source=.,target=/srv/workspace ghcr.io/opentofu/opentofu:1.9.1 fmt -check -diff -recursive
+	docker run --rm --workdir=/srv/workspace --mount type=bind,source=.,target=/srv/workspace ghcr.io/opentofu/opentofu:latest fmt -check -diff -recursive
 	docker run --rm --workdir=/srv/workspace --mount type=bind,source=.,target=/srv/workspace alpine/terragrunt:latest terragrunt hcl fmt --check
 
 .PHONY: lint
