@@ -33,14 +33,14 @@ RUN curl -Lso opentofu.zip "https://github.com/opentofu/opentofu/releases/downlo
  && tofu version
 
 # Install terragrunt
-ARG TERRAGRUNT_VERSION=0.88.1
+ARG TERRAGRUNT_VERSION=0.92.1
 RUN curl -Lso terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_$(uname -m | sed -e "s/aarch64/arm64/" -e "s/x86_64/amd64/")" \
  && install -o root -g root -m 0755 terragrunt /usr/local/bin/ \
  && rm terragrunt \
  && terragrunt -version
 
 # Install yq
-ARG YQ_VERSION=4.47.2
+ARG YQ_VERSION=4.48.1
 RUN curl -Lso yq "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_$(uname -m | sed -e "s/aarch64/arm64/" -e "s/x86_64/amd64/")" \
  && install -o root -g root -m 0755 yq /usr/local/bin/ \
  && rm yq \

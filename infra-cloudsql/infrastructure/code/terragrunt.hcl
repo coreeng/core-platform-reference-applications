@@ -1,5 +1,5 @@
 terraform_binary             = "tofu"
-terraform_version_constraint = ">= 1.9.1"
+terraform_version_constraint = ">= 1.10.6"
 
 locals {
   yaml_common = try(yamldecode(file("../common.yaml")), {})

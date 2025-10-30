@@ -17,7 +17,7 @@ resource "google_compute_network" "psa" {
 
 module "cloudsql-psa" {
   source  = "terraform-google-modules/sql-db/google//modules/private_service_access"
-  version = "25.2.2"
+  version = "26.2.2"
 
   depends_on  = [google_compute_network.psa]
   project_id  = var.infrastructure_project_id
@@ -28,7 +28,7 @@ module "cloudsql-psa" {
 module "cloudsql-postgresql" {
   for_each   = local.postgres_clusters_map
   source     = "terraform-google-modules/sql-db/google//modules/postgresql"
-  version    = "25.2.2"
+  version    = "26.2.2"
   project_id = var.infrastructure_project_id
   region     = var.region
   name       = "${each.key}-${var.environment}-cluster"

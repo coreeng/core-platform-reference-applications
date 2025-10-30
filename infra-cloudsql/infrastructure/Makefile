@@ -18,6 +18,12 @@ infra-init-cache:
 	tofu -chdir="$(IAC_PATH)" init -lock=false -backend=false
 	rm -rf "$(IAC_PATH)/.terraform"
 
+.PHONY: infra-init-upgrade
+infra-init-upgrade:
+	tofu -chdir="$(IAC_PATH)" init -lock=false -backend=false -upgrade
+	tofu -chdir="$(IAC_PATH)" providers lock --platform=darwin_amd64 --platform=darwin_arm64 --platform=linux_amd64 --platform=linux_arm64 --platform=windows_amd64
+	rm -rf "$(IAC_PATH)/.terraform"
+
 .PHONY: infra-init
 infra-init: ## Terragrunt init
 	terragrunt init --working-dir="$(IAC_PATH)" --non-interactive --backend-bootstrap -lock=false
