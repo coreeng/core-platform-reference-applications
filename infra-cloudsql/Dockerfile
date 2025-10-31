@@ -1,4 +1,4 @@
-FROM docker.io/ubuntu:noble
+FROM docker.io/debian:trixie
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
@@ -9,32 +9,26 @@ WORKDIR /tmp
 RUN --mount=type=cache,target=/var/cache/apt \
  apt-get update \
  && apt-get install --no-install-recommends -y \
+  ca-certificates \
   curl \
-  dnsutils \
-  file \
   git \
-  gpg \
   jq \
-  lsb-release \
   make \
-  python3 \
-  python3-pip \
-  unzip \
-  vim \
+  vim-tiny \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
 # Install opentofu
 ARG OPENTOFU_VERSION=1.10.6
-RUN curl -Lso opentofu.zip "https://github.com/opentofu/opentofu/releases/download/v${OPENTOFU_VERSION}/tofu_${OPENTOFU_VERSION}_linux_$(uname -m | sed -e "s/aarch64/arm64/" -e "s/x86_64/amd64/").zip" \
- && unzip -q opentofu.zip tofu \
+RUN curl -Lsfo opentofu.tgz "https://github.com/opentofu/opentofu/releases/download/v${OPENTOFU_VERSION}/tofu_${OPENTOFU_VERSION}_linux_$(uname -m | sed -e "s/aarch64/arm64/" -e "s/x86_64/amd64/").tar.gz" \
+ && tar zxf opentofu.tgz tofu \
  && install -o root -g root -m 0755 tofu /usr/local/bin/ \
- && rm opentofu.zip tofu \
+ && rm opentofu.tgz tofu \
  && tofu version
 
 # Install terragrunt
 ARG TERRAGRUNT_VERSION=0.92.1
-RUN curl -Lso terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_$(uname -m | sed -e "s/aarch64/arm64/" -e "s/x86_64/amd64/")" \
+RUN curl -Lsfo terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_$(uname -m | sed -e "s/aarch64/arm64/" -e "s/x86_64/amd64/")" \
  && install -o root -g root -m 0755 terragrunt /usr/local/bin/ \
  && rm terragrunt \
  && terragrunt -version
@@ -51,8 +45,8 @@ WORKDIR /app
 # Copy infrastructure
 COPY infrastructure/ ./
 
-# Check tf code formatting
-RUN tofu fmt -check -diff -recursive
+# Check tf & tg formatting
+RUN tofu fmt -check -diff -recursive && terragrunt hcl fmt --check
 
 # Cache terraform providers, and persist cache in the image
 RUN --mount=type=cache,target=/var/tmp/terraform TF_PLUGIN_CACHE_DIR=/var/tmp/terraform ENV=cache make infra-init-cache \

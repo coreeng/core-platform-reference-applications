@@ -3,3 +3,6 @@
 
 # vi swapfiles
 *.swp
+
+# hidden terraform cache and state directory
+infrastructure/code/.terraform
