@@ -9,6 +9,8 @@ module "project-services" {
 
   activate_apis = [
     "cloudresourcemanager.googleapis.com",
+    "compute.googleapis.com",
     "sqladmin.googleapis.com",
+    "servicenetworking.googleapis.com",
   ]
 }
