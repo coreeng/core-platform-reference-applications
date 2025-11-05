@@ -71,7 +71,7 @@ module "cloudsql-postgresql" {
   ip_configuration = {
     ssl_mode                      = "ENCRYPTED_ONLY"
     authorized_networks           = var.cloudsql.allowed_ip_ranges
-    ipv4_enabled                  = true
+    ipv4_enabled                  = each.value.public_ip_enabled
     private_network               = google_compute_network.psa.id
     psc_enabled                   = true
     psc_allowed_consumer_projects = [data.google_project.platform_project.number]
@@ -90,10 +90,195 @@ module "cloudsql-postgresql" {
   enable_default_db    = false
   additional_databases = each.value.databases
 
-  #enable_default_user = false
-
-  connector_enforcement = each.value.connector_enforcement
-
+  # Default postgres user is required for the provisioner to grant privileges to IAM users
+  # Do not disable unless switching to a different privilege grant mechanism
   user_name     = "postgres"
   user_password = random_password.cloudsql_initial_password.result
+
+  # Connector enforcement requires all connections to use Cloud SQL Auth Proxy or connector library
+  connector_enforcement = each.value.connector_enforcement
+}
+
+# Grant Cloud SQL Client role to IAM service accounts
+# This allows the service accounts to call the Cloud SQL Admin API for connection info
+resource "google_project_iam_member" "cloudsql_client" {
+  for_each = toset(distinct(flatten([
+    for cluster in local.postgresql_clusters_map : [
+      for iam_user in cluster.iam_users :
+      iam_user.email if can(regex(".*@.*\\.iam\\.gserviceaccount\\.com$", iam_user.email))
+    ]
+  ])))
+
+  project = var.infrastructure_project_id
+  role    = "roles/cloudsql.client"
+  member  = "serviceAccount:${each.value}"
+}
+
+# Grant Cloud SQL Instance User role to IAM service accounts
+# This allows the service accounts to authenticate to Cloud SQL instances using IAM
+resource "google_project_iam_member" "cloudsql_instance_user" {
+  for_each = toset(distinct(flatten([
+    for cluster in local.postgresql_clusters_map : [
+      for iam_user in cluster.iam_users :
+      iam_user.email if can(regex(".*@.*\\.iam\\.gserviceaccount\\.com$", iam_user.email))
+    ]
+  ])))
+
+  project = var.infrastructure_project_id
+  role    = "roles/cloudsql.instanceUser"
+  member  = "serviceAccount:${each.value}"
+}
+
+# Grant Service Usage Consumer role to IAM service accounts
+# This allows the service accounts from the platform project to access Cloud SQL in the infrastructure project
+resource "google_project_iam_member" "service_usage_consumer" {
+  for_each = toset(distinct(flatten([
+    for cluster in local.postgresql_clusters_map : [
+      for iam_user in cluster.iam_users :
+      iam_user.email if can(regex(".*@.*\\.iam\\.gserviceaccount\\.com$", iam_user.email))
+    ]
+  ])))
+
+  project = var.infrastructure_project_id
+  role    = "roles/serviceusage.serviceUsageConsumer"
+  member  = "serviceAccount:${each.value}"
+}
+
+# Grant comprehensive privileges to IAM users specified for each database
+resource "null_resource" "grant_iam_user_privileges" {
+  for_each = {
+    for combo in flatten([
+      for cluster_name, cluster in local.postgresql_clusters_map : [
+        for db in cluster.databases : [
+          for iam_user in db.iam_users : {
+            key          = "${cluster_name}/${db.name}/${iam_user.id}"
+            cluster_name = "${cluster_name}-${var.environment}-cluster"
+            database     = db.name
+            # CloudSQL truncates IAM usernames to end at .iam (63 char PostgreSQL limit)
+            iam_user = replace(iam_user.email, ".iam.gserviceaccount.com", ".iam")
+            roles    = try(iam_user.roles, [])
+          }
+        ]
+      ]
+    ]) : combo.key => combo
+  }
+
+  provisioner "local-exec" {
+    interpreter = ["/bin/bash", "-c"]
+    command     = <<-EOT
+      set -e
+
+      # Ensure proxy process is cleaned up on exit or error
+      # EXIT trap works with set -e to catch both normal exit and errors
+      cleanup_proxy() {
+        if [ ! -z "$PROXY_PID" ]; then
+          echo "Cleaning up Cloud SQL Proxy (PID: $PROXY_PID)..."
+          kill $PROXY_PID 2>/dev/null || true
+          wait $PROXY_PID 2>/dev/null || true
+        fi
+      }
+      trap cleanup_proxy EXIT
+
+      echo "Granting privileges on database '${each.value.database}' to '${each.value.iam_user}'..."
+
+      # Get connection name for Cloud SQL Proxy
+      CONNECTION_NAME=$(gcloud sql instances describe ${each.value.cluster_name} \
+        --project=${var.infrastructure_project_id} \
+        --format='value(connectionName)')
+
+      # Start Cloud SQL Proxy in background on random port with retry logic
+      # Use PID and nanoseconds to avoid port collision when running in parallel
+      MAX_PORT_RETRIES=10
+      PROXY_STARTED=false
+
+      for port_attempt in $(seq 1 $MAX_PORT_RETRIES); do
+        PROXY_PORT=$((30000 + ($$ + $(date +%N 2>/dev/null || echo 0) + port_attempt * 137) % 10000))
+        echo "Attempt $port_attempt: Starting Cloud SQL Proxy on port $PROXY_PORT..."
+
+        # Start proxy and capture output
+        cloud-sql-proxy "$CONNECTION_NAME" --port=$PROXY_PORT &
+        PROXY_PID=$!
+
+        # Give proxy a moment to fail if port is in use
+        sleep 1
+
+        # Check if proxy is still running (it exits immediately if port is in use)
+        if kill -0 $PROXY_PID 2>/dev/null; then
+          PROXY_STARTED=true
+          echo "Cloud SQL Proxy started successfully on port $PROXY_PORT"
+          break
+        else
+          echo "Port $PROXY_PORT was in use, trying another port..."
+          PROXY_PID=""
+        fi
+      done
+
+      if [ "$PROXY_STARTED" = false ]; then
+        echo "ERROR: Failed to start Cloud SQL Proxy after $MAX_PORT_RETRIES attempts"
+        exit 1
+      fi
+
+      # Wait for proxy to be ready with retry logic (max 30 seconds)
+      echo "Waiting for Cloud SQL Proxy to be ready..."
+      for i in $(seq 1 30); do
+        if pg_isready -h 127.0.0.1 -p $PROXY_PORT -U postgres -q 2>/dev/null; then
+          echo "Cloud SQL Proxy is ready after $i seconds"
+          break
+        fi
+        if [ $i -eq 30 ]; then
+          echo "ERROR: Cloud SQL Proxy failed to become ready after 30 seconds"
+          exit 1
+        fi
+        sleep 1
+      done
+
+      # Execute SQL via psql (password provided via PGPASSWORD environment variable)
+      # Note: Some grants may fail if postgres user doesn't own certain objects (e.g., flyway_schema_history)
+      # This is expected and acceptable - psql will continue without ON_ERROR_STOP
+      echo "Executing privilege grants..."
+      psql -h 127.0.0.1 -p $PROXY_PORT -U postgres -d ${each.value.database} \
+        -c "GRANT ALL PRIVILEGES ON DATABASE \"${each.value.database}\" TO \"${each.value.iam_user}\";" \
+        -c "GRANT ALL PRIVILEGES ON SCHEMA public TO \"${each.value.iam_user}\";" \
+        -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO \"${each.value.iam_user}\";" \
+        -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO \"${each.value.iam_user}\";" \
+        -c "GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO \"${each.value.iam_user}\";" \
+        -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO \"${each.value.iam_user}\";" \
+        -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON SEQUENCES TO \"${each.value.iam_user}\";" \
+        -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON FUNCTIONS TO \"${each.value.iam_user}\";"
+
+      # Grant PostgreSQL roles if specified
+      ROLES="${join(",", each.value.roles)}"
+      if [ ! -z "$ROLES" ]; then
+        echo "Granting PostgreSQL roles to '${each.value.iam_user}': $ROLES"
+        IFS=',' read -ra ROLE_ARRAY <<< "$ROLES"
+        for role in "$${ROLE_ARRAY[@]}"; do
+          if [ ! -z "$role" ]; then
+            echo "  Granting role: $role"
+            psql -h 127.0.0.1 -p $PROXY_PORT -U postgres -d ${each.value.database} \
+              -c "GRANT \"$role\" TO \"${each.value.iam_user}\";" || echo "  Warning: Failed to grant role $role (may not exist or already granted)"
+          fi
+        done
+      fi
+
+      echo "Privileges granted successfully (errors for non-postgres owned objects are expected)"
+    EOT
+
+    environment = {
+      PGPASSWORD = nonsensitive(random_password.cloudsql_initial_password.result)
+    }
+  }
+
+  depends_on = [
+    module.cloudsql-postgresql,
+    google_project_iam_member.cloudsql_client
+  ]
+
+  triggers = {
+    cluster  = each.value.cluster_name
+    database = each.value.database
+    iam_user = each.value.iam_user
+    roles    = join(",", each.value.roles)
+    # Increment this version to force re-run
+    grant_version = "v1"
+  }
 }

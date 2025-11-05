@@ -31,6 +31,12 @@ variable "cloudsql" {
           name      = string
           charset   = optional(string, "")
           collation = optional(string, "")
+          iam_users = optional(list(object({
+            id    = string
+            email = string
+            type  = optional(string)
+            roles = optional(list(string), [])
+          })), [])
         }))
         disk_size             = optional(number, 10)
         disk_type             = optional(string, "PD_SSD")
@@ -62,12 +68,8 @@ variable "cloudsql" {
         deletion_protection             = optional(bool, true)
         database_deletion_policy        = optional(string, "ABANDON")
         retain_backups_on_delete        = optional(bool, false)
-        connector_enforcement           = optional(bool, false)
-        iam_users = optional(list(object({
-          id    = string
-          email = string
-          type  = optional(string)
-        })), [])
+        connector_enforcement           = optional(bool, true)
+        public_ip_enabled               = optional(bool, true)
       })))
     }))
   })
