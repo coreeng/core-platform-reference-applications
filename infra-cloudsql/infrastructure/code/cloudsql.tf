@@ -29,7 +29,7 @@ variable "cloudsql" {
         availability_type     = optional(string, "ZONAL")
         backup_configuration = optional(object({
           enabled                        = optional(bool, true)
-          start_time                     = optional(string, "23:00")
+          start_time                     = optional(string, "01:00")
           location                       = optional(string, null)
           point_in_time_recovery_enabled = optional(bool, true)
           transaction_log_retention_days = optional(string, "7")

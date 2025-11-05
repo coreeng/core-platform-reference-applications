@@ -84,12 +84,14 @@ Each PostgreSQL cluster supports the following configuration:
 |-----------|------|---------|-------------|
 | `availability_type` | `string` | `"ZONAL"` | The availability type for the Cloud SQL instance, can be either `ZONAL` or `REGIONAL` |
 
+If near zero downtime planned maintenance is required please consult Google's [documentation](https://docs.cloud.google.com/sql/docs/postgres/maintenance#nearzero) for prerequisites and constraints.
+
 ##### Backup Configuration
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `backup_configuration.enabled` | `bool` | `true` | Enable automated backups |
-| `backup_configuration.start_time` | `string` | `"23:00"` | Backup start time in HH:MM format (UTC) |
+| `backup_configuration.start_time` | `string` | `"01:00"` | Backup start time in HH:MM format (UTC) |
 | `backup_configuration.location` | `string` | `null` | Multi-region location for backups (e.g., `us`, `eu`). Default: same as instance region |
 | `backup_configuration.point_in_time_recovery_enabled` | `bool` | `true` | Enable continuous backup for point-in-time recovery |
 | `backup_configuration.transaction_log_retention_days` | `string` | `"7"` | Number of days to retain transaction logs for PITR (1-7 for PITR, up to 14 for Enterprise Plus) |
