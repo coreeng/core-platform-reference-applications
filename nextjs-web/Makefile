@@ -71,7 +71,7 @@ push-%:
 
 .PHONY: deploy-%
 deploy-%:
-	helm repo add core-platform-assets https://coreeng.github.io/core-platform-assets
+	helm repo add core-platform-assets https://coreeng.github.io/core-platform-assets --force-update
 
 	envsubst < p2p/config/$*.yaml | \
 	helm upgrade --install "$(p2p_app_name)" core-platform-assets/core-platform-app -n "$(p2p_namespace)" \
