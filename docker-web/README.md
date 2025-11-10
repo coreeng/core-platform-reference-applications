@@ -1,6 +1,6 @@
 # Docker Web
 
-Docker application for the Core Platform.
+Docker Web application for the Core Platform.
 
 # Parameters
 
@@ -106,13 +106,23 @@ Stubbed Functional Tests using [Cucumber Godog](https://github.com/cucumber/godo
 
 This namespace is used to test the functionality of the app. Currently, using BDD (Behaviour driven development)
 
-## NFT
+## Non-Functional Testing
 
 This namespace is used to test how the service behaves under load, e.g. 1k TPS, P99 latency < 2000 ms for 1 minute run.
 
-There are 1 endpoint available for testing:
+There is 1 endpoint available for testing:
 
-- `/hello` - simply returns `Hello world`.
+- `/healthz` - simply returns 200.
+
+We are using [K6](https://k6.io/) to generate constant load, collect metrics and validate them against thresholds.
+
+There is a test example: [hello.js](./resources/load-testing/hello.js)
+
+We can send the traffic to the reference app either via ingress endpoint or directly via service endpoint.
+
+There is `nft.endpoint` parameter in `values.yaml` that can be set to `ingress` or `service`.
+
+When running load tests it is important that we define CPU resource limits. This will allow us to have stable results between runs.
 
 ## Integration Testing
 
@@ -121,86 +131,9 @@ Integration Tests are using [Cucumber Godog](https://github.com/cucumber/godog)
 This namespace is used to test that the individual parts of the system as well as service-to-service communication
 of the app works correctly against real dependencies. Currently, using BDD (Behaviour driven development)
 
-#### Load Generation
+## Extended Testing
 
-We are using [K6](https://k6.io/) to generate constant load, collect metrics and validate them against thresholds.
+Extended Test are using [Cucumber Godog](https://github.com/cucumber/godog)
 
-There is a test examples: [hello.js](./resources/load-testing/hello.js)
-
-`helm test` runs K6 scenario in a single Pod.
-
-#### Platform Ingress
-
-We can send the traffic to the reference app either via ingress endpoint or directly via service endpoint.
-
-There is `nft.endpoint` parameter in `values.yaml` that can be set to `ingress` or `service`.
-
-## Extended test
-
-This is similar to NFT, but generates much higher load and runs longer, e.g. 10k TPS, P99 latency < 2000 ms for 10 minutes run.
-
-#### Load Generation
-
-We are using [K6](https://k6.io/) to generate the load.
-We are using [K6 Operator](https://github.com/grafana/k6-operator) to run multiple jobs in parallel, so that we can reach high
-TPS requirements.
-
-When running parallel jobs with K6 Operator we are not getting back the aggregated metrics at the end of the test.
-We are collecting the metrics with Prometheus and validating the results with `promtool`.
-
-#### Platform Ingress
-
-We can send the traffic to the reference app either via ingress endpoint or directly via service endpoint.
-See NFT section for more details.
-
-## Platform Features
-
-> Due to the restrictions applied to your platform you may not be able to enable some of the features
-
-### Monitoring
-
-This feature is needed to allow metrics collection by Prometheus. It needs the metric store (prometheus) to be installed on the parent namespace e.g. `TENANT_NAME`.
-
-By default, Monitoring is disabled. In order to enable it, you need to explicitly override the variable
-
-```
-make MONITORING=true p2p-nft
-```
-
-or change `MONITORING` to `true` in `Makefile`.
-
-### Dashboarding
-
-This feature allows you to automatically import dashboard definitions to Grafana.
-
-> You may import the dashboard manually by uploading the json definition via browser
-
-By default, `DASHBOARDING` is disabled. In order to enable it, you need to explicitly override the variable
-
-```
-make DASHBOARDING=true p2p-nft
-```
-
-or change `DASHBOARDING` to `true` in `Makefile`.
-
-The reference app comes with `10k TPS Reference App` dashboard that shows the TPS and latency
-for the load generator, ingress, API server and its downstream dependency.
-
-This feature depends on metrics collected by `Service Monitor`.
-
-### K6 Operator
-
-> K6 Operator must be enabled for the tenant to run the extended test
-
-You can enable it by enabling the beta feature in the tenant.yaml file:
-
-```yaml
-betaFeatures:
-  - k6-operator
-```
-
-## Limiting the CPU usage
-
-When running load tests it is important that we define CPU resource limits. This will allow us to have stable results between runs.
-
-If we don't apply the limits then the performance of the Pods will depend on the CPU utilization of the node that is running the container.
+This namespace is used to test that the individual parts of the system as well as service-to-service communication
+of the app works correctly against real dependencies. Currently, using BDD (Behaviour driven development)
