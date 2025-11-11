@@ -97,6 +97,9 @@ module "cloudsql-postgresql" {
 
   # Connector enforcement requires all connections to use Cloud SQL Auth Proxy or connector library
   connector_enforcement = each.value.connector_enforcement
+
+  # Password validation policy
+  password_validation_policy_config = each.value.password_validation_policy_config
 }
 
 # Grant Cloud SQL Client role to IAM service accounts

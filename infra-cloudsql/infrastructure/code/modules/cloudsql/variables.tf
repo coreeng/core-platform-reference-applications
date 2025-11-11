@@ -49,7 +49,7 @@ variable "cloudsql" {
           location                       = optional(string, null)
           point_in_time_recovery_enabled = optional(bool, true)
           transaction_log_retention_days = optional(string, "7")
-          retained_backups               = optional(number, 15)
+          retained_backups               = optional(number, 21)
           retention_unit                 = optional(string, "COUNT")
         }), {})
         database_flags = optional(list(object({
@@ -70,6 +70,17 @@ variable "cloudsql" {
         retain_backups_on_delete        = optional(bool, false)
         connector_enforcement           = optional(bool, true)
         public_ip_enabled               = optional(bool, true)
+        password_validation_policy_config = optional(object({
+          min_length                  = optional(number, 8)
+          complexity                  = optional(string, "COMPLEXITY_DEFAULT")
+          reuse_interval              = optional(number, 0)
+          disallow_username_substring = optional(bool, true)
+          password_change_interval    = optional(string)
+        }), {})
+        audit_config = optional(object({
+          enabled               = optional(bool, true)
+          log_statement_classes = optional(string, "all")
+        }), {})
       })))
     }))
   })
