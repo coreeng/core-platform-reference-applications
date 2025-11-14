@@ -15,3 +15,14 @@ output "dns_authorization_records" {
     }
   }
 }
+
+output "bucket_details" {
+  description = "Details about bucket-backed routes"
+  value = {
+    for key, bucket in google_storage_bucket.asset_store :
+    key => {
+      name     = bucket.name
+      location = bucket.location
+    }
+  }
+}

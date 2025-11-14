@@ -11,5 +11,6 @@ module "project-services" {
     "certificatemanager.googleapis.com",
     "cloudresourcemanager.googleapis.com",
     "compute.googleapis.com",
+    "storage.googleapis.com",
   ]
 }

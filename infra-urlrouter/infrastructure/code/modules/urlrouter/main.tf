@@ -1,3 +1,8 @@
+# Metadata about the infrastructure project
+data "google_project" "infrastructure" {
+  project_id = var.infrastructure_project_id
+}
+
 # A Global IP for the Global Load Balancer
 resource "google_compute_global_address" "lb_ip" {
   name    = "${local.name_prefix}-ip"
@@ -68,6 +73,7 @@ resource "google_compute_backend_service" "bs" {
   project               = var.infrastructure_project_id
   load_balancing_scheme = "EXTERNAL_MANAGED"
   protocol              = "HTTP2"
+  enable_cdn            = each.value.enable_cdn
   timeout_sec           = 600
 
   backend {
@@ -77,6 +83,10 @@ resource "google_compute_backend_service" "bs" {
   custom_request_headers = [
     "Host: ${each.value.host}"
   ]
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 # A Backend Service wth no backend to use as a default service
@@ -86,6 +96,37 @@ resource "google_compute_backend_service" "bs_default" {
   load_balancing_scheme = "EXTERNAL_MANAGED"
   protocol              = "HTTP"
   # no `backend {}` blocks here → any call into this service returns 503
+}
+
+# A GCS bucket per bucket-backed route
+resource "google_storage_bucket" "asset_store" {
+  for_each = local.bucket_routes_map
+
+  name                        = each.value.bucket.name
+  project                     = var.infrastructure_project_id
+  location                    = each.value.bucket.location != null ? each.value.bucket.location : var.region
+  labels                      = length(each.value.bucket.labels) > 0 ? each.value.bucket.labels : null
+  uniform_bucket_level_access = true
+  force_destroy               = false
+}
+
+# Allow public read access for bucket-backed routes
+resource "google_storage_bucket_iam_member" "asset_store_lb_access" {
+  for_each = local.bucket_routes_map
+
+  bucket = google_storage_bucket.asset_store[each.key].name
+  role   = "roles/storage.legacyObjectReader"
+  member = "allUsers"
+}
+
+# Backend bucket per bucket-backed route
+resource "google_compute_backend_bucket" "asset_store" {
+  for_each = local.bucket_routes_map
+
+  name        = "${local.name_prefix}-${each.key}"
+  project     = var.infrastructure_project_id
+  bucket_name = google_storage_bucket.asset_store[each.key].name
+  enable_cdn  = each.value.bucket.enable_cdn
 }
 
 # HTTPS Redirect url map
@@ -105,6 +146,12 @@ resource "google_compute_url_map" "https_map" {
 
   default_service = google_compute_backend_service.bs_default.self_link
 
+  # Explicit dependencies to ensure proper ordering during creation and deletion
+  depends_on = [
+    google_compute_backend_service.bs,
+    google_compute_backend_bucket.asset_store
+  ]
+
   # unmatched requests default to 421 - Misdirected Request
   default_route_action {
     fault_injection_policy {
@@ -117,29 +164,55 @@ resource "google_compute_url_map" "https_map" {
 
   # host rules
   dynamic "host_rule" {
-    for_each = local.routes_map
+    for_each = { for k in sort(keys(local.routes_map)) : k => local.routes_map[k] }
     content {
       hosts        = [host_rule.value.host]
       path_matcher = host_rule.key
     }
   }
 
-  # path matchers with weighted backends
+  # path matchers per host (service and bucket routes)
   dynamic "path_matcher" {
-    for_each = local.routes_map
+    for_each = { for k in sort(keys(local.routes_map)) : k => local.routes_map[k] }
     content {
       name = path_matcher.key
 
-      default_route_action {
-        # for each endpoint belonging to this route, pull in its backend service + weight
-        dynamic "weighted_backend_services" {
-          for_each = [
-            for ep in local.endpoints_flat : ep
-            if ep.route == path_matcher.key
-          ]
-          content {
-            backend_service = google_compute_backend_service.bs["${weighted_backend_services.value.route}-${weighted_backend_services.value.name}"].self_link
-            weight          = weighted_backend_services.value.weight
+      default_service = contains(keys(local.bucket_routes_map), path_matcher.key) ? google_compute_backend_bucket.asset_store[path_matcher.key].self_link : null
+
+      # for each endpoint belonging to this route, pull in its backend service + weight (service-backed routes only)
+      dynamic "default_route_action" {
+        for_each = contains(keys(local.bucket_routes_map), path_matcher.key) ? [] : (
+          contains(keys(lookup(local.endpoints_by_route_and_path, path_matcher.key, {})), "/") ? [path_matcher.key] : []
+        )
+        content {
+          dynamic "weighted_backend_services" {
+            for_each = [
+              for ep in lookup(lookup(local.endpoints_by_route_and_path, path_matcher.key, {}), "/", []) : ep
+            ]
+            content {
+              backend_service = google_compute_backend_service.bs["${path_matcher.key}-${weighted_backend_services.value.name}"].self_link
+              weight          = weighted_backend_services.value.weight
+            }
+          }
+        }
+      }
+
+      # path rules for non-default paths
+      dynamic "path_rule" {
+        for_each = contains(keys(local.bucket_routes_map), path_matcher.key) ? {} : {
+          for path, endpoints in lookup(local.endpoints_by_route_and_path, path_matcher.key, {}) :
+          path => endpoints if path != "/"
+        }
+        content {
+          paths = ["${path_rule.key}", "${path_rule.key}/", "${path_rule.key}/*"]
+          route_action {
+            dynamic "weighted_backend_services" {
+              for_each = path_rule.value
+              content {
+                backend_service = google_compute_backend_service.bs["${path_matcher.key}-${weighted_backend_services.value.name}"].self_link
+                weight          = weighted_backend_services.value.weight
+              }
+            }
           }
         }
       }
