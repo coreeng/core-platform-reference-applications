@@ -190,12 +190,11 @@ resource "null_resource" "grant_iam_user_privileges" {
         --format='value(connectionName)')
 
       # Start Cloud SQL Proxy in background on random port with retry logic
-      # Use PID and nanoseconds to avoid port collision when running in parallel
       MAX_PORT_RETRIES=10
       PROXY_STARTED=false
 
       for port_attempt in $(seq 1 $MAX_PORT_RETRIES); do
-        PROXY_PORT=$((30000 + ($$ + $(date +%N 2>/dev/null || echo 0) + port_attempt * 137) % 10000))
+        PROXY_PORT=$((30000 + RANDOM % 10000))
         echo "Attempt $port_attempt: Starting Cloud SQL Proxy on port $PROXY_PORT..."
 
         # Start proxy and capture output
@@ -283,5 +282,37 @@ resource "null_resource" "grant_iam_user_privileges" {
     roles    = join(",", each.value.roles)
     # Increment this version to force re-run
     grant_version = "v1"
+  }
+}
+
+# Apply password verification to the postgres user to satisfy Google Cloud security recommendations
+resource "null_resource" "apply_user_password_policy" {
+  for_each = local.postgresql_clusters_map
+
+  provisioner "local-exec" {
+    interpreter = ["/bin/bash", "-c"]
+    command     = <<-EOT
+      set -e
+
+      echo "Applying password policy to postgres user on instance '${each.key}-${var.environment}-cluster'..."
+
+      gcloud sql users set-password-policy postgres \
+        --instance=${each.key}-${var.environment}-cluster \
+        --project=${var.infrastructure_project_id} \
+        --host=% \
+        --password-policy-enable-password-verification
+
+      echo "Password verification enabled for postgres user"
+    EOT
+  }
+
+  depends_on = [
+    module.cloudsql-postgresql
+  ]
+
+  triggers = {
+    cluster = "${each.key}-${var.environment}-cluster"
+    # Increment this version to force re-run
+    policy_version = "v1"
   }
 }
