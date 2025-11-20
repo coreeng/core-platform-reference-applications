@@ -16,11 +16,12 @@ variable "urlrouter" {
       type       = string
       enable_cdn = optional(bool, false)
       endpoints = optional(list(object({
-        name   = string
-        path   = optional(string, "/")
-        host   = string
-        port   = optional(number, 443)
-        weight = number
+        name                = string
+        path                = optional(string, "/")
+        path_prefix_rewrite = optional(string)
+        host                = string
+        port                = optional(number, 443)
+        weight              = number
       })))
       bucket = optional(object({
         name       = string

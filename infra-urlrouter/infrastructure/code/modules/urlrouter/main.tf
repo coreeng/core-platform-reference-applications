@@ -213,6 +213,14 @@ resource "google_compute_url_map" "https_map" {
                 weight          = weighted_backend_services.value.weight
               }
             }
+
+            # URL rewrite if any endpoint specifies path_prefix_rewrite
+            dynamic "url_rewrite" {
+              for_each = length([for ep in path_rule.value : ep if lookup(ep, "path_prefix_rewrite", null) != null]) > 0 ? [1] : []
+              content {
+                path_prefix_rewrite = lookup(path_rule.value[0], "path_prefix_rewrite", null)
+              }
+            }
           }
         }
       }
