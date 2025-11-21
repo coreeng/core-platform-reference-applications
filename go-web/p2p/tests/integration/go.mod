@@ -1,8 +1,6 @@
 module github.com/coreeng/idp-reference-app-go/integration
 
-go 1.24.0
-
-toolchain go1.24.1
+go 1.25.4
 
 require (
 	github.com/cucumber/godog v0.15.1
@@ -18,6 +16,6 @@ require (
 	github.com/hashicorp/go-memdb v1.3.5 // indirect
 	github.com/hashicorp/golang-lru v1.0.2 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
-	golang.org/x/net v0.44.0 // indirect
-	golang.org/x/sys v0.36.0 // indirect
+	golang.org/x/net v0.47.0 // indirect
+	golang.org/x/sys v0.38.0 // indirect
 )
