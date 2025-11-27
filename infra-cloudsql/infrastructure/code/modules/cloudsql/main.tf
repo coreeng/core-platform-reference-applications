@@ -102,49 +102,44 @@ module "cloudsql-postgresql" {
   password_validation_policy_config = each.value.password_validation_policy_config
 }
 
-# Grant Cloud SQL Client role to IAM service accounts
-# This allows the service accounts to call the Cloud SQL Admin API for connection info
+# Grant Cloud SQL Client role to all IAM users
+# This allows them to call the Cloud SQL Admin API for connection info
 resource "google_project_iam_member" "cloudsql_client" {
-  for_each = toset(distinct(flatten([
-    for cluster in local.postgresql_clusters_map : [
-      for iam_user in cluster.iam_users :
-      iam_user.email if can(regex(".*@.*\\.iam\\.gserviceaccount\\.com$", iam_user.email))
-    ]
-  ])))
+  for_each = local.iam_users
 
   project = var.infrastructure_project_id
   role    = "roles/cloudsql.client"
-  member  = "serviceAccount:${each.value}"
+  member  = each.value
 }
 
-# Grant Cloud SQL Instance User role to IAM service accounts
-# This allows the service accounts to authenticate to Cloud SQL instances using IAM
+# Grant Cloud SQL Instance User role to all IAM users
+# This allows them to authenticate to Cloud SQL instances using IAM
 resource "google_project_iam_member" "cloudsql_instance_user" {
-  for_each = toset(distinct(flatten([
-    for cluster in local.postgresql_clusters_map : [
-      for iam_user in cluster.iam_users :
-      iam_user.email if can(regex(".*@.*\\.iam\\.gserviceaccount\\.com$", iam_user.email))
-    ]
-  ])))
+  for_each = local.iam_users
 
   project = var.infrastructure_project_id
   role    = "roles/cloudsql.instanceUser"
-  member  = "serviceAccount:${each.value}"
+  member  = each.value
 }
 
-# Grant Service Usage Consumer role to IAM service accounts
+# Grant Service Usage Consumer role to IAM service accounts only
 # This allows the service accounts from the platform project to access Cloud SQL in the infrastructure project
 resource "google_project_iam_member" "service_usage_consumer" {
-  for_each = toset(distinct(flatten([
-    for cluster in local.postgresql_clusters_map : [
-      for iam_user in cluster.iam_users :
-      iam_user.email if can(regex(".*@.*\\.iam\\.gserviceaccount\\.com$", iam_user.email))
-    ]
-  ])))
+  for_each = local.service_account_iam_users
 
   project = var.infrastructure_project_id
   role    = "roles/serviceusage.serviceUsageConsumer"
-  member  = "serviceAccount:${each.value}"
+  member  = each.value
+}
+
+# Grant Cloud SQL Viewer role to all IAM users
+# This allows them to list databases and users in Cloud SQL instances
+resource "google_project_iam_member" "cloudsql_viewer" {
+  for_each = local.iam_users
+
+  project = var.infrastructure_project_id
+  role    = "roles/cloudsql.viewer"
+  member  = each.value
 }
 
 # Grant comprehensive privileges to IAM users specified for each database

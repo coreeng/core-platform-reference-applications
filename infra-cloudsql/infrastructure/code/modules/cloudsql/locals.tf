@@ -1,5 +1,5 @@
 locals {
-  # map postgresql clusters by name for easy for_each with automatic IAM authentication and audit flags
+  # Map postgresql clusters by name for easy for_each with automatic IAM authentication and audit flags
   postgresql_clusters_map = {
     for r in var.cloudsql.clusters.postgresql : r.name => merge(r, {
       # Automatically add database flags based on configuration
@@ -25,4 +25,20 @@ locals {
       iam_users = distinct(flatten([for db in r.databases : db.iam_users]))
     })
   }
+
+  # All IAM users with correct prefix (serviceAccount:, group:, or user:)
+  iam_users = toset(distinct(flatten([
+    for cluster in local.postgresql_clusters_map : [
+      for iam_user in cluster.iam_users :
+      try(iam_user.type, "") == "CLOUD_IAM_GROUP" ? "group:${iam_user.email}" : (
+        can(regex(".*@.*\\.iam\\.gserviceaccount\\.com$", iam_user.email)) ? "serviceAccount:${iam_user.email}" : "user:${iam_user.email}"
+      )
+    ]
+  ])))
+
+  # Service Account IAM users only
+  service_account_iam_users = toset([
+    for member in local.iam_users : member
+    if can(regex("^serviceAccount:", member))
+  ])
 }
