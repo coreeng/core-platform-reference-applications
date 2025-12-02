@@ -33,5 +33,6 @@ jobs:
       env_vars: ${{ secrets.env_vars }}
     with:
       app-name: docker-web
+      tenant-name: $(TENANT_NAME)
       version: ${{ needs.version.outputs.version }}
       working-directory: ./

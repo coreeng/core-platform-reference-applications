@@ -23,6 +23,7 @@ jobs:
       env_vars: ${{ secrets.env_vars }}
     with:
       app-name: nextjs-web
+      tenant-name: $(TENANT_NAME)
       version: ${{ needs.get-latest-version.outputs.version }}
       version-prefix: v
       working-directory: ./
