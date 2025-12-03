@@ -1,13 +1,13 @@
 ---
-replicaCount: 2
+replicaCount: ${p2p_app_config_replicas:-2}
 
 resources:
   requests:
-    cpu: 250m
-    memory: 512Mi
+    cpu: ${p2p_app_config_resources_limits_cpu:-250m}
+    memory: ${p2p_app_config_resources_limits_memory:-512Mi}
   limits:
-    cpu: 250m
-    memory: 512Mi
+    cpu: ${p2p_app_config_resources_limits_cpu:-250m}
+    memory: ${p2p_app_config_resources_limits_memory:-512Mi}
 
 livenessProbe:
   failureThreshold: 3
