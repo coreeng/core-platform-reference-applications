@@ -12,8 +12,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-var baseUri = getBaseURI()
-var ingressBaseUri = getIngressBaseUrl()
+var baseURI = getBaseURI()
+var ingressBaseURI = getIngressBaseURL()
 var request *resty.Request
 var response resty.Response
 
@@ -23,11 +23,11 @@ func aRestService() {
 }
 
 func iCallTheHelloWorldEndpoint() error {
-	log.Printf("Hitting GET endpoint %s\n", baseUri)
-	httpResponse, err := request.Get(baseUri + "/hello")
+	log.Printf("Hitting GET endpoint %s\n", baseURI)
+	httpResponse, err := request.Get(baseURI + "/hello")
 
 	if err != nil {
-		return fmt.Errorf("call to %s was unsuccessful, error: %v", baseUri, err)
+		return fmt.Errorf("call to %s was unsuccessful, error: %v", baseURI, err)
 	}
 
 	response = *httpResponse
@@ -37,10 +37,10 @@ func iCallTheHelloWorldEndpoint() error {
 func iCallTheIngressHelloWorldEndpointAndWaitForItToBeReady() error {
 	successful := false
 	for i := 0; i < 8; i++ {
-		log.Printf(" GET endpoint %s - retry number %d\n", ingressBaseUri, i)
-		httpResponse, err := request.Get(ingressBaseUri + "/hello")
+		log.Printf(" GET endpoint %s - retry number %d\n", ingressBaseURI, i)
+		httpResponse, err := request.Get(ingressBaseURI + "/hello")
 		if err != nil {
-			log.Errorf("call to %s was unsuccessful, error: %v\n Sleeping for 10 seconds to wait for ingress to be available...", ingressBaseUri, err)
+			log.Errorf("call to %s was unsuccessful, error: %v\n Sleeping for 10 seconds to wait for ingress to be available...", ingressBaseURI, err)
 			time.Sleep(10 * time.Second)
 			continue
 		}
@@ -50,7 +50,7 @@ func iCallTheIngressHelloWorldEndpointAndWaitForItToBeReady() error {
 	}
 
 	if !successful {
-		return fmt.Errorf("call to %s was unsuccessful, error: %v", ingressBaseUri, errors.New("unsuccessful call"))
+		return fmt.Errorf("call to %s was unsuccessful, error: %v", ingressBaseURI, errors.New("unsuccessful call"))
 	}
 
 	return nil
@@ -79,7 +79,7 @@ func getBaseURI() string {
 	return serviceEndpoint
 }
 
-func getIngressBaseUrl() string {
+func getIngressBaseURL() string {
 	return os.Getenv("INGRESS_ENDPOINT")
 }
 func TestFeatures(t *testing.T) {
