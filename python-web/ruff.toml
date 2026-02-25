@@ -1,0 +1,22 @@
+line-length = 120
+target-version = "py314"
+
+[lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "N",   # pep8-naming
+    "S",   # flake8-bandit (security)
+    "RUF", # ruff-specific rules
+]
+ignore = [
+    "S104", # binding to all interfaces is expected for containerised services
+]
+
+[lint.per-file-ignores]
+"tests/**" = ["S101"] # assert statements are expected in tests
