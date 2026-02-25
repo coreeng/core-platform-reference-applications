@@ -19,6 +19,11 @@ public class LogFilter extends GenericFilter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        if (!log.isInfoEnabled()) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         StopWatch watch = new StopWatch();
         watch.start();
         String path = null;
