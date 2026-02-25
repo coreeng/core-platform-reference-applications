@@ -20,9 +20,6 @@ build/
 venv/
 env/
 
-# uv
-uv.lock
-
 # pytest
 .pytest_cache/
 .coverage
