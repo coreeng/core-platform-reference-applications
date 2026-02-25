@@ -1,6 +1,6 @@
 module github.com/coreeng/idp-reference-app-go/integration
 
-go 1.25.3
+go 1.26.0
 
 require (
 	github.com/cucumber/godog v0.15.1

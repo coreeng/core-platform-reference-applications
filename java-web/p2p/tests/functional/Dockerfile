@@ -1,4 +1,4 @@
-FROM docker.io/gradle:8.14.2-jdk21-alpine
+FROM docker.io/gradle:9.3.1-jdk25-noble
 
 WORKDIR /opt/app
 

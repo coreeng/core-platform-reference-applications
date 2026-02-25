@@ -1,13 +1,16 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.3.1'
-	id 'io.spring.dependency-management' version '1.1.5'
+	id 'org.springframework.boot' version '3.5.11'
+	id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'io.cecg'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = JavaVersion.VERSION_21
-targetCompatibility = JavaVersion.VERSION_21
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
+}
 
 repositories {
 	mavenCentral()
@@ -23,9 +26,9 @@ dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-jetty')
 	implementation('org.springframework.boot:spring-boot-starter-actuator')
 	implementation('io.micrometer:micrometer-registry-prometheus')
-	implementation('org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0')
-	implementation('com.google.guava:guava:33.2.1-jre')
-	implementation('com.zaxxer:HikariCP:5.1.0')
+	implementation('org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.15')
+	implementation('com.google.guava:guava:33.5.0-jre')
+	implementation('com.zaxxer:HikariCP:6.3.0')
 
 	testImplementation('org.springframework.boot:spring-boot-starter-test')
 }

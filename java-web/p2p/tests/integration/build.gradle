@@ -5,13 +5,13 @@ repositories {
 }
 
 dependencies {
-    testImplementation(platform('org.junit:junit-bom:5.9.0'))
-    testImplementation('org.junit.jupiter:junit-jupiter:5.9.0')
-    testImplementation('io.cucumber:cucumber-java:7.18.+')
-    testImplementation('io.cucumber:cucumber-junit:7.18.+')
-    testImplementation('io.rest-assured:rest-assured:5.2.+')
-    testImplementation('org.junit.vintage:junit-vintage-engine:5.9.0')
-    testImplementation('org.skyscreamer:jsonassert:1.5.1')
+    testImplementation(platform('org.junit:junit-bom:5.14.2'))
+    testImplementation('org.junit.jupiter:junit-jupiter:5.14.2')
+    testImplementation('io.cucumber:cucumber-java:7.26.0')
+    testImplementation('io.cucumber:cucumber-junit:7.26.0')
+    testImplementation('io.rest-assured:rest-assured:5.5.7')
+    testImplementation('org.junit.vintage:junit-vintage-engine:5.14.2')
+    testImplementation('org.skyscreamer:jsonassert:1.5.3')
 }
 
 // Test will be called from make target p2p-integration

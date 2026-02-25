@@ -30,7 +30,7 @@ lint-dockerfile: ## Run dockerfile lint checks
 
 .PHONY: lint-app
 lint-app: ## Run app lint checks
-	docker run --rm --mount type=bind,source=.,target=/app -w /app docker.io/golang:1.25.4-alpine3.22 sh -c "go install github.com/mgechev/revive@v1.14.0 && revive -config revive.toml -formatter stylish ./cmd/service/... ./cmd/handler/..."
+	docker run --rm --mount type=bind,source=.,target=/app -w /app docker.io/golang:1.26.0-alpine3.23 sh -c "go install github.com/mgechev/revive@v1.14.0 && revive -config revive.toml -formatter stylish ./cmd/service/... ./cmd/handler/..."
 
 .PHONY: lint
 lint: lint-config lint-dockerfile lint-app ## Run all lint checks

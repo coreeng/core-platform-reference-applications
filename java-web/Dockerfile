@@ -1,4 +1,4 @@
-FROM docker.io/gradle:8.14.2-jdk21-alpine AS build
+FROM docker.io/gradle:9.3.1-jdk25-noble AS build
 WORKDIR /build
 
 COPY settings.gradle .
@@ -6,7 +6,7 @@ COPY service service
 
 RUN gradle service:build --no-daemon
 
-FROM registry.access.redhat.com/ubi8/openjdk-21:1.21
+FROM eclipse-temurin:25-jre-noble
 WORKDIR /
 COPY --from=build /build/service/build/libs/service-*-SNAPSHOT.jar /service.jar
 COPY service/src/main/resources/application.yaml /application.yaml
