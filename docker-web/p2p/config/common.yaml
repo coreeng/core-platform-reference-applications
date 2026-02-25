@@ -16,7 +16,7 @@ livenessProbe:
     path: /healthz
   periodSeconds: 20
   successThreshold: 1
-  timeoutSeconds: 1
+  timeoutSeconds: 5
 readinessProbe:
   failureThreshold: 3
   httpGet:
@@ -24,7 +24,7 @@ readinessProbe:
     path: /readyz
   periodSeconds: 20
   successThreshold: 1
-  timeoutSeconds: 1
+  timeoutSeconds: 5
 
 ingress:
   enabled: true

@@ -5,5 +5,5 @@ config:
   replicas: 2
   resources:
     limits:
-      cpu: 1024m
+      cpu: 1000m
       memory: 1024Mi
