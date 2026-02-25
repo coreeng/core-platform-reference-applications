@@ -5,12 +5,12 @@ repositories {
 }
 
 dependencies {
-    testImplementation(platform('org.junit:junit-bom:5.14.2'))
-    testImplementation('org.junit.jupiter:junit-jupiter:5.14.2')
-    testImplementation('io.cucumber:cucumber-java:7.26.0')
-    testImplementation('io.cucumber:cucumber-junit:7.26.0')
+    testImplementation(platform('org.junit:junit-bom:5.14.3'))
+    testImplementation('org.junit.jupiter:junit-jupiter:5.14.3')
+    testImplementation('io.cucumber:cucumber-java:7.34.2')
+    testImplementation('io.cucumber:cucumber-junit:7.34.2')
     testImplementation('io.rest-assured:rest-assured:5.5.7')
-    testImplementation('org.junit.vintage:junit-vintage-engine:5.14.2')
+    testImplementation('org.junit.vintage:junit-vintage-engine:5.14.3')
     testImplementation('org.skyscreamer:jsonassert:1.5.3')
     testRuntimeOnly('org.junit.platform:junit-platform-launcher')
 }
