@@ -2,10 +2,7 @@ import asyncio
 import logging
 
 import uvicorn
-from opentelemetry import metrics
-from opentelemetry.exporter.prometheus import PrometheusMetricReader
-from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
-from opentelemetry.sdk.metrics import MeterProvider
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from app.handler import app as handler_app
 from app.internal import app as internal_app
@@ -14,15 +11,12 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-def setup_telemetry() -> None:
-    reader = PrometheusMetricReader()
-    provider = MeterProvider(metric_readers=[reader])
-    metrics.set_meter_provider(provider)
-    FastAPIInstrumentor.instrument_app(handler_app)
+def setup_metrics() -> None:
+    Instrumentator().instrument(handler_app)
 
 
 async def main() -> None:
-    setup_telemetry()
+    setup_metrics()
 
     config_app = uvicorn.Config(handler_app, host="0.0.0.0", port=8080, log_level="info")
     config_internal = uvicorn.Config(internal_app, host="0.0.0.0", port=8081, log_level="info")
