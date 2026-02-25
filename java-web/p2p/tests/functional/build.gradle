@@ -12,6 +12,7 @@ dependencies {
     testImplementation('io.rest-assured:rest-assured:5.5.7')
     testImplementation('org.junit.vintage:junit-vintage-engine:5.14.2')
     testImplementation('org.skyscreamer:jsonassert:1.5.3')
+    testRuntimeOnly('org.junit.platform:junit-platform-launcher')
 }
 
 // Test will be called from make target stubbed-functional
