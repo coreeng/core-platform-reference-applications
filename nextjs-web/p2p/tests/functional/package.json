@@ -16,5 +16,8 @@
   "dependencies": {
     "@cucumber/cucumber": "^12.7.0",
     "node-fetch": "^3.3.2"
+  },
+  "resolutions": {
+    "**/minimatch": "10.2.4"
   }
 }
