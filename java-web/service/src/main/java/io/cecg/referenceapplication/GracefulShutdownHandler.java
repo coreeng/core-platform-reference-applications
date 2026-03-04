@@ -3,7 +3,7 @@ package io.cecg.referenceapplication;
 import io.cecg.referenceapplication.api.filters.ConnectionDrainingFilter;
 import org.eclipse.jetty.server.handler.EventsHandler;
 import org.eclipse.jetty.server.handler.StatisticsHandler;
-import org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory;
+import org.springframework.boot.jetty.servlet.JettyServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.stereotype.Component;
 
