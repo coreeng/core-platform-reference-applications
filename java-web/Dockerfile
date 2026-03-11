@@ -1,4 +1,4 @@
-FROM docker.io/gradle:9.3.1-jdk25-noble AS build
+FROM docker.io/gradle:9.4.0-jdk25-noble AS build
 WORKDIR /build
 
 COPY settings.gradle .

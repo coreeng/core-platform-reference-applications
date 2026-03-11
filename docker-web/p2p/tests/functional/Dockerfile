@@ -1,4 +1,4 @@
-FROM docker.io/golang:1.26.0-trixie
+FROM docker.io/golang:1.26.1-trixie
 
 WORKDIR /opt/app
 
