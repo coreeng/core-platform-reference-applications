@@ -13,6 +13,8 @@ permissions:
 jobs:
   get-latest-version:
     uses: coreeng/p2p/.github/workflows/p2p-get-latest-image-extended-test.yaml@v1
+    secrets:
+      slack_webhook_url: ${{ secrets.P2P_SLACK_WEBHOOK_URL }}
     with:
       image-name: infra-urlrouter
 
@@ -20,6 +22,7 @@ jobs:
     needs: [get-latest-version]
     uses: coreeng/p2p/.github/workflows/p2p-workflow-extended-test.yaml@v1
     secrets:
+      slack_webhook_url: ${{ secrets.P2P_SLACK_WEBHOOK_URL }}
       env_vars: ${{ secrets.env_vars }}
     with:
       app-name: infra-urlrouter
