@@ -5,7 +5,7 @@ go 1.26.1
 require (
 	github.com/cucumber/godog v0.15.1
 	github.com/go-resty/resty/v2 v2.16.5
-	github.com/sirupsen/logrus v1.9.3
+	github.com/sirupsen/logrus v1.9.4
 )
 
 require (
@@ -16,6 +16,6 @@ require (
 	github.com/hashicorp/go-memdb v1.3.5 // indirect
 	github.com/hashicorp/golang-lru v1.0.2 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
-	golang.org/x/net v0.46.0 // indirect
-	golang.org/x/sys v0.38.0 // indirect
+	golang.org/x/net v0.52.0 // indirect
+	golang.org/x/sys v0.42.0 // indirect
 )
