@@ -24,7 +24,7 @@ jobs:
     outputs:
       image-name: ${{ steps.image-name.outputs.image_name }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - id: image-name
         env:
           MAKEFILE: ./${{ inputs.lifecycle }}/Makefile
