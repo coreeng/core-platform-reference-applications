@@ -1,4 +1,4 @@
-# Nextra Docs
+# static-nextra
 
 Nextra docs application for the Core Platform.
 

@@ -1,4 +1,4 @@
-# Docker Web
+# docker-web
 
 Docker Web application for the Core Platform.
 

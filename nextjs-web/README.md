@@ -1,4 +1,4 @@
-# Next.js Web
+# nextjs-web
 
 Next.js application for the Core Platform.
 
