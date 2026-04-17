@@ -1,4 +1,4 @@
-FROM docker.io/python:3.14-slim
+FROM docker.io/python:3.14.4-slim
 
 # Extended tests are not yet implemented.
 # Add your extended test runner here (e.g. a higher-load / longer-duration K6 script,

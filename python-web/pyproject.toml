@@ -3,17 +3,17 @@ name = "python-web"
 version = "0.1.0"
 requires-python = ">=3.14"
 dependencies = [
-    "fastapi>=0.115",
-    "uvicorn[standard]>=0.34",
-    "prometheus-client>=0.21",
-    "prometheus-fastapi-instrumentator>=0.11",
+    "fastapi>=0.136.0",
+    "uvicorn[standard]>=0.44.0",
+    "prometheus-client>=0.25.0",
+    "prometheus-fastapi-instrumentator>=7.1.0",
 ]
 
 [dependency-groups]
 dev = [
-    "pytest>=8",
-    "httpx>=0.28",
-    "ruff>=0.15",
+    "pytest>=9.0.3",
+    "httpx>=0.28.1",
+    "ruff>=0.15.11",
 ]
 
 [build-system]

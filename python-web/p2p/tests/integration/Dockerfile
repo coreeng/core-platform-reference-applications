@@ -1,7 +1,7 @@
-FROM docker.io/python:3.14-slim
+FROM docker.io/python:3.14.4-slim
 
 # hadolint ignore=DL3013
-RUN pip install --no-cache-dir 'behave==1.3.3' 'requests==2.32.5'
+RUN pip install --no-cache-dir 'behave==1.3.3' 'requests==2.33.1'
 
 COPY ./ /opt/app
 WORKDIR /opt/app

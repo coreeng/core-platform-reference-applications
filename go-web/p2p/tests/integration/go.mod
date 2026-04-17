@@ -1,10 +1,10 @@
 module github.com/coreeng/idp-reference-app-go/integration
 
-go 1.26.1
+go 1.26.2
 
 require (
 	github.com/cucumber/godog v0.15.1
-	github.com/go-resty/resty/v2 v2.16.5
+	github.com/go-resty/resty/v2 v2.17.2
 	github.com/sirupsen/logrus v1.9.4
 )
 
