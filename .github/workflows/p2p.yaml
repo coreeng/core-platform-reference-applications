@@ -38,7 +38,7 @@ jobs:
     uses: coreeng/p2p/.github/workflows/p2p-workflow-fastfeedback.yaml@v1
     with:
       app-name: ${{ inputs.lifecycle }}
-      tenant-name: ${{ inputs.lifecycle }}
+      tenant-name: reference-applications
       version: ${{ needs.version.outputs.version }}
       working-directory: './${{ inputs.lifecycle }}'
       checkout-version: ${{ inputs.ref }}
@@ -47,7 +47,7 @@ jobs:
     uses: coreeng/p2p/.github/workflows/p2p-workflow-extended-test.yaml@v1
     with:
       app-name: ${{ inputs.lifecycle }}
-      tenant-name: ${{ inputs.lifecycle }}
+      tenant-name: reference-applications
       version: ${{ needs.version.outputs.version }}
       version-prefix: '${{ inputs.lifecycle }}/v'
       working-directory: './${{ inputs.lifecycle }}'
@@ -56,7 +56,7 @@ jobs:
     uses: coreeng/p2p/.github/workflows/p2p-workflow-prod.yaml@v1
     with:
       app-name: ${{ inputs.lifecycle }}
-      tenant-name: ${{ inputs.lifecycle }}
+      tenant-name: reference-applications
       version: ${{ needs.version.outputs.version }}
       version-prefix: '${{ inputs.lifecycle }}/v'
       working-directory: './${{ inputs.lifecycle }}'
