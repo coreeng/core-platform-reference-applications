@@ -17,6 +17,7 @@ jobs:
       slack_webhook_url: ${{ secrets.P2P_SLACK_WEBHOOK_URL }}
     with:
       image-name: infra-cloudsql
+      tenant-name: $(TENANT_NAME)
 
   extendedtests:
     needs: [get-latest-version]
