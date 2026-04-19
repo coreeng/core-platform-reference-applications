@@ -38,14 +38,14 @@ jobs:
     uses: coreeng/p2p/.github/workflows/p2p-get-latest-image-extended-test.yaml@v1
     with:
       image-name: ${{ needs.get-image-name.outputs.image-name }}
-      tenant-name: ${{ inputs.lifecycle }}
+      tenant-name: reference-applications
 
   extended-tests:
     needs: [get-latest-version]
     uses: coreeng/p2p/.github/workflows/p2p-workflow-extended-test.yaml@v1
     with:
       app-name: ${{ inputs.lifecycle }}
-      tenant-name: ${{ inputs.lifecycle }}
+      tenant-name: reference-applications
       working-directory: './${{ inputs.lifecycle }}'
       version: ${{ needs.get-latest-version.outputs.version }}
       version-prefix: '${{ inputs.lifecycle }}/v'
