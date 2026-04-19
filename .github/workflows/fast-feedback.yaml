@@ -31,5 +31,7 @@ jobs:
     needs: [version]
     uses: coreeng/p2p/.github/workflows/p2p-workflow-fastfeedback.yaml@v1
     with:
+      app-name: ${{ inputs.lifecycle }}
+      tenant-name: ${{ inputs.lifecycle }}
       working-directory: './${{ inputs.lifecycle }}'
       version: ${{ needs.version.outputs.version }}
