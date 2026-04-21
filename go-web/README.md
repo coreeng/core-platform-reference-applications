@@ -1,6 +1,6 @@
 # go-web
 
-Go application for the Core Platform.
+Go web application for Core Platform
 
 # Parameters
 

@@ -1,6 +1,6 @@
 # docker-web
 
-Docker Web application for the Core Platform.
+Docker web application for Core Platform
 
 # Parameters
 

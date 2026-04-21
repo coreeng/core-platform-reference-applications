@@ -1,3 +1,3 @@
 # infra-cloudsql
 
-Infrastructure provisioning application for the Core Platform.
+Infrastructure provisioning application for Core Platform

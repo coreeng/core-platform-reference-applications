@@ -1,6 +1,6 @@
 # java-web
 
-Java application for the Core Platform.
+Java web application for Core Platform
 
 # Parameters
 

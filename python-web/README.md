@@ -1,6 +1,6 @@
 # python-web
 
-A Python web service built with [FastAPI](https://fastapi.tiangolo.com/) and [Uvicorn](https://www.uvicorn.org/), scaffolded from the `python-web` Core Platform template.
+Python web application for Core Platform
 
 ## Overview
 
