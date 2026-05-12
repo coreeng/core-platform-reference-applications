@@ -1,4 +1,4 @@
-FROM docker.io/gradle:9.4.1-jdk25-noble
+FROM docker.io/gradle:9.5.0-jdk25-noble
 
 WORKDIR /opt/app
 

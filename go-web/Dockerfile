@@ -1,4 +1,4 @@
-FROM docker.io/golang:1.26.2-alpine3.23 AS build
+FROM docker.io/golang:1.26.3-alpine3.23 AS build
 WORKDIR /app
 COPY ./cmd /app/cmd
 COPY go.mod /app
