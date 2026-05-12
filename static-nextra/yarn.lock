@@ -2238,6 +2238,11 @@
   resolved "https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.9.10.tgz#a0ad5a26fe8aa996310870726e1704977f769dee"
   integrity sha512-A9gOqLdi6cV4ibazAjcQufGj0B1y/vDqYrcuP6d/6x8P27gRS8643Dj9o1dEKtB6O7fwxb2FgBmJS2mX7gpvdw==
 
+"@zod/core@0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@zod/core/-/core-0.9.0.tgz#53dfa0a61916cf7e53980ecbd9681e57362edcd1"
+  integrity sha512-bVfPiV2kDUkAJ4ArvV4MHcPZA8y3xOX6/SjzSy2kX2ACopbaaAP4wk6hd/byRmfi9MLNai+4SFJMmcATdOyclg==
+
 acorn-jsx@^5.0.0, acorn-jsx@^5.3.2:
   version "5.3.2"
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-5.3.2.tgz#7ed5bb55908b3b2f1bc55c6af1653bada7f07937"
@@ -6335,23 +6340,23 @@ next@16.2.6:
     "@next/swc-win32-x64-msvc" "16.2.6"
     sharp "^0.34.5"
 
-nextra-theme-docs@^4.6.1:
-  version "4.6.1"
-  resolved "https://registry.yarnpkg.com/nextra-theme-docs/-/nextra-theme-docs-4.6.1.tgz#bb6ab7599c084958b3cf4914b444d5b12baf1950"
-  integrity sha512-u5Hh8erVcGOXO1FVrwYBgrEjyzdYQY0k/iAhLd8RofKp+Bru3fyLy9V9W34mfJ0KHKHjv/ldlDTlb4KlL4eIuQ==
+nextra-theme-docs@4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/nextra-theme-docs/-/nextra-theme-docs-4.6.0.tgz#9469d30e3546fa0e0920b40300978552570bb2a0"
+  integrity sha512-lAFveL2sFZ6NRr602MTwsQK1bjVYYbuHkQlsrHNutwIV6YvD9IruP7M8WUXEMasjH6RY6bVN/BDS/qO7NJgbgg==
   dependencies:
     "@headlessui/react" "^2.1.2"
     clsx "^2.1.0"
     next-themes "^0.4.0"
     react-compiler-runtime "^19.1.0-rc.2"
     scroll-into-view-if-needed "^3.1.0"
-    zod "^4.1.12"
+    zod "4.0.0-beta.20250424T163858"
     zustand "^5.0.1"
 
-nextra@^4.6.1:
-  version "4.6.1"
-  resolved "https://registry.yarnpkg.com/nextra/-/nextra-4.6.1.tgz#23362b8e3613ee1a09ee1cf6de3d1faa6d1ec93d"
-  integrity sha512-yz5WMJFZ5c58y14a6Rmwt+SJUYDdIgzWSxwtnpD4XAJTq3mbOqOg3VTaJqLiJjwRSxoFRHNA1yAhnhbvbw9zSg==
+nextra@4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/nextra/-/nextra-4.6.0.tgz#48fd4cf5ba1ae368fe747dfc519fef9606ce949a"
+  integrity sha512-7kIBqQm2aEdHTtglcKDf8ZZMfPErY8iVym2a7ujEWUoHbCc5zsWloYdrtSHDRTmOH/hCqSsWJDZX+2lleKQscw==
   dependencies:
     "@formatjs/intl-localematcher" "^0.6.0"
     "@headlessui/react" "^2.1.2"
@@ -6391,7 +6396,7 @@ nextra@^4.6.1:
     unist-util-visit "^5.0.0"
     unist-util-visit-children "^3.0.0"
     yaml "^2.3.2"
-    zod "^4.1.12"
+    zod "4.0.0-beta.20250424T163858"
 
 nlcst-to-string@^4.0.0:
   version "4.0.0"
@@ -8415,7 +8420,14 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/zod-validation-error/-/zod-validation-error-4.0.2.tgz#bc605eba49ce0fcd598c127fee1c236be3f22918"
   integrity sha512-Q6/nZLe6jxuU80qb/4uJ4t5v2VEZ44lzQjPDhYJNztRQ4wyWc6VF3D3Kb/fAuPetZQnhS3hnajCf9CsWesghLQ==
 
-"zod@^3.25.0 || ^4.0.0", zod@^4.1.12:
+zod@4.0.0-beta.20250424T163858:
+  version "4.0.0-beta.20250424T163858"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-4.0.0-beta.20250424T163858.tgz#182eed707f41dc1aa3524ad79b171ce780cd926a"
+  integrity sha512-fKhW+lEJnfUGo0fvQjmam39zUytARR2UdCEh7/OXJSBbKScIhD343K74nW+UUHu/r6dkzN6Uc/GqwogFjzpCXg==
+  dependencies:
+    "@zod/core" "0.9.0"
+
+"zod@^3.25.0 || ^4.0.0":
   version "4.4.3"
   resolved "https://registry.yarnpkg.com/zod/-/zod-4.4.3.tgz#b680f172885d18bbebf21a834ea25e55a1bbf356"
   integrity sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==
