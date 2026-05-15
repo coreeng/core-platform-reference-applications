@@ -59,13 +59,62 @@ jobs:
   p2p:
     needs: [update-templates]
     if: needs.update-templates.outputs.changed_templates != '[]'
+    runs-on: ubuntu-24.04
+    permissions:
+      actions: write
+      contents: read
     strategy:
       fail-fast: false
       matrix:
         changed_template: ${{ fromJson(needs.update-templates.outputs.changed_templates) }}
-    uses: ./.github/workflows/p2p.yaml
-    with:
-      lifecycle: ${{ matrix.changed_template }}
-      ref: ${{ needs.update-templates.outputs.latest_ref }}
-    secrets:
-      SLACK_WEBHOOK_ALERT_URL: ${{ secrets.SLACK_WEBHOOK_ALERT_URL }}
+    steps:
+      - name: Run P2P workflows
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APP: ${{ matrix.changed_template }}
+          REF: ${{ needs.update-templates.outputs.latest_ref }}
+          DISPATCH_REF: ${{ github.ref_name }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          dispatch_and_wait() {
+            local workflow="$1"
+            local run_id=""
+
+            echo "Dispatching $workflow on $DISPATCH_REF for commit $REF"
+            for attempt in {1..12}; do
+              if gh workflow run "$workflow" --repo "$REPO" --ref "$DISPATCH_REF"; then
+                break
+              fi
+              if [[ "$attempt" == "12" ]]; then
+                echo "Failed to dispatch $workflow after $attempt attempts"
+                exit 1
+              fi
+              sleep 10
+            done
+
+            for attempt in {1..30}; do
+              run_id="$(gh run list \
+                --repo "$REPO" \
+                --workflow "$workflow" \
+                --json databaseId,event,headSha \
+                --jq "[.[] | select(.event == \"workflow_dispatch\" and .headSha == \"$REF\")][0].databaseId // \"\"")"
+              if [[ -n "$run_id" ]]; then
+                break
+              fi
+              sleep 10
+            done
+
+            if [[ -z "$run_id" ]]; then
+              echo "Could not find workflow_dispatch run for $workflow at $REF"
+              exit 1
+            fi
+
+            echo "Watching $workflow run $run_id"
+            gh run watch "$run_id" --repo "$REPO" --exit-status
+          }
+
+          dispatch_and_wait "$APP-fast-feedback.yaml"
+          dispatch_and_wait "$APP-extended-test.yaml"
+          dispatch_and_wait "$APP-prod.yaml"
