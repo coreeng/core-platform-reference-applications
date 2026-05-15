@@ -17,11 +17,11 @@ The Path to Production (P2P) pipeline progresses through these namespaces:
 
 | Stage | Namespace | Triggered by |
 |-------|-----------|-------------|
-| Fast Feedback | `$(TENANT_NAME)-functional` | Push / PR to `main` |
-| NFT | `$(TENANT_NAME)-nft` | Fast Feedback |
-| Integration | `$(TENANT_NAME)-integration` | Fast Feedback |
-| Extended Test | `$(TENANT_NAME)-extended-test` | Daily schedule (22:00 UTC) |
-| Prod | `$(TENANT_NAME)-prod` | Weekday schedule (05:30 UTC) |
+| Fast Feedback | `python-web-functional` | Push / PR to `main` |
+| NFT | `python-web-nft` | Fast Feedback |
+| Integration | `python-web-integration` | Fast Feedback |
+| Extended Test | `python-web-extended-test` | Daily schedule (22:00 UTC) |
+| Prod | `python-web-prod` | Weekday schedule (05:30 UTC) |
 
 ## Local Development
 
