@@ -34,6 +34,6 @@ jobs:
       env_vars: ${{ secrets.env_vars }}
     with:
       app-name: static-nextra
-      tenant-name: $(TENANT_NAME)
+      tenant-name: static-nextra
       version: ${{ needs.version.outputs.version }}
       working-directory: ./

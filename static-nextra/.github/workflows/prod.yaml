@@ -17,7 +17,7 @@ jobs:
       slack_webhook_url: ${{ secrets.P2P_SLACK_WEBHOOK_URL }}
     with:
       image-name: static-nextra
-      tenant-name: $(TENANT_NAME)
+      tenant-name: static-nextra
 
   prod:
     needs: [get-latest-version]
@@ -27,7 +27,7 @@ jobs:
       env_vars: ${{ secrets.env_vars }}
     with:
       app-name: static-nextra
-      tenant-name: $(TENANT_NAME)
+      tenant-name: static-nextra
       version: ${{ needs.get-latest-version.outputs.version }}
       version-prefix: v
       working-directory: ./

@@ -1,5 +1,5 @@
 # Set tenant and app name
-P2P_TENANT_NAME ?= $(TENANT_NAME)
+P2P_TENANT_NAME ?= nextjs-web
 P2P_APP_NAME ?= nextjs-web
 
 # Download and include p2p makefile

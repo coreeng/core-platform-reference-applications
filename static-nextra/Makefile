@@ -1,5 +1,5 @@
 # Set tenant and app name
-P2P_TENANT_NAME ?= $(TENANT_NAME)
+P2P_TENANT_NAME ?= static-nextra
 P2P_APP_NAME ?= static-nextra
 
 # Download and include p2p makefile

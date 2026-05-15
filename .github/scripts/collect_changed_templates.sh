@@ -46,7 +46,7 @@ for t in "${all_templates[@]}"; do
   echo "Rendering template '$t'"
   rm -rf "./$reference_apps_dir/$t"
   mkdir -p "./$reference_apps_dir/$t"
-  corectl template render "$t" "./$reference_apps_dir/$t" --templates "$templates_dir" --args-file "$args_file" -a "name=$t"
+  corectl template render "$t" "./$reference_apps_dir/$t" --templates "$templates_dir" --args-file "$args_file" -a "name=$t" -a "tenant=$t"
   git -C "./$reference_apps_dir" add "./$t"
   if [[ "$(git -C "$reference_apps_dir" status "./$t" --untracked-files=no --porcelain)" ]]; then
     echo "Template '$t' has changed!"

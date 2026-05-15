@@ -37,14 +37,14 @@ jobs:
     uses: coreeng/p2p/.github/workflows/p2p-get-latest-image-prod.yaml@v1
     with:
       image-name: ${{ needs.get-image-name.outputs.image-name }}
-      tenant-name: reference-applications
+      tenant-name: ${{ inputs.lifecycle }}
 
   prod:
     needs: [get-latest-version]
     uses: coreeng/p2p/.github/workflows/p2p-workflow-prod.yaml@v1
     with:
       app-name: ${{ inputs.lifecycle }}
-      tenant-name: reference-applications
+      tenant-name: ${{ inputs.lifecycle }}
       working-directory: './${{ inputs.lifecycle }}'
       version: ${{ needs.get-latest-version.outputs.version }}
       version-prefix: '${{ inputs.lifecycle }}/v'
