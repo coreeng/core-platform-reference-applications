@@ -34,6 +34,6 @@ jobs:
       env_vars: ${{ secrets.env_vars }}
     with:
       app-name: java-web
-      tenant-name: $(TENANT_NAME)
+      tenant-name: java-web
       version: ${{ needs.version.outputs.version }}
       working-directory: ./

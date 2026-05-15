@@ -17,7 +17,7 @@ jobs:
       slack_webhook_url: ${{ secrets.P2P_SLACK_WEBHOOK_URL }}
     with:
       image-name: infra-tofu
-      tenant-name: $(TENANT_NAME)
+      tenant-name: infra-tofu
 
   prod:
     needs: [get-latest-version]
@@ -27,7 +27,7 @@ jobs:
       env_vars: ${{ secrets.env_vars }}
     with:
       app-name: infra-tofu
-      tenant-name: $(TENANT_NAME)
+      tenant-name: infra-tofu
       version: ${{ needs.get-latest-version.outputs.version }}
       version-prefix: v
       working-directory: ./

@@ -1,3 +1,2 @@
-tenant: $(TENANT_NAME)
 working_directory: ./
 version_prefix: v

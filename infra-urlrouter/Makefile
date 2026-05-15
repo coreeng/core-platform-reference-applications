@@ -1,5 +1,5 @@
 # Set tenant and app name
-P2P_TENANT_NAME ?= $(TENANT_NAME)
+P2P_TENANT_NAME ?= infra-urlrouter
 P2P_APP_NAME ?= infra-urlrouter
 
 # Download and include p2p makefile

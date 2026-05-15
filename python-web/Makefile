@@ -1,5 +1,5 @@
 # Set tenant and app name
-P2P_TENANT_NAME ?= $(TENANT_NAME)
+P2P_TENANT_NAME ?= python-web
 P2P_APP_NAME ?= python-web
 
 # Download and include p2p makefile
