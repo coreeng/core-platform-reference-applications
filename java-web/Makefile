@@ -104,7 +104,7 @@ run-integration:
 
 .PHONY: run-extended-test
 run-extended-test:
-	bash p2p/scripts/helm-test.sh extended "$(p2p_namespace)" "$(p2p_app_name)" false
+	bash p2p/scripts/helm-test.sh extended "$(p2p_namespace)" "$(p2p_app_name)" true
 
 .PHONY: run-%
 run-%:
