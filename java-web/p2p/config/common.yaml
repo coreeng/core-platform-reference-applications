@@ -1,6 +1,17 @@
 ---
 replicaCount: ${p2p_app_config_replicas}
 
+autoscaling:
+  enabled: ${p2p_app_config_autoscaling_enabled}
+  minReplicas: ${p2p_app_config_autoscaling_minReplicas}
+  maxReplicas: ${p2p_app_config_autoscaling_maxReplicas}
+  targetCPUUtilizationPercentage: ${p2p_app_config_autoscaling_targetCPUUtilizationPercentage}
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: ${p2p_app_config_autoscaling_behavior_scaleUp_stabilizationWindowSeconds}
+    scaleDown:
+      stabilizationWindowSeconds: ${p2p_app_config_autoscaling_behavior_scaleDown_stabilizationWindowSeconds}
+
 resources:
   requests:
     cpu: ${p2p_app_config_resources_limits_cpu}

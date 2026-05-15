@@ -1,0 +1,4 @@
+---
+# Disable HPA because this stage scales workloads to zero after tests.
+autoscaling:
+  enabled: false
