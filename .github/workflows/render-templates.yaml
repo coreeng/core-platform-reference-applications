@@ -118,3 +118,94 @@ jobs:
           dispatch_and_wait "$APP-fast-feedback.yaml"
           dispatch_and_wait "$APP-extended-test.yaml"
           dispatch_and_wait "$APP-prod.yaml"
+
+  cleanup-matrix:
+    needs: [update-templates]
+    if: needs.update-templates.outputs.changed_templates != '[]'
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - id: matrix
+        env:
+          CHANGED_TEMPLATES: ${{ needs.update-templates.outputs.changed_templates }}
+          FAST_FEEDBACK: ${{ vars.FAST_FEEDBACK }}
+          PROD: ${{ vars.PROD }}
+        run: |
+          set -euo pipefail
+          matrix="$(jq -cn \
+            --argjson apps "$CHANGED_TEMPLATES" \
+            --argjson fast_feedback "$FAST_FEEDBACK" \
+            --argjson prod "$PROD" \
+            '{include: (
+              [$apps[] as $app | $fast_feedback[] | {app: $app, stage: "integration", deploy_env: .deploy_env}] +
+              [$apps[] as $app | $prod[] | {app: $app, stage: "prod", deploy_env: .deploy_env}]
+            )}')"
+          echo "Cleanup matrix: $matrix"
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+  cleanup:
+    needs: [update-templates, p2p, cleanup-matrix]
+    if: always() && needs.update-templates.result == 'success' && needs.cleanup-matrix.result == 'success' && needs.update-templates.outputs.changed_templates != '[]'
+    runs-on: ubuntu-24.04
+    environment: ${{ matrix.deploy_env }}
+    permissions:
+      contents: read
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.cleanup-matrix.outputs.matrix) }}
+    env:
+      APP: ${{ matrix.app }}
+      STAGE: ${{ matrix.stage }}
+      DPLATFORM: ${{ vars.DPLATFORM }}
+      PROJECT_ID: ${{ vars.PROJECT_ID }}
+      PROJECT_NUMBER: ${{ vars.PROJECT_NUMBER }}
+      REGION: ${{ vars.REGION || 'europe-west2' }}
+      SERVICE_ACCOUNT: p2p-${{ matrix.app }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com
+      WORKLOAD_IDENTITY_PROVIDER: projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/p2p-${{ matrix.app }}/providers/p2p-${{ matrix.app }}
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ env.SERVICE_ACCOUNT }}
+          project_id: ${{ env.PROJECT_ID }}
+          token_format: access_token
+          access_token_lifetime: 3600s
+
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v3
+        with:
+          skip_install: true
+
+      - name: Setup kubeconfig
+        uses: google-github-actions/get-gke-credentials@v3
+        with:
+          context_name: gke_${{ env.PROJECT_ID }}_${{ env.REGION }}_${{ env.DPLATFORM }}
+          cluster_name: ${{ env.DPLATFORM }}
+          location: ${{ env.REGION }}
+          project_id: ${{ env.PROJECT_ID }}
+          use_dns_based_endpoint: true
+
+      - name: Scale down reference app namespace
+        run: |
+          set -euo pipefail
+          namespace="$APP-$STAGE"
+
+          if ! kubectl get namespace "$namespace" >/dev/null 2>&1; then
+            echo "Namespace $namespace does not exist; nothing to scale down"
+            exit 0
+          fi
+
+          echo "Deleting HPAs in $namespace"
+          kubectl -n "$namespace" delete hpa --all --ignore-not-found
+
+          resources="$(kubectl -n "$namespace" get deployments,statefulsets -o name 2>/dev/null || true)"
+          if [[ -z "$resources" ]]; then
+            echo "No deployments or statefulsets found in $namespace"
+            exit 0
+          fi
+
+          echo "Scaling workloads in $namespace to zero"
+          kubectl -n "$namespace" scale --replicas=0 $resources

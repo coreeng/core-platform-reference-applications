@@ -58,8 +58,9 @@ for t in "${all_templates[@]}"; do
     mkdir -p "./$reference_apps_dir/.github/workflows"
     for workflow in fast-feedback extended-test prod; do
       if [[ -f "./$reference_apps_dir/$t/.github/workflows/$workflow.yaml" ]]; then
-        mv "./$reference_apps_dir/$t/.github/workflows/$workflow.yaml" \
-          "./$reference_apps_dir/.github/workflows/$t-$workflow.yaml"
+        workflow_file="./$reference_apps_dir/.github/workflows/$t-$workflow.yaml"
+        mv "./$reference_apps_dir/$t/.github/workflows/$workflow.yaml" "$workflow_file"
+        yq -i 'del(.on.schedule)' "$workflow_file"
       fi
     done
     rmdir "./$reference_apps_dir/$t/.github/workflows" 2>/dev/null || true
