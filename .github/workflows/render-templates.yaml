@@ -138,8 +138,8 @@ jobs:
             --argjson fast_feedback "$FAST_FEEDBACK" \
             --argjson prod "$PROD" \
             '{include: (
-              [$apps[] as $app | $fast_feedback[] | {app: $app, stage: "integration", deploy_env: .deploy_env}] +
-              [$apps[] as $app | $prod[] | {app: $app, stage: "prod", deploy_env: .deploy_env}]
+              [$apps[] as $app | $fast_feedback.include[] | {app: $app, stage: "integration", deploy_env: .deploy_env}] +
+              [$apps[] as $app | $prod.include[] | {app: $app, stage: "prod", deploy_env: .deploy_env}]
             )}')"
           echo "Cleanup matrix: $matrix"
           echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
