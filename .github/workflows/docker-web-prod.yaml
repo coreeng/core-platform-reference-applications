@@ -1,15 +1,10 @@
 ---
 name: docker-web Prod
-
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "30 5 * * 1-5"
-
 permissions:
   contents: read
   id-token: write
-
 jobs:
   get-latest-version:
     uses: coreeng/p2p/.github/workflows/p2p-get-latest-image-prod.yaml@v1
@@ -18,7 +13,6 @@ jobs:
     with:
       image-name: docker-web
       tenant-name: docker-web
-
   prod:
     needs: [get-latest-version]
     uses: coreeng/p2p/.github/workflows/p2p-workflow-prod.yaml@v1
