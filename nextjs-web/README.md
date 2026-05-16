@@ -1,5 +1,6 @@
 # nextjs-web
 
+
 Next.js web application for Core Platform
 
 # Parameters
