@@ -10,21 +10,21 @@ sequenceDiagram
     participant ST as core-platform-software-templates
     box core-platform-reference-applications
       participant RT as render-templates.yaml
-      participant FF as go-web-fast-feedback.yaml
-      participant ET as go-web-extended-test.yaml
-      participant PROD as go-web-prod.yaml
+      participant FF as reference-go-web-fast-feedback.yaml
+      participant ET as reference-go-web-extended-test.yaml
+      participant PROD as reference-go-web-prod.yaml
     end
     
-    C ->> ST: Update 'go-web' template
+    C ->> ST: Update 'reference-go-web' template
     
     ST ->> RT: Trigger workflow
     RT ->> RT: Render all templates
-    RT ->> RT: Push updates for 'go-web' template
-    RT ->> FF: Trigger Fast Feedback for 'go-web'
+    RT ->> RT: Push updates for 'reference-go-web' template
+    RT ->> FF: Trigger Fast Feedback for 'reference-go-web'
     FF -->> RT: Completed
-    RT ->> ET: Trigger Extended Test for 'go-web'
+    RT ->> ET: Trigger Extended Test for 'reference-go-web'
     ET -->> RT: Completed
-    RT ->> PROD: Trigger Prod for 'go-web'
+    RT ->> PROD: Trigger Prod for 'reference-go-web'
 ```
 
 Hence, changes to applications are happening automatically
