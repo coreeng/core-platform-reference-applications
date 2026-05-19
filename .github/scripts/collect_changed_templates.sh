@@ -43,41 +43,42 @@ set -euo pipefail
 mapfile -t all_templates < <(corectl template list --templates "$templates_dir")
 changed_templates=()
 for t in "${all_templates[@]}"; do
+  reference_t="reference-$t"
   echo "Rendering template '$t'"
-  rm -rf "./$reference_apps_dir/$t"
-  mkdir -p "./$reference_apps_dir/$t"
-  corectl template render "$t" "./$reference_apps_dir/$t" \
+  rm -rf "./$reference_apps_dir/$reference_t"
+  mkdir -p "./$reference_apps_dir/$reference_t"
+  corectl template render "$t" "./$reference_apps_dir/$reference_t" \
     --templates "$templates_dir" \
     --args-file "$args_file" \
-    -a "name=$t" \
-    -a "tenant=$t" \
-    -a "working_directory=$t" \
-    -a "version_prefix=$t/v"
+    -a "name=$reference_t" \
+    -a "tenant=$reference_t" \
+    -a "working_directory=$reference_t" \
+    -a "version_prefix=$reference_t/v"
 
-  if [[ -d "./$reference_apps_dir/$t/.github/workflows" ]]; then
+  if [[ -d "./$reference_apps_dir/$reference_t/.github/workflows" ]]; then
     mkdir -p "./$reference_apps_dir/.github/workflows"
     for workflow in fast-feedback extended-test prod; do
-      if [[ -f "./$reference_apps_dir/$t/.github/workflows/$workflow.yaml" ]]; then
-        workflow_file="./$reference_apps_dir/.github/workflows/$t-$workflow.yaml"
-        mv "./$reference_apps_dir/$t/.github/workflows/$workflow.yaml" "$workflow_file"
+      if [[ -f "./$reference_apps_dir/$reference_t/.github/workflows/$workflow.yaml" ]]; then
+        workflow_file="./$reference_apps_dir/.github/workflows/$reference_t-$workflow.yaml"
+        mv "./$reference_apps_dir/$reference_t/.github/workflows/$workflow.yaml" "$workflow_file"
         yq -i 'del(.on.schedule)' "$workflow_file"
       fi
     done
-    rmdir "./$reference_apps_dir/$t/.github/workflows" 2>/dev/null || true
-    rmdir "./$reference_apps_dir/$t/.github" 2>/dev/null || true
+    rmdir "./$reference_apps_dir/$reference_t/.github/workflows" 2>/dev/null || true
+    rmdir "./$reference_apps_dir/$reference_t/.github" 2>/dev/null || true
   fi
 
-  git -C "./$reference_apps_dir" add "./$t"
-  git -C "./$reference_apps_dir" add "./.github/workflows/$t-fast-feedback.yaml" \
-    "./.github/workflows/$t-extended-test.yaml" \
-    "./.github/workflows/$t-prod.yaml"
-  if [[ "$(git -C "$reference_apps_dir" status "./$t" --untracked-files=no --porcelain)" ]]; then
+  git -C "./$reference_apps_dir" add "./$reference_t"
+  git -C "./$reference_apps_dir" add "./.github/workflows/$reference_t-fast-feedback.yaml" \
+    "./.github/workflows/$reference_t-extended-test.yaml" \
+    "./.github/workflows/$reference_t-prod.yaml"
+  if [[ "$(git -C "$reference_apps_dir" status "./$reference_t" --untracked-files=no --porcelain)" ]]; then
     echo "Template '$t' has changed!"
     changed_templates+=("$t")
   elif [[ "$(git -C "$reference_apps_dir" status \
-    "./.github/workflows/$t-fast-feedback.yaml" \
-    "./.github/workflows/$t-extended-test.yaml" \
-    "./.github/workflows/$t-prod.yaml" \
+    "./.github/workflows/$reference_t-fast-feedback.yaml" \
+    "./.github/workflows/$reference_t-extended-test.yaml" \
+    "./.github/workflows/$reference_t-prod.yaml" \
     --untracked-files=no --porcelain)" ]]; then
     echo "Template '$t' workflows have changed!"
     changed_templates+=("$t")
