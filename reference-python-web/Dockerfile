@@ -1,6 +1,6 @@
 FROM python:3.14.5-slim AS builder
 
-COPY --from=ghcr.io/astral-sh/uv:0.11.13 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.11.15 /uv /uvx /bin/
 
 WORKDIR /app
 
