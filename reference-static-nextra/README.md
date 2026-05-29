@@ -1,5 +1,5 @@
 # reference-static-nextra
- 
+
 Nextra docs application for Core Platform
 
 # Parameters
