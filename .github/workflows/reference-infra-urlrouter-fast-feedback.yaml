@@ -33,4 +33,5 @@ jobs:
       app-name: reference-infra-urlrouter
       tenant-name: reference-infra-urlrouter
       version: ${{ needs.version.outputs.version }}
+      skip-subnamespaces-create: true
       working-directory: reference-infra-urlrouter
