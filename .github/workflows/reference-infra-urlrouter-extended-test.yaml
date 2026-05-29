@@ -24,4 +24,5 @@ jobs:
       tenant-name: reference-infra-urlrouter
       version: ${{ needs.get-latest-version.outputs.version }}
       version-prefix: reference-infra-urlrouter/v
+      skip-subnamespaces-create: true
       working-directory: reference-infra-urlrouter

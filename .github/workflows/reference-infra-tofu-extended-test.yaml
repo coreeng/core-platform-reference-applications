@@ -24,4 +24,5 @@ jobs:
       tenant-name: reference-infra-tofu
       version: ${{ needs.get-latest-version.outputs.version }}
       version-prefix: reference-infra-tofu/v
+      skip-subnamespaces-create: true
       working-directory: reference-infra-tofu
