@@ -130,15 +130,18 @@ jobs:
         env:
           CHANGED_TEMPLATES: ${{ needs.update-templates.outputs.changed_templates }}
           FAST_FEEDBACK: ${{ vars.FAST_FEEDBACK }}
+          EXTENDED_TEST: ${{ vars.EXTENDED_TEST }}
           PROD: ${{ vars.PROD }}
         run: |
           set -euo pipefail
           matrix="$(jq -cn \
             --argjson apps "$CHANGED_TEMPLATES" \
             --argjson fast_feedback "$FAST_FEEDBACK" \
+            --argjson extended_test "$EXTENDED_TEST" \
             --argjson prod "$PROD" \
             '{include: (
-              [$apps[] as $app | $fast_feedback.include[] | {app: ("reference-" + $app), stage: "integration", deploy_env: .deploy_env}] +
+              [$apps[] as $app | $fast_feedback.include[] | .deploy_env as $deploy_env | ["functional", "nft", "integration"][] | {app: ("reference-" + $app), stage: ., deploy_env: $deploy_env}] +
+              [$apps[] as $app | $extended_test.include[] | {app: ("reference-" + $app), stage: "extended", deploy_env: .deploy_env}] +
               [$apps[] as $app | $prod.include[] | {app: ("reference-" + $app), stage: "prod", deploy_env: .deploy_env}]
             )}')"
           echo "Cleanup matrix: $matrix"
@@ -188,24 +191,19 @@ jobs:
           project_id: ${{ env.PROJECT_ID }}
           use_dns_based_endpoint: true
 
-      - name: Scale down reference app namespace
+      - name: Delete reference app subnamespace
         run: |
           set -euo pipefail
-          namespace="$APP-$STAGE"
+          parent_namespace="$APP"
+          subnamespace="$APP-$STAGE"
 
-          if ! kubectl get namespace "$namespace" >/dev/null 2>&1; then
-            echo "Namespace $namespace does not exist; nothing to scale down"
+          if ! kubectl get namespace "$subnamespace" >/dev/null 2>&1; then
+            echo "Namespace $subnamespace does not exist; nothing to clean up"
             exit 0
           fi
 
-          echo "Deleting HPAs in $namespace"
-          kubectl -n "$namespace" delete hpa --all --ignore-not-found
+          echo "Deleting subnamespace anchor $subnamespace in $parent_namespace"
+          kubectl -n "$parent_namespace" delete subnamespaceanchor "$subnamespace"
 
-          resources="$(kubectl -n "$namespace" get deployments,statefulsets -o name 2>/dev/null || true)"
-          if [[ -z "$resources" ]]; then
-            echo "No deployments or statefulsets found in $namespace"
-            exit 0
-          fi
-
-          echo "Scaling workloads in $namespace to zero"
-          kubectl -n "$namespace" scale --replicas=0 $resources
+          echo "Waiting for namespace $subnamespace to be deleted"
+          kubectl wait --for=delete "namespace/$subnamespace" --timeout=10m
