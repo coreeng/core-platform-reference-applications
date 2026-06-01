@@ -9,14 +9,14 @@ config:
       scaleUp:
         stabilizationWindowSeconds: 30
     enabled: true
-    maxReplicas: 8
-    minReplicas: 2
+    maxReplicas: 9
+    minReplicas: 3
     targetCPUUtilizationPercentage: 80
-  replicas: 2
+  replicas: 3
   resources:
     limits:
       cpu: 250m
       memory: 512Mi
     requests:
-      cpu: 250m
+      cpu: 50m
       memory: 512Mi
