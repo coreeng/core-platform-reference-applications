@@ -44,6 +44,19 @@ The module creates:
 | `enabled` | `bool` | (required) | Whether to create Cloud SQL resources |
 | `allowed_ip_ranges` | `list(map(string))` | `[]` | List of authorized networks for public IP access. Each entry should have `name` and `value` (CIDR) |
 
+#### Monitoring Configuration
+
+The module creates Cloud Monitoring alert policies for each Cloud SQL instance covering CPU utilization, disk utilization, memory utilization, disk read ops, and disk write ops. Email notification channels are created only when `notification_emails` is set.
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `monitoring.notification_emails` | `list(string)` | `[]` | Email recipients for Cloud SQL alert notifications. Google Monitoring email channels may require recipient verification before notifications are active. |
+| `monitoring.thresholds.cpu_utilization` | `number` | `0.9` | CPU utilization alert threshold. |
+| `monitoring.thresholds.disk_utilization` | `number` | `0.8` | Disk utilization alert threshold. |
+| `monitoring.thresholds.memory_utilization` | `number` | `0.9` | Memory utilization alert threshold. |
+| `monitoring.thresholds.read_ops_per_second` | `number` | `1000` | Disk read operations per second alert threshold. |
+| `monitoring.thresholds.write_ops_per_second` | `number` | `1000` | Disk write operations per second alert threshold. |
+
 #### Cluster Configuration
 
 Each PostgreSQL cluster supports the following configuration:

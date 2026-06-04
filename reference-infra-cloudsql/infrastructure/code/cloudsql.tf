@@ -3,6 +3,16 @@ variable "cloudsql" {
   type = object({
     enabled           = bool
     allowed_ip_ranges = optional(list(map(string)), [])
+    monitoring = optional(object({
+      notification_emails = optional(list(string), [])
+      thresholds = optional(object({
+        cpu_utilization      = optional(number, 0.9)
+        disk_utilization     = optional(number, 0.8)
+        memory_utilization   = optional(number, 0.9)
+        read_ops_per_second  = optional(number, 1000)
+        write_ops_per_second = optional(number, 1000)
+      }), {})
+    }), {})
     clusters = optional(object({
       postgresql = optional(list(object({
         name               = string
