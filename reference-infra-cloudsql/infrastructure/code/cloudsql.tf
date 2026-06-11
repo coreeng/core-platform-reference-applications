@@ -13,6 +13,13 @@ variable "cloudsql" {
         write_ops_per_second = optional(number, 1000)
       }), {})
     }), {})
+    ids = optional(object({
+      enabled               = optional(bool, false)
+      location              = optional(string)
+      severity              = optional(string, "INFORMATIONAL")
+      packet_mirroring_tags = optional(list(string), ["cloudsql-psa"])
+      notifications_enabled = optional(bool, true)
+    }), {})
     clusters = optional(object({
       postgresql = optional(list(object({
         name               = string
@@ -78,6 +85,11 @@ variable "cloudsql" {
       })))
     }))
   })
+
+  validation {
+    condition     = contains(["INFORMATIONAL", "LOW", "MEDIUM"], try(var.cloudsql.ids.severity, "INFORMATIONAL"))
+    error_message = "cloudsql.ids.severity must be INFORMATIONAL, LOW, or MEDIUM."
+  }
 }
 
 module "cloudsql" {

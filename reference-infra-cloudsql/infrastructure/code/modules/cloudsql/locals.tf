@@ -46,6 +46,12 @@ locals {
     for channel in google_monitoring_notification_channel.cloudsql_email : channel.name
   ]
 
+  cloud_ids_enabled               = try(var.cloudsql.ids.enabled, false)
+  cloud_ids_location              = coalesce(try(var.cloudsql.ids.location, null), "${var.region}-b")
+  cloud_ids_severity              = try(var.cloudsql.ids.severity, "INFORMATIONAL")
+  cloud_ids_packet_mirroring_tags = try(var.cloudsql.ids.packet_mirroring_tags, ["cloudsql-psa"])
+  cloud_ids_notifications_enabled = try(var.cloudsql.ids.notifications_enabled, true)
+
   cloudsql_alert_metrics = {
     cpu_utilization = {
       display_name       = "CPU utilization"
