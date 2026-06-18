@@ -8,6 +8,21 @@ class GreetingControllerTest {
     private final GreetingController controller = new GreetingController();
 
     @Test
+    void returnsGreetingForNormalName() {
+        assertEquals("Hello John!", controller.hello("John"));
+    }
+
+    @Test
+    void handlesEmptyName() {
+        assertEquals("Hello !", controller.hello(""));
+    }
+
+    @Test
+    void handlesNullName() {
+        assertEquals("Hello !", controller.hello(null));
+    }
+
+    @Test
     void escapesNameParameter() {
         assertEquals(
                 "Hello &lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;!",
