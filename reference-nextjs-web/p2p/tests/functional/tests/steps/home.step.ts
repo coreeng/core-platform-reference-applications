@@ -1,5 +1,5 @@
 import { Then, Given } from "@cucumber/cucumber";
-import { expect, Locator } from "@playwright/test";
+import { expect } from "@playwright/test";
 import { CustomWorld } from "./custom-world";
 
 const BASE_URL = process.env.SERVICE_ENDPOINT || "http://localhost:3000";
