@@ -9,6 +9,6 @@ import org.springframework.web.util.HtmlUtils;
 public class GreetingController {
     @GetMapping("/hello")
     public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
-        return String.format("Hello %s!", name == null ? "" : HtmlUtils.htmlEscape(name));
+        return String.format("Hello %s!", HtmlUtils.htmlEscape(name));
     }
 }
