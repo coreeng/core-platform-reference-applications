@@ -1,6 +1,5 @@
 # reference-go-web
 
-
 Go web application for Core Platform
 
 # Parameters
