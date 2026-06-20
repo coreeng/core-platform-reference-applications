@@ -1,0 +1,16 @@
+---
+name: reference-infra-urlrouter Security Scan
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  scheduled-security-scan:
+    uses: coreeng/p2p/.github/workflows/p2p-workflow-security-scan.yaml@v1
+    secrets:
+      env_vars: ${{ secrets.env_vars }}
+    with:
+      tenant-name: reference-infra-urlrouter
+      security-scan-blocking-severity: "off"
+      working-directory: reference-infra-urlrouter

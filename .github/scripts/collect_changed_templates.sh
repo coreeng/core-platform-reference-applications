@@ -57,7 +57,7 @@ for t in "${all_templates[@]}"; do
 
   if [[ -d "./$reference_apps_dir/$reference_t/.github/workflows" ]]; then
     mkdir -p "./$reference_apps_dir/.github/workflows"
-    for workflow in fast-feedback extended-test prod; do
+    for workflow in fast-feedback extended-test prod scheduled-security-scan; do
       if [[ -f "./$reference_apps_dir/$reference_t/.github/workflows/$workflow.yaml" ]]; then
         workflow_file="./$reference_apps_dir/.github/workflows/$reference_t-$workflow.yaml"
         mv "./$reference_apps_dir/$reference_t/.github/workflows/$workflow.yaml" "$workflow_file"
@@ -71,7 +71,8 @@ for t in "${all_templates[@]}"; do
   git -C "./$reference_apps_dir" add "./$reference_t"
   git -C "./$reference_apps_dir" add "./.github/workflows/$reference_t-fast-feedback.yaml" \
     "./.github/workflows/$reference_t-extended-test.yaml" \
-    "./.github/workflows/$reference_t-prod.yaml"
+    "./.github/workflows/$reference_t-prod.yaml" \
+    "./.github/workflows/$reference_t-scheduled-security-scan.yaml"
   if [[ "$(git -C "$reference_apps_dir" status "./$reference_t" --untracked-files=no --porcelain)" ]]; then
     echo "Template '$t' has changed!"
     changed_templates+=("$t")
@@ -79,6 +80,7 @@ for t in "${all_templates[@]}"; do
     "./.github/workflows/$reference_t-fast-feedback.yaml" \
     "./.github/workflows/$reference_t-extended-test.yaml" \
     "./.github/workflows/$reference_t-prod.yaml" \
+    "./.github/workflows/$reference_t-scheduled-security-scan.yaml" \
     --untracked-files=no --porcelain)" ]]; then
     echo "Template '$t' workflows have changed!"
     changed_templates+=("$t")
