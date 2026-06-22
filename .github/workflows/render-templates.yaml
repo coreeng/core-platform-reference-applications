@@ -119,6 +119,7 @@ jobs:
           dispatch_and_wait "reference-$APP-fast-feedback.yaml"
           dispatch_and_wait "reference-$APP-extended-test.yaml"
           dispatch_and_wait "reference-$APP-prod.yaml"
+          dispatch_and_wait "reference-$APP-scheduled-security-scan.yaml"
 
   cleanup-matrix:
     needs: [update-templates]
