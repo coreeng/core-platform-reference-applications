@@ -1,6 +1,5 @@
 # reference-docker-web
 
-
 Docker web application for Core Platform
 
 # Parameters
