@@ -6,7 +6,8 @@ COPY go.sum /app
 
 RUN go build -o service /app/cmd/service/main.go
 
-FROM docker.io/alpine:3.23.4
+FROM docker.io/alpine:3.24.1
+
 WORKDIR /app
 COPY --from=build /app/service ./
 
