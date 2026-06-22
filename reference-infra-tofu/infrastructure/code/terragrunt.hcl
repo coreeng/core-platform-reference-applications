@@ -18,8 +18,11 @@ locals {
   ])
 }
 
-# Skip execution if required configuration is missing
-skip = !local.has_required_config
+# Exclude from Terragrunt run queues if required configuration is missing
+exclude {
+  if      = !local.has_required_config
+  actions = ["all"]
+}
 
 inputs = {
   p2p_version               = local.p2p_version
