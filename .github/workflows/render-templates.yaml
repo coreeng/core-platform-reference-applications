@@ -3,14 +3,20 @@ on:
   workflow_call:
     inputs: {}
   workflow_dispatch:
-    inputs: {}
+    inputs:
+      run_full_p2p:
+        description: Run P2P for all reference apps even if templates did not change
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   update-templates:
     runs-on: ubuntu-24.04
     outputs:
-      latest_ref: ${{ steps.push.outputs.commit_hash }}
+      latest_ref: ${{ steps.push.outputs.commit_hash || github.sha }}
       changed_templates: ${{ steps.render.outputs.changed_templates }}
+      p2p_templates: ${{ steps.render.outputs.p2p_templates }}
     permissions:
       contents: write
     steps:
@@ -30,6 +36,8 @@ jobs:
           extract: true
           out-file-path: corectl
       - id: render
+        env:
+          RUN_FULL_P2P: ${{ github.event_name == 'workflow_dispatch' && inputs.run_full_p2p }}
         run: |
           corectl_path="$(realpath ./corectl)"
           export PATH="${PATH}:${corectl_path}"
@@ -39,8 +47,15 @@ jobs:
             -o ./changed_templates.json \
             -a ./reference-apps/.github/data/args.yaml
           ct_json="$(cat ./changed_templates.json)"
+          if [[ "$RUN_FULL_P2P" == "true" ]]; then
+            p2p_json="$(corectl template list --templates ./software-templates | jq -Rsc 'split("\n")[:-1]')"
+          else
+            p2p_json="$ct_json"
+          fi
           echo "Changed templates: $ct_json"
+          echo "P2P templates: $p2p_json"
           echo "changed_templates=$ct_json" >> "$GITHUB_OUTPUT"
+          echo "p2p_templates=$p2p_json" >> "$GITHUB_OUTPUT"
           git -C "./reference-apps" status --porcelain
       - uses: stefanzweifel/git-auto-commit-action@v7
         id: push
@@ -59,7 +74,7 @@ jobs:
 
   p2p:
     needs: [update-templates]
-    if: needs.update-templates.outputs.changed_templates != '[]'
+    if: needs.update-templates.outputs.p2p_templates != '[]'
     runs-on: ubuntu-24.04
     permissions:
       actions: write
@@ -67,7 +82,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        changed_template: ${{ fromJson(needs.update-templates.outputs.changed_templates) }}
+        changed_template: ${{ fromJson(needs.update-templates.outputs.p2p_templates) }}
     steps:
       - name: Run P2P workflows
         env:
@@ -123,21 +138,21 @@ jobs:
 
   cleanup-matrix:
     needs: [update-templates]
-    if: needs.update-templates.outputs.changed_templates != '[]'
+    if: needs.update-templates.outputs.p2p_templates != '[]'
     runs-on: ubuntu-24.04
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
       - id: matrix
         env:
-          CHANGED_TEMPLATES: ${{ needs.update-templates.outputs.changed_templates }}
+          P2P_TEMPLATES: ${{ needs.update-templates.outputs.p2p_templates }}
           FAST_FEEDBACK: ${{ vars.FAST_FEEDBACK }}
           EXTENDED_TEST: ${{ vars.EXTENDED_TEST }}
           PROD: ${{ vars.PROD }}
         run: |
           set -euo pipefail
           matrix="$(jq -cn \
-            --argjson apps "$CHANGED_TEMPLATES" \
+            --argjson apps "$P2P_TEMPLATES" \
             --argjson fast_feedback "$FAST_FEEDBACK" \
             --argjson extended_test "$EXTENDED_TEST" \
             --argjson prod "$PROD" \
@@ -151,7 +166,7 @@ jobs:
 
   cleanup:
     needs: [update-templates, p2p, cleanup-matrix]
-    if: always() && needs.update-templates.result == 'success' && needs.cleanup-matrix.result == 'success' && needs.update-templates.outputs.changed_templates != '[]'
+    if: always() && needs.update-templates.result == 'success' && needs.cleanup-matrix.result == 'success' && needs.update-templates.outputs.p2p_templates != '[]'
     runs-on: ubuntu-24.04
     environment: ${{ matrix.deploy_env }}
     permissions:
