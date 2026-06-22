@@ -2,6 +2,8 @@
 name: reference-java-web Security Scan
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 4 * * *"
 permissions:
   contents: read
   id-token: write
