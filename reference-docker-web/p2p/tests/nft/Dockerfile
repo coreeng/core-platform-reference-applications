@@ -1,4 +1,4 @@
-FROM docker.io/golang:1.26.4-alpine3.23 AS build
+FROM docker.io/golang:1.26.4-alpine3.24 AS build
 WORKDIR $GOPATH/src/go.k6.io/k6
 
 # hadolint ignore=DL3018
@@ -8,7 +8,7 @@ RUN apk add --no-cache git && \
 
 FROM docker.io/prom/prometheus:v2.55.1 AS prometheus
 
-FROM docker.io/alpine:3.23.4
+FROM docker.io/alpine:3.24.1
 
 # hadolint ignore=DL3018
 RUN apk add --no-cache ca-certificates && \
