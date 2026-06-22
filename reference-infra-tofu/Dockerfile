@@ -27,7 +27,7 @@ RUN curl -Lsfo opentofu.tgz "https://github.com/opentofu/opentofu/releases/downl
  && tofu version
 
 # Install terragrunt
-ARG TERRAGRUNT_VERSION=1.0.8
+ARG TERRAGRUNT_VERSION=0.92.1
 RUN curl -Lsfo terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_$(uname -m | sed -e "s/aarch64/arm64/" -e "s/x86_64/amd64/")" \
  && install -o root -g root -m 0755 terragrunt /usr/local/bin/ \
  && rm terragrunt \
