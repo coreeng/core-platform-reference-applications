@@ -1,6 +1,5 @@
 # reference-python-web
 
-
 Python web application for Core Platform
 
 ## Overview
