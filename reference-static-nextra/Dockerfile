@@ -1,4 +1,5 @@
-FROM docker.io/node:25.9.0-alpine3.23 AS base
+FROM docker.io/node:26.3.1-alpine3.23 AS base
+RUN npm install --global yarn@1.22.22
 
 # Install dependencies only when needed
 FROM base AS deps
