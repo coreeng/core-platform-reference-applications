@@ -61,7 +61,9 @@ for t in "${all_templates[@]}"; do
       if [[ -f "./$reference_apps_dir/$reference_t/.github/workflows/$workflow.yaml" ]]; then
         workflow_file="./$reference_apps_dir/.github/workflows/$reference_t-$workflow.yaml"
         mv "./$reference_apps_dir/$reference_t/.github/workflows/$workflow.yaml" "$workflow_file"
-        if [[ "$workflow" != "scheduled-security-scan" ]]; then
+        if [[ "$workflow" == "scheduled-security-scan" ]]; then
+          yq -i '.' "$workflow_file"
+        else
           yq -i 'del(.on.schedule)' "$workflow_file"
         fi
       fi
