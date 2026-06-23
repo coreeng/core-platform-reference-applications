@@ -13,6 +13,7 @@ jobs:
     secrets:
       env_vars: ${{ secrets.env_vars }}
     with:
+      app-name: reference-static-nextra
       tenant-name: reference-static-nextra
       security-scan-blocking-severity: "off"
       working-directory: reference-static-nextra

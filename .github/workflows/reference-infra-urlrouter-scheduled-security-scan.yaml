@@ -13,6 +13,7 @@ jobs:
     secrets:
       env_vars: ${{ secrets.env_vars }}
     with:
+      app-name: reference-infra-urlrouter
       tenant-name: reference-infra-urlrouter
       security-scan-blocking-severity: "off"
       working-directory: reference-infra-urlrouter
