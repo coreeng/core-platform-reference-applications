@@ -13,6 +13,7 @@ jobs:
     secrets:
       env_vars: ${{ secrets.env_vars }}
     with:
+      app-name: reference-docker-web
       tenant-name: reference-docker-web
       security-scan-blocking-severity: "off"
       working-directory: reference-docker-web

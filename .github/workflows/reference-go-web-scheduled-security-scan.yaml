@@ -13,6 +13,7 @@ jobs:
     secrets:
       env_vars: ${{ secrets.env_vars }}
     with:
+      app-name: reference-go-web
       tenant-name: reference-go-web
       security-scan-blocking-severity: "off"
       working-directory: reference-go-web
