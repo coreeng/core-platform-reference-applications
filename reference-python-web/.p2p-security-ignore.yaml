@@ -1,0 +1,25 @@
+---
+version: 1
+images:
+  - name: "reference-python-web"
+    secrets:
+      - id: p2psec_2e745269d2a106a0
+        path: /var/lib/dpkg/info/libc6:amd64.md5sums
+        expires: 2026-09-23
+        reason: "False positive in Debian libc package checksum metadata, not an application secret."
+      - id: p2psec_ae7c9f95165aff0b
+        path: /app/.venv/lib/python3.14/site-packages/pydantic/networks.py
+        expires: 2026-09-23
+        reason: "False positive from public URI examples in the packaged pydantic URL validation code."
+      - id: p2psec_7f935aceca16787b
+        path: /app/.venv/lib/python3.14/site-packages/pydantic/networks.py
+        expires: 2026-09-23
+        reason: "False positive from public URI examples in the packaged pydantic URL validation code."
+      - id: p2psec_ca89328d0d75906f
+        path: /app/.venv/lib/python3.14/site-packages/pydantic/networks.py
+        expires: 2026-09-23
+        reason: "False positive from public URI examples in the packaged pydantic URL validation code."
+      - id: p2psec_8f2fad8d82532ee3
+        path: /usr/local/lib/python3.14/site-packages/pip/_vendor/urllib3/util/url.py
+        expires: 2026-09-23
+        reason: "False positive from public URI parsing examples in pip's vendored urllib3 code."
