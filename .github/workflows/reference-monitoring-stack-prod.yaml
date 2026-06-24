@@ -24,5 +24,4 @@ jobs:
       tenant-name: reference-monitoring-stack
       version: ${{ needs.get-latest-version.outputs.version }}
       version-prefix: reference-monitoring-stack/v
-      skip-subnamespaces-create: true
       working-directory: reference-monitoring-stack
