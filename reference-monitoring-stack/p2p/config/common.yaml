@@ -1,0 +1,9 @@
+---
+grafana:
+  anonymous:
+    enabled: true
+    orgRole: Viewer
+  resources:
+    requests:
+      cpu: 50m
+      memory: 160Mi

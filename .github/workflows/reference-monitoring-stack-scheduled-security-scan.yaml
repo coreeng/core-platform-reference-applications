@@ -1,0 +1,19 @@
+---
+name: reference-monitoring-stack Security Scan
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 4 * * *"
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  scheduled-security-scan:
+    uses: coreeng/p2p/.github/workflows/p2p-workflow-security-scan.yaml@v1
+    secrets:
+      env_vars: ${{ secrets.env_vars }}
+    with:
+      app-name: reference-monitoring-stack
+      tenant-name: reference-monitoring-stack
+      security-scan-blocking-severity: "off"
+      working-directory: reference-monitoring-stack
