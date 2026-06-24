@@ -38,13 +38,16 @@ build-integration:
 	docker buildx build $(p2p_image_cache) --tag "$(p2p_image_tag)" p2p/tests/integration/
 
 .PHONY: build-functional
-build-functional: build-integration
+build-functional:
+	docker buildx build $(p2p_image_cache) --tag "$(p2p_image_tag)" p2p/tests/integration/
 
 .PHONY: build-nft
-build-nft: build-integration
+build-nft:
+	docker buildx build $(p2p_image_cache) --tag "$(p2p_image_tag)" p2p/tests/integration/
 
 .PHONY: build-extended-test
-build-extended-test: build-integration
+build-extended-test:
+	docker buildx build $(p2p_image_cache) --tag "$(p2p_image_tag)" p2p/tests/integration/
 
 .PHONY: build-%
 build-%:
