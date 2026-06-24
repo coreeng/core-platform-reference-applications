@@ -60,12 +60,20 @@ push-%:
 .PHONY: deploy-%
 deploy-%:
 	helm repo add core-platform-assets https://coreeng.github.io/core-platform-assets --force-update
+	stage="$*"; \
+	name_override="$(p2p_app_name)"; \
+	app_url_suffix="$(p2p_app_url_suffix)"; \
+	if [[ "$$stage" != "prod" ]]; then \
+		if [[ "$$stage" == "extended-test" ]]; then stage="extended"; fi; \
+		name_override="$(p2p_app_name)-$$stage"; \
+		app_url_suffix=""; \
+	fi; \
 	helm upgrade --install "$(p2p_app_name)" core-platform-assets/core-platform-monitoring -n "$(p2p_namespace)" \
 		-f <(envsubst < p2p/config/common.yaml) \
 		-f <(envsubst < p2p/config/$*.yaml) \
-		--set nameOverride="$(p2p_app_name)" \
+		--set nameOverride="$$name_override" \
 		--set tenantName="$(p2p_tenant_name)" \
-		--set ingress.appUrlSuffix="$(p2p_app_url_suffix)" \
+		--set ingress.appUrlSuffix="$$app_url_suffix" \
 		--set ingress.domain="$(INTERNAL_SERVICES_DOMAIN)" \
 		--atomic
 
