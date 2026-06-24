@@ -3,17 +3,14 @@
 Shared Core Platform monitoring stack.
 
 This repository is generated from the `monitoring-stack` software template. It deploys the
-`core-platform-assets/core-platform-monitoring` Helm chart through the standard P2P stages.
+`core-platform-assets/core-platform-monitoring` Helm chart through the integration and prod P2P stages.
 
 ## Deployment
 
 Use the generated P2P targets:
 
 ```bash
-make p2p-functional
-make p2p-nft
 make p2p-integration
-make p2p-extended-test
 make p2p-prod
 ```
 
@@ -85,6 +82,6 @@ named by `webhookSecretKey`. The template does not create Slack webhook secrets.
 
 ## P2P Validation
 
-The P2P functional, NFT, integration, and extended-test stages deploy this monitoring chart and then
-run `helm test` if the chart defines Helm test hooks. If the chart has no test hooks, the stage treats
-successful deployment as deploy-only validation.
+The P2P integration stage deploys this monitoring chart and then runs `helm test` if the chart defines
+Helm test hooks. If the chart has no test hooks, the stage treats successful deployment as deploy-only
+validation.

@@ -1,6 +1,0 @@
----
-prometheus:
-  targetNamespaces:
-    - reference-monitoring-stack-integration
-  targetInstances:
-    - reference-monitoring-stack

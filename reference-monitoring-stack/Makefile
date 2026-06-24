@@ -8,10 +8,7 @@ include .p2p.mk
 
 # Define required p2p targets
 p2p-build:         build-app           push-app
-p2p-functional:    build-functional    push-functional    deploy-functional    run-functional
-p2p-nft:           build-nft           push-nft           deploy-nft           run-nft
 p2p-integration:   build-integration   push-integration   deploy-integration   run-integration
-p2p-extended-test: build-extended-test push-extended-test deploy-extended-test run-extended-test
 p2p-prod:                                                 deploy-prod
 
 .PHONY: lint-config
@@ -35,18 +32,6 @@ build-app: lint ## Build app
 
 .PHONY: build-integration
 build-integration:
-	docker buildx build $(p2p_image_cache) --tag "$(p2p_image_tag)" p2p/tests/integration/
-
-.PHONY: build-functional
-build-functional:
-	docker buildx build $(p2p_image_cache) --tag "$(p2p_image_tag)" p2p/tests/integration/
-
-.PHONY: build-nft
-build-nft:
-	docker buildx build $(p2p_image_cache) --tag "$(p2p_image_tag)" p2p/tests/integration/
-
-.PHONY: build-extended-test
-build-extended-test:
 	docker buildx build $(p2p_image_cache) --tag "$(p2p_image_tag)" p2p/tests/integration/
 
 .PHONY: build-%
@@ -73,21 +58,9 @@ deploy-%:
 run-app: ## Run app
 	docker run --rm -P --name "$(p2p_app_name)" "$(p2p_image_tag)"
 
-.PHONY: run-functional
-run-functional:
-	bash p2p/scripts/helm-test.sh functional "$(p2p_namespace)" "$(p2p_app_name)" true
-
-.PHONY: run-nft
-run-nft:
-	bash p2p/scripts/helm-test.sh nft "$(p2p_namespace)" "$(p2p_app_name)" true
-
 .PHONY: run-integration
 run-integration:
 	bash p2p/scripts/helm-test.sh integration "$(p2p_namespace)" "$(p2p_app_name)" false
-
-.PHONY: run-extended-test
-run-extended-test:
-	bash p2p/scripts/helm-test.sh extended-test "$(p2p_namespace)" "$(p2p_app_name)" true
 
 .PHONY: run-%
 run-%:
