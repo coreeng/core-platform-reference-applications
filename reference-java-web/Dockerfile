@@ -18,6 +18,7 @@ RUN apt-get update \
   libsystemd0=255.4-1ubuntu8.16 \
   libudev1=255.4-1ubuntu8.16 \
   openssl=3.0.13-0ubuntu3.11 \
+  perl-base=5.38.2-3.2ubuntu0.3 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
