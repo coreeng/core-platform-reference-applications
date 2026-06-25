@@ -1,0 +1,8 @@
+# p2p makefile
+.p2p.mk
+
+# vi swapfiles
+*.swp
+
+# hidden terraform cache and state directory
+infrastructure/code/.terraform
