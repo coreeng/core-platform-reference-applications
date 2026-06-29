@@ -7,4 +7,5 @@ const withNextra = nextra({
 
 export default withNextra({
   output: "standalone",
+  serverExternalPackages: ["prom-client"],
 });

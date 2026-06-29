@@ -54,3 +54,7 @@ ingress:
 
 service:
   port: 3000
+
+metrics:
+  enabled: true
+  port: 8081
