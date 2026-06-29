@@ -1,32 +1,27 @@
 # reference-monitoring-stack
 
-Shared Core Platform monitoring stack.
+Shared monitoring stack generated from the Core Platform `monitoring-stack` software template.
 
-This repository is generated from the `monitoring-stack` software template. It deploys the
-`core-platform-assets/core-platform-monitoring` Helm chart through the integration and prod P2P stages.
+This repository deploys the `core-platform-assets/core-platform-monitoring` Helm chart for a delivery unit.
 
-## Deployment
+## Tech Stack
 
-Use the generated P2P targets:
+- Prometheus for metrics collection.
+- Grafana for dashboards.
+- Alertmanager for alert routing.
+- Helm values in `p2p/config/` for environment-specific configuration.
 
-```bash
-make p2p-integration
-make p2p-prod
-```
+## Monitored Delivery Units
 
-## Monitoring Targets
-
-The generated Helm values monitor this delivery unit by default:
+The generated values monitor this delivery unit by default:
 
 - non-production stages: `reference-monitoring-stack-integration`
 - production: `reference-monitoring-stack-prod`
 - target instance: `reference-monitoring-stack`
 
-To monitor additional delivery units, edit the environment values files and add each delivery unit's
-namespace under `prometheus.targetNamespaces` and instance name under `prometheus.targetInstances`.
+To monitor additional delivery units, edit the environment values files and add each delivery unit namespace under `prometheus.targetNamespaces` and instance name under `prometheus.targetInstances`.
 
-For example, to monitor `payments-api` and `orders-api` in integration, update
-`p2p/config/integration.yaml`:
+For integration, update `p2p/config/integration.yaml`:
 
 ```yaml
 prometheus:
@@ -40,7 +35,7 @@ prometheus:
     - orders-api
 ```
 
-For production, update `p2p/config/prod.yaml` with production namespaces:
+For production, update `p2p/config/prod.yaml`:
 
 ```yaml
 prometheus:
@@ -54,20 +49,9 @@ prometheus:
     - orders-api
 ```
 
-## Description
-
-The generated `app.yaml` contains the repository description:
-
-```yaml
-description: Shared Core Platform monitoring stack
-```
-
-Change that value in the generated repository if a team-specific description is needed.
-
 ## Slack Alerting
 
-Slack settings are regular Helm values in the generated repository. To set the Slack channel, add
-`alertmanager.slack.channel` to the relevant environment values file. For example:
+Slack settings are regular Helm values in the generated repository. To set the Slack channel, add `alertmanager.slack.channel` to the relevant environment values file:
 
 ```yaml
 alertmanager:
@@ -77,11 +61,6 @@ alertmanager:
     webhookSecretKey: url
 ```
 
-The secret named by `webhookSecretName` must exist in the monitoring namespace and contain the key
-named by `webhookSecretKey`. The template does not create Slack webhook secrets.
+The secret named by `webhookSecretName` must exist in the monitoring namespace and contain the key named by `webhookSecretKey`. The template does not create Slack webhook secrets.
 
-## P2P Validation
-
-The P2P integration stage deploys this monitoring chart and then runs `helm test` if the chart defines
-Helm test hooks. If the chart has no test hooks, the stage treats successful deployment as deploy-only
-validation.
+`AGENTS.md` contains generated-repository guidance for coding agents.
