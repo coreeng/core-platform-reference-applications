@@ -22,7 +22,7 @@ resource "google_cloud_ids_endpoint" "psa" {
   project  = var.infrastructure_project_id
   name     = "cloudsql-${var.environment}-ids"
   location = local.cloud_ids_location
-  network  = google_compute_network.psa.id
+  network  = google_compute_network.psa[0].id
   severity = local.cloud_ids_severity
 
   depends_on = [google_project_service.cloud_ids, module.cloudsql-psa]
@@ -36,7 +36,7 @@ resource "google_compute_packet_mirroring" "psa" {
   name    = "cloudsql-${var.environment}-ids-mirroring"
 
   network {
-    url = google_compute_network.psa.id
+    url = google_compute_network.psa[0].id
   }
 
   collector_ilb {

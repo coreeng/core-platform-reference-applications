@@ -46,7 +46,9 @@ locals {
     for channel in google_monitoring_notification_channel.cloudsql_email : channel.name
   ]
 
-  cloud_ids_enabled               = try(var.cloudsql.ids.enabled, false)
+  psa_enabled                     = try(var.cloudsql.psa_enabled, false)
+  psc_enabled                     = try(var.cloudsql.psc_enabled, false)
+  cloud_ids_enabled               = try(var.cloudsql.ids.enabled, false) && local.psa_enabled
   cloud_ids_location              = coalesce(try(var.cloudsql.ids.location, null), "${var.region}-b")
   cloud_ids_severity              = try(var.cloudsql.ids.severity, "INFORMATIONAL")
   cloud_ids_packet_mirroring_tags = try(var.cloudsql.ids.packet_mirroring_tags, ["cloudsql-psa"])

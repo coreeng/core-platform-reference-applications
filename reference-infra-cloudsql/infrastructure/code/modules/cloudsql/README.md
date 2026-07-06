@@ -6,8 +6,8 @@ It wraps the official [terraform-google-sql-db PostgreSQL module](https://github
 
 ## Module Features
 
-- **Private Service Access (PSA)**: Automatic VPC network and PSA setup for private connectivity
-- **Private Service Connect (PSC)**: Enabled for secure cross-project database access
+- **Private Service Access (PSA)**: Optional VPC network and PSA setup for private connectivity
+- **Private Service Connect (PSC)**: Optional producer-side settings for cross-project database access
 - **High Availability**: Support for regional (HA) or zonal deployments
 - **Comprehensive Backup**: Point-in-time recovery (PITR) with configurable retention
 - **Security First**: Encrypted connections only, deletion protection by default, password validation policies
@@ -19,10 +19,9 @@ It wraps the official [terraform-google-sql-db PostgreSQL module](https://github
 ## Architecture
 
 The module creates:
-1. A dedicated VPC network for Cloud SQL Private Service Access
-2. Private Service Access connection to Google Cloud SQL service producer
-3. One or more PostgreSQL instances (defined via `for_each`)
-4. Databases, users, and IAM bindings as configured
+1. One or more PostgreSQL instances (defined via `for_each`)
+2. Databases, users, and IAM bindings as configured
+3. Optional dedicated VPC network and Private Service Access connection when `cloudsql.psa_enabled` is true
 
 ## Input Variables
 
@@ -42,6 +41,8 @@ The module creates:
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `enabled` | `bool` | (required) | Whether to create Cloud SQL resources |
+| `psa_enabled` | `bool` | `false` | Whether to create a dedicated Private Service Access VPC and attach instances to it |
+| `psc_enabled` | `bool` | `false` | Whether to enable Cloud SQL producer-side Private Service Connect settings for the platform project |
 | `allowed_ip_ranges` | `list(map(string))` | `[]` | List of authorized networks for public IP access. Each entry should have `name` and `value` (CIDR) |
 
 #### Monitoring Configuration
@@ -140,7 +141,7 @@ If near zero downtime planned maintenance is required please consult Google's [d
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `connector_enforcement` | `bool` | `true` | Enforce that clients use the connector library |
-| `public_ip_enabled` | `bool` | `true` | Enable public IPv4 address for the instance. When `false`, the instance is only accessible via private IP through VPC/PSA, which requires network connectivity to the private network (e.g., VPN, or running from within GCP). The `cloud-sql-proxy` command must include the `--private-ip` flag when public IP is disabled. |
+| `public_ip_enabled` | `bool` | `true` | Enable public IPv4 address for the instance. When `false`, `cloudsql.psa_enabled` or `cloudsql.psc_enabled` must be true and clients need the corresponding private connectivity. |
 | `deletion_protection` | `bool` | `true` | Enables protection of an Cloud SQL instance from accidental deletion across all surfaces (API, gcloud, Cloud Console and Terraform) |
 | `database_deletion_policy` | `string` | `"ABANDON"` | The deletion policy for the database, `ABANDON` is useful for PostgreSQL where databases cannot be deleted from the API if there are users other than cloudsqlsuperuser with access |
 | `retain_backups_on_delete` | `bool` | `false` | When this parameter is set to true, Cloud SQL retains backups of the instance even after the instance is deleted. The ON_DEMAND backup will be retained until customer deletes the backup or the project. The AUTOMATED backup will be retained based on the backups retention setting. |
@@ -168,9 +169,13 @@ The module automatically configures audit logging using [pgAudit](https://www.pg
 
 ### Private Service Access (PSA)
 
-The module automatically creates:
+When `cloudsql.psa_enabled` is true, the module creates:
 - A dedicated VPC network: `cloudsql-{environment}-psa`
 - Private Service Access connection with address `10.220.0.0/16`
+
+### Private Service Connect (PSC)
+
+When `cloudsql.psc_enabled` is true, the module enables Cloud SQL producer-side PSC settings and allows the configured platform project as a consumer. The consuming platform environment must still provide the PSC consumer endpoint and DNS before clients can use PSC.
 
 ### IP Configuration
 
@@ -180,19 +185,17 @@ The module configures the following network settings:
 ip_configuration = {
   ssl_mode                      = "ENCRYPTED_ONLY"     # Force SSL/TLS (hardcoded)
   authorized_networks           = var.cloudsql.allowed_ip_ranges
-  ipv4_enabled                  = each.value.public_ip_enabled  # Configurable, defaults to false
-  private_network               = google_compute_network.psa.id # PSA network (hardcoded)
-  psc_enabled                   = true                 # Private Service Connect (hardcoded)
-  psc_allowed_consumer_projects = [platform_project_id]  # (hardcoded)
+  ipv4_enabled                  = each.value.public_ip_enabled  # Configurable, defaults to true
+  private_network               = local.psa_enabled ? google_compute_network.psa[0].id : null
+  psc_enabled                   = local.psc_enabled
+  psc_allowed_consumer_projects = local.psc_enabled ? [platform_project_id] : []
 }
 ```
 
 **Notes**:
-- With `public_ip_enabled = true` (default), the instance has both public and private IPs. Connector enforcement still ensures secure connections.
-- With `public_ip_enabled = false`, the instance only has a private IP, providing maximum security but requiring:
-  - Network connectivity to the private IP range (10.220.0.0/16) via VPN, Cloud VPN, or running from within GCP
-  - The `--private-ip` flag when using `cloud-sql-proxy` command
-  - Terraform provisioner must run from a location with private network access
+- With `public_ip_enabled = true` (default), applications can connect through a Cloud SQL connector or Cloud SQL Auth Proxy. Connector enforcement still ensures secure connections.
+- With `public_ip_enabled = false`, either PSA or PSC must be enabled and clients must use the matching private connectivity path.
+- Cloud IDS requires PSA because it mirrors the PSA VPC.
 
 ## User Management
 

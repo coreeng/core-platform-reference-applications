@@ -24,8 +24,8 @@ Collect these values before enabling the pipeline:
 
 The template uses two project IDs:
 
-- `platform_project_id`: the Core Platform environment project that consumes the database through Private Service Connect.
-- `infrastructure_project_id`: the tenant-owned GCP project where this template creates Cloud SQL, the PSA network, monitoring resources, and Terraform state.
+- `platform_project_id`: the Core Platform environment project that runs applications connecting to the database.
+- `infrastructure_project_id`: the tenant-owned GCP project where this template creates Cloud SQL, monitoring resources, and Terraform state.
 
 The `infrastructure_project_id` project must already exist, have billing enabled, and allow the P2P deploy identity to manage resources. Terragrunt stores state in a bucket named `tfstate-<infrastructure_project_id>`.
 
@@ -132,3 +132,16 @@ Terragrunt skips provisioning until all required bootstrap values are present:
 - `platform_project_id`
 
 Cloud SQL resources are only created when `cloudsql.enabled` is `true` and at least one PostgreSQL cluster is configured.
+
+## Network Defaults
+
+Generated Cloud SQL instances use public IP by default with Cloud SQL connector enforcement enabled. Applications should connect through a Cloud SQL connector or Cloud SQL Auth Proxy, and access can be narrowed with `cloudsql.allowed_ip_ranges`.
+
+Private networking is opt-in:
+
+- Set `cloudsql.psa_enabled: true` to create a dedicated Private Service Access VPC and attach instances to it.
+- Set `cloudsql.psc_enabled: true` to enable Private Service Connect producer-side settings for the platform project.
+- Set cluster `public_ip_enabled: false` only when `cloudsql.psa_enabled` or `cloudsql.psc_enabled` is also enabled.
+- Set `cloudsql.ids.enabled: true` only with `cloudsql.psa_enabled: true`; Cloud IDS mirrors the PSA VPC.
+
+Do not enable PSC unless the consuming platform environment also provides the required PSC consumer endpoint and DNS. Without that platform-side setup, PSC-only clients cannot resolve or reach the Cloud SQL instance.

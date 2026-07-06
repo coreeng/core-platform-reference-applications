@@ -10,6 +10,8 @@ resource "random_password" "cloudsql_initial_password" {
 }
 
 resource "google_compute_network" "psa" {
+  count = local.psa_enabled ? 1 : 0
+
   name                    = "cloudsql-${var.environment}-psa"
   project                 = var.infrastructure_project_id
   auto_create_subnetworks = false
@@ -18,12 +20,14 @@ resource "google_compute_network" "psa" {
 }
 
 module "cloudsql-psa" {
+  count = local.psa_enabled ? 1 : 0
+
   source  = "terraform-google-modules/sql-db/google//modules/private_service_access"
   version = "26.2.2"
 
   depends_on  = [module.project-services, google_compute_network.psa]
   project_id  = var.infrastructure_project_id
-  vpc_network = google_compute_network.psa.name
+  vpc_network = google_compute_network.psa[0].name
   address     = "10.220.0.0"
 }
 
@@ -72,9 +76,9 @@ module "cloudsql-postgresql" {
     ssl_mode                      = "ENCRYPTED_ONLY"
     authorized_networks           = var.cloudsql.allowed_ip_ranges
     ipv4_enabled                  = each.value.public_ip_enabled
-    private_network               = google_compute_network.psa.id
-    psc_enabled                   = true
-    psc_allowed_consumer_projects = [data.google_project.platform_project.number]
+    private_network               = local.psa_enabled ? google_compute_network.psa[0].id : null
+    psc_enabled                   = local.psc_enabled
+    psc_allowed_consumer_projects = local.psc_enabled ? [data.google_project.platform_project.number] : []
   }
 
   backup_configuration = {

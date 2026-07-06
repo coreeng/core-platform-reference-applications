@@ -2,6 +2,8 @@ variable "cloudsql" {
   description = "Cloud SQL configuration"
   type = object({
     enabled           = bool
+    psa_enabled       = optional(bool, false)
+    psc_enabled       = optional(bool, false)
     allowed_ip_ranges = optional(list(map(string)), [])
     monitoring = optional(object({
       notification_emails = optional(list(string), [])
@@ -89,6 +91,19 @@ variable "cloudsql" {
   validation {
     condition     = contains(["INFORMATIONAL", "LOW", "MEDIUM"], try(var.cloudsql.ids.severity, "INFORMATIONAL"))
     error_message = "cloudsql.ids.severity must be INFORMATIONAL, LOW, or MEDIUM."
+  }
+
+  validation {
+    condition     = !try(var.cloudsql.ids.enabled, false) || try(var.cloudsql.psa_enabled, false)
+    error_message = "cloudsql.ids.enabled requires cloudsql.psa_enabled because Cloud IDS mirrors the PSA VPC."
+  }
+
+  validation {
+    condition = alltrue([
+      for cluster in try(var.cloudsql.clusters.postgresql, []) :
+      try(cluster.public_ip_enabled, true) || try(var.cloudsql.psa_enabled, false) || try(var.cloudsql.psc_enabled, false)
+    ])
+    error_message = "Cloud SQL clusters with public_ip_enabled=false require cloudsql.psa_enabled or cloudsql.psc_enabled."
   }
 }
 
