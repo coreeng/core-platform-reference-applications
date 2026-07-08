@@ -48,6 +48,9 @@ locals {
 
   psa_enabled                     = try(var.cloudsql.psa_enabled, false)
   psc_enabled                     = try(var.cloudsql.psc_enabled, false)
+  cluster_psa_enabled             = { for name, cluster in local.postgresql_clusters_map : name => coalesce(try(cluster.psa_enabled, null), local.psa_enabled) }
+  cluster_psc_enabled             = { for name, cluster in local.postgresql_clusters_map : name => coalesce(try(cluster.psc_enabled, null), local.psc_enabled) }
+  any_psa_enabled                 = anytrue(values(local.cluster_psa_enabled))
   cloud_ids_enabled               = try(var.cloudsql.ids.enabled, false) && local.psa_enabled
   cloud_ids_location              = coalesce(try(var.cloudsql.ids.location, null), "${var.region}-b")
   cloud_ids_severity              = try(var.cloudsql.ids.severity, "INFORMATIONAL")

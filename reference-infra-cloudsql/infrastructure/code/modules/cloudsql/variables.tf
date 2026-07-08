@@ -44,6 +44,8 @@ variable "cloudsql" {
         tier               = string
         database_version   = string
         edition            = optional(string, "ENTERPRISE")
+        psa_enabled        = optional(bool)
+        psc_enabled        = optional(bool)
         activation_policy  = optional(string, "ALWAYS")
         data_cache_enabled = optional(bool, false)
         databases = list(object({
@@ -117,8 +119,8 @@ variable "cloudsql" {
   validation {
     condition = alltrue([
       for cluster in try(var.cloudsql.clusters.postgresql, []) :
-      try(cluster.public_ip_enabled, true) || try(var.cloudsql.psa_enabled, false) || try(var.cloudsql.psc_enabled, false)
+      try(cluster.public_ip_enabled, true) || coalesce(try(cluster.psa_enabled, null), try(var.cloudsql.psa_enabled, false)) || coalesce(try(cluster.psc_enabled, null), try(var.cloudsql.psc_enabled, false))
     ])
-    error_message = "Cloud SQL clusters with public_ip_enabled=false require cloudsql.psa_enabled or cloudsql.psc_enabled."
+    error_message = "Cloud SQL clusters with public_ip_enabled=false require psa_enabled or psc_enabled at the cluster or cloudsql level."
   }
 }
