@@ -17,10 +17,11 @@ variable "region" {
 variable "cloudsql" {
   description = "Cloud SQL configuration"
   type = object({
-    enabled           = bool
-    psa_enabled       = optional(bool, false)
-    psc_enabled       = optional(bool, false)
-    allowed_ip_ranges = optional(list(map(string)), [])
+    enabled              = bool
+    psa_enabled          = optional(bool, false)
+    manage_psa_resources = optional(bool)
+    psc_enabled          = optional(bool, false)
+    allowed_ip_ranges    = optional(list(map(string)), [])
     monitoring = optional(object({
       notification_emails = optional(list(string), [])
       thresholds = optional(object({
@@ -112,8 +113,8 @@ variable "cloudsql" {
   }
 
   validation {
-    condition     = !try(var.cloudsql.ids.enabled, false) || try(var.cloudsql.psa_enabled, false)
-    error_message = "cloudsql.ids.enabled requires cloudsql.psa_enabled because Cloud IDS mirrors the PSA VPC."
+    condition     = !try(var.cloudsql.ids.enabled, false) || (try(var.cloudsql.psa_enabled, false) && coalesce(try(var.cloudsql.manage_psa_resources, null), true))
+    error_message = "cloudsql.ids.enabled requires cloudsql.psa_enabled and managed PSA resources because Cloud IDS mirrors the PSA VPC."
   }
 
   validation {

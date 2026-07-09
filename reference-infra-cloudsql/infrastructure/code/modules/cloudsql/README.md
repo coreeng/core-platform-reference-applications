@@ -21,7 +21,7 @@ It wraps the official [terraform-google-sql-db PostgreSQL module](https://github
 The module creates:
 1. One or more PostgreSQL instances (defined via `for_each`)
 2. Databases, users, and IAM bindings as configured
-3. Optional dedicated VPC network and Private Service Access connection when `cloudsql.psa_enabled` is true
+3. Optional dedicated VPC network and Private Service Access connection when `cloudsql.psa_enabled` and `cloudsql.manage_psa_resources` are true
 
 ## Input Variables
 
@@ -41,7 +41,8 @@ The module creates:
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `enabled` | `bool` | (required) | Whether to create Cloud SQL resources |
-| `psa_enabled` | `bool` | `false` | Whether to create a dedicated Private Service Access VPC and attach instances to it |
+| `psa_enabled` | `bool` | `false` | Whether to attach instances to the dedicated Private Service Access VPC |
+| `manage_psa_resources` | `bool` | `cloudsql.psa_enabled` | Whether this module should create/manage the dedicated Private Service Access VPC, reserved range, and service networking connection. Set to `false` when attaching instances to an existing PSA VPC managed elsewhere, for example when multiple infra apps share one PSA setup in the same project. |
 | `psc_enabled` | `bool` | `false` | Whether to enable Cloud SQL producer-side Private Service Connect settings for the platform project |
 | `allowed_ip_ranges` | `list(map(string))` | `[]` | List of authorized networks for public IP access. Each entry should have `name` and `value` (CIDR) |
 
@@ -169,9 +170,11 @@ The module automatically configures audit logging using [pgAudit](https://www.pg
 
 ### Private Service Access (PSA)
 
-When `cloudsql.psa_enabled` is true, the module creates:
+When `cloudsql.psa_enabled` is true and `cloudsql.manage_psa_resources` is not false, the module creates:
 - A dedicated VPC network: `cloudsql-{environment}-psa`
 - Private Service Access connection with address `10.220.0.0/16`
+
+When `cloudsql.psa_enabled` is true and `cloudsql.manage_psa_resources` is false, the module attaches Cloud SQL to the expected PSA VPC URI but does not create, read, or manage the PSA VPC resources. Use this when the PSA VPC and private service access connection are provided by another infra app or shared project setup.
 
 ### Private Service Connect (PSC)
 
@@ -186,7 +189,7 @@ ip_configuration = {
   ssl_mode                      = "ENCRYPTED_ONLY"     # Force SSL/TLS (hardcoded)
   authorized_networks           = var.cloudsql.allowed_ip_ranges
   ipv4_enabled                  = each.value.public_ip_enabled  # Configurable, defaults to true
-  private_network               = local.psa_enabled ? google_compute_network.psa[0].id : null
+  private_network               = local.psa_enabled ? local.psa_network_id : null
   psc_enabled                   = local.psc_enabled
   psc_allowed_consumer_projects = local.psc_enabled ? [platform_project_id] : []
 }
@@ -195,7 +198,7 @@ ip_configuration = {
 **Notes**:
 - With `public_ip_enabled = true` (default), applications can connect through a Cloud SQL connector or Cloud SQL Auth Proxy. Connector enforcement still ensures secure connections.
 - With `public_ip_enabled = false`, either PSA or PSC must be enabled and clients must use the matching private connectivity path.
-- Cloud IDS requires PSA because it mirrors the PSA VPC.
+- Cloud IDS requires managed PSA resources because it mirrors the PSA VPC.
 
 ## User Management
 

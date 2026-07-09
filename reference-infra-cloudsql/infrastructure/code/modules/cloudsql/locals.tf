@@ -51,7 +51,9 @@ locals {
   cluster_psa_enabled             = { for name, cluster in local.postgresql_clusters_map : name => coalesce(try(cluster.psa_enabled, null), local.psa_enabled) }
   cluster_psc_enabled             = { for name, cluster in local.postgresql_clusters_map : name => coalesce(try(cluster.psc_enabled, null), local.psc_enabled) }
   any_psa_enabled                 = anytrue(values(local.cluster_psa_enabled))
-  cloud_ids_enabled               = try(var.cloudsql.ids.enabled, false) && local.psa_enabled
+  manage_psa_resources            = coalesce(try(var.cloudsql.manage_psa_resources, null), local.any_psa_enabled)
+  psa_network_id                  = "projects/${var.infrastructure_project_id}/global/networks/cloudsql-${var.environment}-psa"
+  cloud_ids_enabled               = try(var.cloudsql.ids.enabled, false) && local.psa_enabled && local.manage_psa_resources
   cloud_ids_location              = coalesce(try(var.cloudsql.ids.location, null), "${var.region}-b")
   cloud_ids_severity              = try(var.cloudsql.ids.severity, "INFORMATIONAL")
   cloud_ids_packet_mirroring_tags = try(var.cloudsql.ids.packet_mirroring_tags, ["cloudsql-psa"])

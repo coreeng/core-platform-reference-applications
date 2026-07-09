@@ -139,9 +139,10 @@ Generated Cloud SQL instances use public IP by default with Cloud SQL connector 
 
 Private networking is opt-in:
 
-- Set `cloudsql.psa_enabled: true` to create a dedicated Private Service Access VPC and attach instances to it.
+- Set `cloudsql.psa_enabled: true` to attach instances to the dedicated Private Service Access VPC.
+- Leave `cloudsql.manage_psa_resources` unset for normal PSA use. Set it to `false` when attaching Cloud SQL instances to an existing PSA VPC and private service access connection managed outside this infra app, for example when multiple infra apps share one PSA setup in the same project.
 - Set `cloudsql.psc_enabled: true` to enable Private Service Connect producer-side settings for the platform project.
 - Set cluster `public_ip_enabled: false` only when `cloudsql.psa_enabled` or `cloudsql.psc_enabled` is also enabled.
-- Set `cloudsql.ids.enabled: true` only with `cloudsql.psa_enabled: true`; Cloud IDS mirrors the PSA VPC.
+- Set `cloudsql.ids.enabled: true` only with managed PSA resources; Cloud IDS mirrors the PSA VPC.
 
 Do not enable PSC unless the consuming platform environment also provides the required PSC consumer endpoint and DNS. Without that platform-side setup, PSC-only clients cannot resolve or reach the Cloud SQL instance.
