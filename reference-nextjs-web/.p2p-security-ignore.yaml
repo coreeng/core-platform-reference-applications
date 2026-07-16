@@ -1,0 +1,10 @@
+version: 1
+
+source:
+  secrets:
+    - id: 4521b49fbafd22f6c1c2644d4a79898c75771a9c1673b692b8633b16933ea7e5
+      path: yarn.lock
+      reason: False positive in Yarn lockfile checksum; no credential material.
+    - id: 4904adc4778dc1f1415726bdef669c0e4896208765c723485be778b3f75665ee
+      path: yarn.lock
+      reason: False positive in Yarn lockfile checksum; no credential material.
