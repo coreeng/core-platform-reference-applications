@@ -16,10 +16,12 @@ repositories {
 	mavenCentral()
 }
 
+ext['logback.version'] = '1.5.35'
+
 dependencyManagement {
 	imports {
-		// Temporary CVE-2026-54515 fix; remove when Spring Boot manages jackson-databind >= 2.21.5.
-		mavenBom 'com.fasterxml.jackson:jackson-bom:2.22.0'
+		// Temporary CVE-2026-54515 fix; remove when Spring Boot manages jackson-databind >= 2.22.1.
+		mavenBom 'com.fasterxml.jackson:jackson-bom:2.22.1'
 	}
 }
 

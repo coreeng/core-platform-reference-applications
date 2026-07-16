@@ -1,5 +1,8 @@
 FROM docker.io/node:26.3.1-alpine3.24 AS base
-RUN npm install --global yarn@1.22.22
+ENV YARN_NODE_LINKER=node-modules \
+    YARN_ENABLE_GLOBAL_CACHE=true \
+    YARN_ENABLE_SCRIPTS=true
+RUN npm install --global @yarnpkg/cli-dist@4.17.1
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -8,7 +11,8 @@ WORKDIR /app
 
 # Install dependencies
 COPY package.json yarn.lock* ./
-RUN yarn --frozen-lockfile --ignore-scripts;
+RUN yarn install --immutable --mode=skip-build \
+    && yarn cache clean --all
 
 # Rebuild the source code only when needed
 FROM base AS build

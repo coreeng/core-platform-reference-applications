@@ -16,6 +16,10 @@ help:
 .PHONY: infra-init-cache
 infra-init-cache:
 	tofu -chdir="$(IAC_PATH)" init -lock=false -backend=false
+	if [ -n "$(TF_PLUGIN_CACHE_DESTINATION)" ]; then \
+		mkdir -p "$(TF_PLUGIN_CACHE_DESTINATION)"; \
+		cp -LR "$(IAC_PATH)/.terraform/providers/." "$(TF_PLUGIN_CACHE_DESTINATION)/"; \
+	fi
 	rm -rf "$(IAC_PATH)/.terraform"
 
 .PHONY: infra-init-upgrade

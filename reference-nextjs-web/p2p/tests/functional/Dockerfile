@@ -1,10 +1,19 @@
-FROM mcr.microsoft.com/playwright:v1.61.0-noble
+FROM docker.io/node:26.3.1-bookworm-slim AS node-runtime
+
+FROM mcr.microsoft.com/playwright:v1.61.1-noble
+
+COPY --from=node-runtime /usr/local/ /usr/local/
+ENV YARN_NODE_LINKER=node-modules \
+    YARN_ENABLE_GLOBAL_CACHE=true \
+    YARN_ENABLE_SCRIPTS=true
+RUN npm install --global @yarnpkg/cli-dist@4.17.1
 
 WORKDIR /app
 
 # Install dependencies
 COPY package.json yarn.lock* ./
-RUN yarn --frozen-lockfile --ignore-scripts;
+RUN yarn install --immutable --mode=skip-build \
+    && yarn cache clean --all
 
 # Copy only the needed files and folders individually
 COPY tsconfig.json cucumber.json ./
