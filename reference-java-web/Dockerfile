@@ -24,7 +24,7 @@ RUN apt-get update \
   ncurses-bin=6.4+20240113-1ubuntu2.1 \
   openssl=3.0.13-0ubuntu3.11 \
   perl-base=5.38.2-3.2ubuntu0.3 \
-  tar=1.35+dfsg-3ubuntu0.2 \
+  tar=1.35+dfsg-3ubuntu0.3 \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
