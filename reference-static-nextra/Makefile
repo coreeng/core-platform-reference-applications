@@ -30,7 +30,10 @@ lint-dockerfile: ## Run dockerfile lint checks
 
 .PHONY: lint-app
 lint-app: ## Run app lint checks
-	@echo "WARNING: $@ not implemented"
+	docker run --rm --mount type=bind,source=.,target=/app -w /app \
+		--mount type=volume,target=/app/node_modules \
+		docker.io/node:26.5.0-alpine3.24 sh -c \
+		"npm install --global yarn@1.22.22 && yarn --frozen-lockfile --ignore-scripts && yarn lint"
 
 .PHONY: lint
 lint: lint-config lint-dockerfile lint-app ## Run all lint checks

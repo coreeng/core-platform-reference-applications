@@ -1,4 +1,4 @@
-module github.com/coreeng/idp-reference-app-go/integration
+module github.com/coreeng/idp-reference-app-go/functional
 
 go 1.26.5
 

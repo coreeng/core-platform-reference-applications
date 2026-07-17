@@ -19,7 +19,7 @@ COPY public ./public
 COPY src ./src
 
 # Build and test the app
-RUN yarn run test && yarn run build
+RUN yarn run lint && yarn run test && yarn run build
 
 # Production image, copy all the files and run next
 FROM docker.io/alpine:3.24.1 AS runner

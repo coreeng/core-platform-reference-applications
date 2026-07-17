@@ -1,4 +1,9 @@
+FROM docker.io/node:26.5.0-bookworm-slim AS node-runtime
+
 FROM mcr.microsoft.com/playwright:v1.61.1-noble
+
+COPY --from=node-runtime /usr/local/ /usr/local/
+RUN npm install --global yarn@1.22.22
 
 WORKDIR /app
 
