@@ -16,7 +16,7 @@ repositories {
 	mavenCentral()
 }
 
-ext['logback.version'] = '1.5.35'
+ext['logback.version'] = '1.5.38'
 
 dependencyManagement {
 	imports {
