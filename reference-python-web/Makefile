@@ -30,7 +30,7 @@ lint-dockerfile: ## Run dockerfile lint checks
 
 .PHONY: lint-app
 lint-app: ## Run app lint checks
-	docker run --rm --mount type=bind,source=.,target=/app -w /app ghcr.io/astral-sh/ruff:0.15.2 check src/ tests/
+	docker run --rm --mount type=bind,source=.,target=/app -w /app ghcr.io/astral-sh/ruff:0.15.22 check src/ tests/
 
 .PHONY: lint
 lint: lint-config lint-dockerfile lint-app ## Run all lint checks

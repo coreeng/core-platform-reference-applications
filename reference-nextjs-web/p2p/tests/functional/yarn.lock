@@ -55,7 +55,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cucumber/cucumber@npm:^13.0.0":
+"@cucumber/cucumber@npm:^13.1.1":
   version: 13.1.1
   resolution: "@cucumber/cucumber@npm:13.1.1"
   dependencies:
@@ -178,10 +178,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cucumber/messages@npm:>=31.0.0 <34, @cucumber/messages@npm:^33.0.0, @cucumber/messages@npm:^33.0.3":
+"@cucumber/messages@npm:>=31.0.0 <34, @cucumber/messages@npm:^33.0.0":
   version: 33.0.4
   resolution: "@cucumber/messages@npm:33.0.4"
   checksum: 10c0/6e4d4b65e5dee7283089697c694d605200830142c7f4d238815e77c2a5afc9bde8ecff614861c5af8ba79a241441c29aacf368f57f37ff474e547148fb0b4216
+  languageName: node
+  linkType: hard
+
+"@cucumber/messages@npm:^34.1.0":
+  version: 34.1.0
+  resolution: "@cucumber/messages@npm:34.1.0"
+  checksum: 10c0/a0e06981863893aadbaa778d733dbf0d825ffa67351f9a538d803033bece7c714c5788d53185783280f0e2bb4c7c3d8db845c7bfec87530025fe4ae85dc1ef25
   languageName: node
   linkType: hard
 
@@ -261,7 +268,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:^1.61.0":
+"@playwright/test@npm:^1.61.1":
   version: 1.61.1
   resolution: "@playwright/test@npm:1.61.1"
   dependencies:
@@ -307,7 +314,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^26.0.0":
+"@types/node@npm:^26.1.1":
   version: 26.1.1
   resolution: "@types/node@npm:26.1.1"
   dependencies:
@@ -547,11 +554,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "functional@workspace:."
   dependencies:
-    "@cucumber/cucumber": "npm:^13.0.0"
-    "@cucumber/messages": "npm:^33.0.3"
+    "@cucumber/cucumber": "npm:^13.1.1"
+    "@cucumber/messages": "npm:^34.1.0"
     "@cucumber/pretty-formatter": "npm:^4.0.0"
-    "@playwright/test": "npm:^1.61.0"
-    "@types/node": "npm:^26.0.0"
+    "@playwright/test": "npm:^1.61.1"
+    "@types/node": "npm:^26.1.1"
     node-fetch: "npm:^3.3.2"
     ts-node: "npm:^10.9.2"
     typescript: "npm:^6.0.3"
