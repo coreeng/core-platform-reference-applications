@@ -1,6 +1,6 @@
-ARG OPENTOFU_VERSION=1.12.3
-ARG TERRAGRUNT_VERSION=0.92.1
-ARG JQ_VERSION=1.8.1
+ARG OPENTOFU_VERSION=1.12.6
+ARG TERRAGRUNT_VERSION=1.1.6
+ARG JQ_VERSION=1.8.2
 
 FROM docker.io/debian:trixie AS tooling
 
@@ -46,7 +46,7 @@ RUN curl -Lsfo terragrunt "https://github.com/gruntwork-io/terragrunt/releases/d
  && terragrunt -version
 
 # Install yq
-ARG YQ_VERSION=4.53.3
+ARG YQ_VERSION=4.53.6
 RUN curl -Lso yq "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_$(uname -m | sed -e "s/aarch64/arm64/" -e "s/x86_64/amd64/")" \
  && install -o root -g root -m 0755 yq /usr/local/bin/ \
  && rm yq \

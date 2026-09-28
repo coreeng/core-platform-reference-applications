@@ -1,4 +1,6 @@
-FROM docker.io/python:3.14.6-slim
+FROM docker.io/python:3.14.7-slim
+
+RUN rm -rf /usr/local/bin/pip* /usr/local/lib/python3.14/site-packages/pip*
 
 # Extended tests are not yet implemented.
 # Add your extended test runner here (e.g. a higher-load / longer-duration K6 script,

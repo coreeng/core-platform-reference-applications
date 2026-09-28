@@ -1,4 +1,4 @@
-FROM docker.io/stefanprodan/podinfo:6.14.0
+FROM docker.io/stefanprodan/podinfo:6.15.0
 
 USER 0
 

@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '4.1.0'
+	id 'org.springframework.boot' version '4.1.1'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -16,12 +16,12 @@ repositories {
 	mavenCentral()
 }
 
-ext['logback.version'] = '1.5.38'
+ext['logback.version'] = '1.6.4'
 
 dependencyManagement {
 	imports {
-		// Temporary CVE-2026-54515 fix; remove when Spring Boot manages jackson-databind >= 2.22.1.
-		mavenBom 'com.fasterxml.jackson:jackson-bom:2.22.1'
+		// Temporary CVE-2026-54515 fix; remove when Spring Boot manages jackson-databind >= 2.22.3.
+		mavenBom 'com.fasterxml.jackson:jackson-bom:2.22.3'
 	}
 }
 
@@ -35,8 +35,8 @@ dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-jetty')
 	implementation('org.springframework.boot:spring-boot-starter-actuator')
 	implementation('io.micrometer:micrometer-registry-prometheus')
-	implementation('org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3')
-	implementation('com.google.guava:guava:33.6.0-jre')
+	implementation('org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1')
+	implementation('com.google.guava:guava:33.7.1-jre')
 	implementation('com.zaxxer:HikariCP:7.1.0')
 
 	testImplementation('org.springframework.boot:spring-boot-starter-test')

@@ -1,4 +1,4 @@
-FROM docker.io/node:26.5.0-alpine3.24 AS base
+FROM docker.io/node:26.10.0-alpine3.24 AS base
 RUN npm install --global yarn@1.22.22
 
 # Install dependencies only when needed
@@ -22,7 +22,7 @@ COPY src ./src
 RUN yarn run lint && yarn run test && yarn run build
 
 # Production image, copy all the files and run next
-FROM docker.io/alpine:3.24.1 AS runner
+FROM docker.io/alpine:3.24.2 AS runner
 WORKDIR /app
 
 RUN apk add --no-cache libstdc++=15.2.0-r5

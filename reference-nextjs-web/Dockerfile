@@ -1,8 +1,8 @@
-FROM docker.io/node:26.5.0-alpine3.24 AS base
+FROM docker.io/node:26.10.0-alpine3.24 AS base
 ENV YARN_NODE_LINKER=node-modules \
     YARN_ENABLE_GLOBAL_CACHE=true \
     YARN_ENABLE_SCRIPTS=true
-RUN npm install --global @yarnpkg/cli-dist@4.17.1
+RUN npm install --global @yarnpkg/cli-dist@4.18.1
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -26,7 +26,7 @@ COPY src ./src
 RUN yarn run lint && yarn run test && yarn run build
 
 # Production image, copy all the files and run next
-FROM docker.io/alpine:3.24.1 AS runner
+FROM docker.io/alpine:3.24.2 AS runner
 WORKDIR /app
 
 RUN apk add --no-cache libstdc++=15.2.0-r5

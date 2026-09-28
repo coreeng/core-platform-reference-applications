@@ -1,0 +1,106 @@
+version: 1
+images:
+  - name: "reference-infra-tofu"
+    vulnerabilities:
+      - id: CVE-2026-25679
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-25681
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-27136
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-27137
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-27145
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-32280
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-32281
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-32283
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-33810
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-33811
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-33814
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-33818
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-39820
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-39821
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-39822
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-39836
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-39883
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-42499
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-42504
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-46600
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-50163
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-56852
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-56853
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-56854
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-56858
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-56859
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-56860
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-56862
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-56864
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-56865
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-84304
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-84445
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-85731
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: GHSA-hrxh-6v49-42gf
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
