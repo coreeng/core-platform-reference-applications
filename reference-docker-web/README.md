@@ -6,7 +6,7 @@ Generic Docker web application generated from the Core Platform `docker-web` sof
 
 - Reference container image based on `stefanprodan/podinfo`.
 - Container image built from the generated `Dockerfile`.
-- Application traffic is served on port `9898`.
+- Application traffic is served on port `8080`.
 
 ## Application Endpoints
 

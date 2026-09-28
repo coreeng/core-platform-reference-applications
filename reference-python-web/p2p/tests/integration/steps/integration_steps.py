@@ -18,6 +18,10 @@ def step_call_hello_world(context):
 
 @when("I call the ingress hello world endpoint and wait for it to be ready")
 def step_call_ingress_hello_world(context):
+    if not context.ingress_base_uri:
+        context.scenario.skip("Ingress is disabled")
+        return
+
     url = f"{context.ingress_base_uri}/hello"
     last_error = None
     for attempt in range(8):

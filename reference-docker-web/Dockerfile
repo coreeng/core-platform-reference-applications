@@ -11,4 +11,6 @@ RUN apk add --no-cache \
 
 USER 100:101
 
-EXPOSE 9898
+EXPOSE 8080
+
+CMD ["./podinfo", "--port=8080"]

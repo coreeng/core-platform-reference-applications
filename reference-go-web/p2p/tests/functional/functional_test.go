@@ -35,6 +35,10 @@ func iCallTheHelloWorldEndpoint() error {
 }
 
 func iCallTheIngressHelloWorldEndpointAndWaitForItToBeReady() error {
+	if ingressBaseURI == "" {
+		return godog.ErrSkip
+	}
+
 	successful := false
 	for i := 0; i < 8; i++ {
 		log.Printf(" GET endpoint %s - retry number %d\n", ingressBaseURI, i)
@@ -82,6 +86,7 @@ func getBaseURI() string {
 func getIngressBaseURL() string {
 	return os.Getenv("INGRESS_ENDPOINT")
 }
+
 func TestFeatures(t *testing.T) {
 	suite := godog.TestSuite{
 		ScenarioInitializer: InitializeScenario,

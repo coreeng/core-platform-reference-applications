@@ -82,6 +82,7 @@ deploy-%:
 		--set image.tag="$(p2p_version)" \
 		--set ingress.appUrlSuffix="$(p2p_app_url_suffix)" \
 		--set ingress.domain="$(BASE_DOMAIN)" \
+		--set tests.nft.endpoint="$(if $(filter true,$(p2p_app_config_ingress_enabled)),ingress,service)" \
 		--atomic
 
 

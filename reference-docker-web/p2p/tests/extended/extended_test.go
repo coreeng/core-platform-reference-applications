@@ -36,6 +36,10 @@ func iCallTheEndpoint(path string) error {
 }
 
 func iCallTheIngressEndpointAndWaitForItToBeReady(path string) error {
+	if ingressBaseUri == "" {
+		return godog.ErrSkip
+	}
+
 	fullUrl := ingressBaseUri + path
 	successful := false
 	for i := 0; i < 8; i++ {
@@ -84,6 +88,7 @@ func getBaseURI() string {
 func getIngressBaseUrl() string {
 	return os.Getenv("INGRESS_ENDPOINT")
 }
+
 func TestFeatures(t *testing.T) {
 	suite := godog.TestSuite{
 		ScenarioInitializer: InitializeScenario,

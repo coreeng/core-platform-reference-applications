@@ -12,6 +12,8 @@ config:
     maxReplicas: 9
     minReplicas: 3
     targetCPUUtilizationPercentage: 80
+  ingress:
+    enabled: false
   replicas: 3
   resources:
     limits:

@@ -46,7 +46,7 @@ readinessProbe:
   timeoutSeconds: 5
 
 ingress:
-  enabled: true
+  enabled: ${p2p_app_config_ingress_enabled}
   hosts:
     - paths:
         - path: "/"

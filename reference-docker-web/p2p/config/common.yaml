@@ -23,7 +23,7 @@ resources:
 startupProbe:
   failureThreshold: 30
   httpGet:
-    port: 9898
+    port: 8080
     path: /healthz
   periodSeconds: 10
   successThreshold: 1
@@ -31,7 +31,7 @@ startupProbe:
 livenessProbe:
   failureThreshold: 3
   httpGet:
-    port: 9898
+    port: 8080
     path: /healthz
   periodSeconds: 20
   successThreshold: 1
@@ -39,21 +39,21 @@ livenessProbe:
 readinessProbe:
   failureThreshold: 3
   httpGet:
-    port: 9898
+    port: 8080
     path: /readyz
   periodSeconds: 20
   successThreshold: 1
   timeoutSeconds: 5
 
 ingress:
-  enabled: true
+  enabled: ${p2p_app_config_ingress_enabled}
   hosts:
     - paths:
         - path: "/"
           pathType: "ImplementationSpecific"
 
 service:
-  port: 9898
+  port: 8080
 
 metrics:
   enabled: false
