@@ -23,7 +23,7 @@ COPY --from=builder /app/src /app/src
 
 ENV PATH="/app/.venv/bin:$PATH"
 
-USER app
+USER 10001
 
 EXPOSE 8080 8081
 
