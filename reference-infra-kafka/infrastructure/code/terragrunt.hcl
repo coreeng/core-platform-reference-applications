@@ -19,7 +19,11 @@ locals {
 }
 
 # Skip execution if required configuration is missing
-skip = !local.has_required_config
+exclude {
+  if      = !local.has_required_config
+  actions = ["all"]
+  no_run  = true
+}
 
 inputs = {
   p2p_version               = local.p2p_version

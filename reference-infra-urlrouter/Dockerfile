@@ -60,7 +60,9 @@ WORKDIR /app
 COPY infrastructure/ ./
 
 # Check tf & tg formatting
-RUN tofu fmt -check -diff -recursive && terragrunt hcl fmt --check
+RUN tofu fmt -check -diff -recursive && \
+    terragrunt hcl fmt --check && \
+    P2P_VERSION=lint environment=lint tenant_name=lint app_name=lint terragrunt hcl validate
 
 FROM lint
 
