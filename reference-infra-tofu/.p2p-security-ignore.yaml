@@ -1,3 +1,4 @@
+---
 version: 1
 images:
   - name: "reference-infra-tofu"
@@ -104,3 +105,94 @@ images:
       - id: GHSA-hrxh-6v49-42gf
         expires: 2026-12-31
         reason: "Latest stable OpenTofu and module-compatible provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-25680
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-27138
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-27139
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-27142
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-32282
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-32288
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-32289
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-32952
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-39823
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-39825
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-39826
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-39882
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-42502
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-42505
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-42506
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-42507
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-56855
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-78662
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-81870
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-81871
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-84303
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: CVE-2026-85732
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+      - id: GHSA-xmrv-pmrh-hhx2
+        expires: 2026-12-31
+        reason: "Latest stable OpenTofu and provider binaries have not yet been rebuilt with the patched Go dependencies; update when upstream publishes fixed artifacts."
+    secrets:
+      - id: p2psec_13532a18f073b84b
+        expires: 2026-12-31
+        reason: "Unverified RedHatPyxis pattern in upstream binary, package metadata, or Google Cloud SDK source; no credential material is present."
+      - id: p2psec_3ddcb26257b8a0c4
+        expires: 2026-12-31
+        reason: "Unverified URI pattern in upstream binary, package metadata, or Google Cloud SDK source; no credential material is present."
+      - id: p2psec_51af07b5ec195029
+        expires: 2026-12-31
+        reason: "Unverified URI pattern in upstream binary, package metadata, or Google Cloud SDK source; no credential material is present."
+      - id: p2psec_55f1ab5d47e7f592
+        expires: 2026-12-31
+        reason: "Unverified Box pattern in upstream binary, package metadata, or Google Cloud SDK source; no credential material is present."
+      - id: p2psec_59a05fb26d9ffd82
+        expires: 2026-12-31
+        reason: "Unverified RedHatPyxis pattern in upstream binary, package metadata, or Google Cloud SDK source; no credential material is present."
+      - id: p2psec_863f0d85b3d604a9
+        expires: 2026-12-31
+        reason: "Unverified RedHatPyxis pattern in upstream binary, package metadata, or Google Cloud SDK source; no credential material is present."
+      - id: p2psec_9756474ad1dca77c
+        expires: 2026-12-31
+        reason: "Unverified Box pattern in upstream binary, package metadata, or Google Cloud SDK source; no credential material is present."

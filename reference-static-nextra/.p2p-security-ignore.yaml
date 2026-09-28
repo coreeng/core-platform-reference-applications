@@ -1,17 +1,17 @@
 ---
 version: 1
 images:
-  - name: "reference-java-web"
+  - name: "reference-static-nextra"
     secrets:
-      - id: p2psec_0a7d3a58ac1bb931
+      - id: p2psec_1d22943db5d825d2
         expires: 2026-12-31
         reason: "Unverified Box pattern in an upstream runtime binary, dependency source, or package metadata; no credential material is present."
-      - id: p2psec_2781284275c26a56
+      - id: p2psec_3900454483ac24f6
         expires: 2026-12-31
         reason: "Unverified Box pattern in an upstream runtime binary, dependency source, or package metadata; no credential material is present."
-      - id: p2psec_9756474ad1dca77c
+      - id: p2psec_94685967a53d70a2
         expires: 2026-12-31
         reason: "Unverified Box pattern in an upstream runtime binary, dependency source, or package metadata; no credential material is present."
-      - id: p2psec_d653005e4d23cf91
+      - id: p2psec_cc37382e737f1b52
         expires: 2026-12-31
-        reason: "Unverified PrivateKey pattern in an upstream runtime binary, dependency source, or package metadata; no credential material is present."
+        reason: "Unverified Box pattern in an upstream runtime binary, dependency source, or package metadata; no credential material is present."

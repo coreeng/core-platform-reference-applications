@@ -1,10 +1,28 @@
+---
 version: 1
-
+images:
+  - name: "reference-nextjs-web"
+    secrets:
+      - id: p2psec_1d22943db5d825d2
+        expires: 2026-12-31
+        reason: "Unverified Box pattern in an upstream runtime binary, dependency source, or package metadata; no credential material is present."
+      - id: p2psec_3900454483ac24f6
+        expires: 2026-12-31
+        reason: "Unverified Box pattern in an upstream runtime binary, dependency source, or package metadata; no credential material is present."
+      - id: p2psec_94685967a53d70a2
+        expires: 2026-12-31
+        reason: "Unverified Box pattern in an upstream runtime binary, dependency source, or package metadata; no credential material is present."
+      - id: p2psec_cc37382e737f1b52
+        expires: 2026-12-31
+        reason: "Unverified Box pattern in an upstream runtime binary, dependency source, or package metadata; no credential material is present."
 source:
   secrets:
     - id: 7bb0f54e02ff3c42d654a0d6f2c91c2176058ba268cf02b02f1dd0d3941a5695
       path: yarn.lock
       reason: False positive in Yarn lockfile checksum; no credential material.
     - id: 4904adc4778dc1f1415726bdef669c0e4896208765c723485be778b3f75665ee
+      path: yarn.lock
+      reason: False positive in Yarn lockfile checksum; no credential material.
+    - id: 4521b49fbafd22f6c1c2644d4a79898c75771a9c1673b692b8633b16933ea7e5
       path: yarn.lock
       reason: False positive in Yarn lockfile checksum; no credential material.
