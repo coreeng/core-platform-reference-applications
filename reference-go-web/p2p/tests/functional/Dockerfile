@@ -1,10 +1,17 @@
 FROM docker.io/golang:1.27.1-alpine3.24 AS build
 
-# hadolint ignore=DL3018
-RUN apk --no-cache add build-base && \
-    go install github.com/cucumber/godog/cmd/godog@v0.15.1
-
-COPY ./ /opt/app
 WORKDIR /opt/app
 
-CMD ["godog"]
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY ./ ./
+RUN CGO_ENABLED=0 go test -c -o /functional.test
+
+FROM scratch
+WORKDIR /opt/app
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+COPY --from=build /functional.test /functional.test
+COPY features/ ./features/
+USER 65532:65532
+ENTRYPOINT ["/functional.test", "-test.v"]

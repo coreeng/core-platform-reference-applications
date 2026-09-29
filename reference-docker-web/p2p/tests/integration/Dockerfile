@@ -1,4 +1,4 @@
-FROM docker.io/golang:1.27.1-trixie
+FROM docker.io/golang:1.27.1-trixie AS build
 
 WORKDIR /opt/app
 
@@ -6,10 +6,15 @@ WORKDIR /opt/app
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Copy the rest of the application
+# Copy the test sources and resources
 COPY ./ ./
 
-# Pre-compile test dependencies
-RUN go test -c -o /dev/null
+RUN CGO_ENABLED=0 go test -c -o /integration.test
 
-CMD ["go", "test", "-v"]
+FROM scratch
+WORKDIR /opt/app
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+COPY --from=build /integration.test /integration.test
+COPY features/ ./features/
+USER 65532:65532
+ENTRYPOINT ["/integration.test", "-test.v"]
