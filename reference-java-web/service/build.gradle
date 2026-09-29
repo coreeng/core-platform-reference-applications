@@ -22,6 +22,8 @@ dependencyManagement {
 	imports {
 		// Temporary CVE-2026-54515 fix; remove when Spring Boot manages jackson-databind >= 2.22.3.
 		mavenBom 'com.fasterxml.jackson:jackson-bom:2.22.3'
+		// Temporary security fix; remove when Spring Boot manages Jackson 3.1.6 or newer.
+		mavenBom 'tools.jackson:jackson-bom:3.1.7'
 	}
 }
 
