@@ -2,12 +2,9 @@ FROM docker.io/stefanprodan/podinfo:6.15.0
 
 USER 0
 
-RUN apk add --no-cache \
-    c-ares=1.34.8-r0 \
-    curl=8.22.0-r0 \
-    libcrypto3=3.5.8-r0 \
-    libcurl=8.22.0-r0 \
-    libssl3=3.5.8-r0
+# Alpine replaces package revisions in its repositories, so exact pins can break builds.
+# Apply available updates from the base image's configured Alpine release repositories.
+RUN apk upgrade --no-cache
 
 USER 100:101
 

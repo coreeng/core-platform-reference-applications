@@ -6,6 +6,9 @@ P2P_APP_NAME ?= reference-nextjs-web
 $(shell curl -fsSL "https://raw.githubusercontent.com/coreeng/p2p/v1/p2p.mk" -o ".p2p.mk")
 include .p2p.mk
 
+# The allocated hostname applies only to Portal; other types keep configured chart values.
+p2p_portal_ingress_args = $(if $(filter portal,$(p2p_app_config_ingress_type)),--set-string ingress.hostname="$(P2P_INGRESS_HOSTNAME)")
+
 # Define required p2p targets
 p2p-build:         build-app           push-app
 p2p-functional:    build-functional    push-functional    deploy-functional    run-functional
@@ -86,6 +89,7 @@ deploy-%:
 		--set image.tag="$(p2p_version)" \
 		--set ingress.appUrlSuffix="$(p2p_app_url_suffix)" \
 		--set ingress.domain="$(BASE_DOMAIN)" \
+		$(p2p_portal_ingress_args) \
 		--set tests.nft.endpoint="$(if $(filter true,$(p2p_app_config_ingress_enabled)),ingress,service)" \
 		--atomic
 

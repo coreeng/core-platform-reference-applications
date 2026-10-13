@@ -47,6 +47,8 @@ readinessProbe:
 
 ingress:
   enabled: ${p2p_app_config_ingress_enabled}
+  type: "${p2p_app_config_ingress_type}"
+  launchPath: "/hello"
   hosts:
     - paths:
         - path: "/"

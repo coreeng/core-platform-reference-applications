@@ -47,6 +47,7 @@ readinessProbe:
 
 ingress:
   enabled: ${p2p_app_config_ingress_enabled}
+  type: "${p2p_app_config_ingress_type}"
   hosts:
     - paths:
         - path: "/"
