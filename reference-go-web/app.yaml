@@ -14,7 +14,6 @@ config:
     targetCPUUtilizationPercentage: 80
   ingress:
     enabled: true
-    type: portal
   replicas: 3
   resources:
     limits:
