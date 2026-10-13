@@ -28,18 +28,11 @@ jobs:
         with:
           repository: coreeng/core-platform-software-templates
           path: ./software-templates
-      - uses: robinraju/release-downloader@v1
-        with:
-          repository: coreeng/corectl
-          latest: true
-          fileName: corectl_Linux_x86_64.tar.gz
-          extract: true
-          out-file-path: corectl
       - id: render
         env:
           RUN_FULL_P2P: ${{ github.event_name == 'workflow_dispatch' && inputs.run_full_p2p }}
         run: |
-          corectl_path="$(realpath ./corectl)"
+          corectl_path="$(realpath ./reference-apps/.github/tools/corectl)"
           export PATH="${PATH}:${corectl_path}"
           ./reference-apps/.github/scripts/collect_changed_templates.sh \
             -t ./software-templates \
