@@ -27,6 +27,13 @@ sequenceDiagram
     RT ->> PROD: Trigger Prod for 'reference-go-web'
 ```
 
+Reference applications use legacy tenant-based P2P authentication. These tenants have no
+Portal Context or allocated Portal hostname, so the renderer removes `config.ingress.type`
+for reference applications whose templates enable Portal access. Leaving the type unset
+preserves their existing DNS, ingress configuration and tests through subsequent template
+updates. Disabled ingress, monitoring applications, and infrastructure templates keep their rendered config.
+New applications created from the software templates continue to default to Portal access.
+
 Hence, changes to applications are happening automatically
 and any application update made directly to this repository will be overwritten.
 If you want to update an application, please make a PR

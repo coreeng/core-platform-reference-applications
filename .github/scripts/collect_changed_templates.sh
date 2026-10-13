@@ -55,6 +55,13 @@ for t in "${all_templates[@]}"; do
     -a "working_directory=$reference_t" \
     -a "version_prefix=$reference_t/v"
 
+  # Reference tenants use legacy P2P authentication without Context-allocated hostnames.
+  # Leave the ingress type unset to preserve their legacy ingress configuration.
+  app_file="./$reference_apps_dir/$reference_t/app.yaml"
+  if [[ "$(yq '.config.ingress.enabled == true and .config.ingress.type == "portal"' "$app_file")" == "true" ]]; then
+    yq -i 'del(.config.ingress.type)' "$app_file"
+  fi
+
   if [[ -d "./$reference_apps_dir/$reference_t/.github/workflows" ]]; then
     mkdir -p "./$reference_apps_dir/.github/workflows"
     for workflow in fast-feedback extended-test prod scheduled-security-scan; do
