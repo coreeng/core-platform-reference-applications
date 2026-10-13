@@ -8,22 +8,22 @@ group = 'io.cecg'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_26
-	targetCompatibility = JavaVersion.VERSION_26
+	sourceCompatibility = JavaVersion.VERSION_27
+	targetCompatibility = JavaVersion.VERSION_27
 }
 
 repositories {
 	mavenCentral()
 }
 
-ext['logback.version'] = '1.6.4'
+ext['logback.version'] = '1.6.5'
 
 dependencyManagement {
 	imports {
 		// Temporary CVE-2026-54515 fix; remove when Spring Boot manages jackson-databind >= 2.22.3.
 		mavenBom 'com.fasterxml.jackson:jackson-bom:2.22.3'
 		// Temporary security fix; remove when Spring Boot manages Jackson 3.1.6 or newer.
-		mavenBom 'tools.jackson:jackson-bom:3.1.7'
+		mavenBom 'tools.jackson:jackson-bom:3.2.3'
 	}
 }
 
@@ -38,7 +38,7 @@ dependencies {
 	implementation('org.springframework.boot:spring-boot-starter-actuator')
 	implementation('io.micrometer:micrometer-registry-prometheus')
 	implementation('org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1')
-	implementation('com.google.guava:guava:33.7.1-jre')
+	implementation('com.google.guava:guava:33.7.2-jre')
 	implementation('com.zaxxer:HikariCP:7.1.0')
 
 	testImplementation('org.springframework.boot:spring-boot-starter-test')

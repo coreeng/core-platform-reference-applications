@@ -4,7 +4,7 @@
   "private": true,
   "packageManager": "yarn@1.22.22",
   "engines": {
-    "node": "26.10.0"
+    "node": "26.11.1"
   },
   "scripts": {
     "test:cucumber": "cucumber-js"
@@ -12,17 +12,17 @@
   "devDependencies": {
     "@cucumber/messages": "^34.2.1",
     "@cucumber/pretty-formatter": "^4.1.0",
-    "@playwright/test": "^1.63.0",
-    "@types/node": "^26.6.3",
+    "@playwright/test": "^1.64.0",
+    "@types/node": "^26.6.5",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
   },
   "dependencies": {
-    "@cucumber/cucumber": "^13.2.1",
+    "@cucumber/cucumber": "^13.3.0",
     "node-fetch": "^3.3.2"
   },
   "resolutions": {
-    "brace-expansion": "2.1.4",
+    "brace-expansion": "2.1.7",
     "js-yaml": "4.3.2"
   }
 }

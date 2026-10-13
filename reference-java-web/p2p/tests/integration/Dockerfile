@@ -1,4 +1,4 @@
-FROM docker.io/gradle:9.8.0-jdk26-noble@sha256:7168b9b65175d776d2a186d23647383625284f9ec7df59873a47d9be0d1b58e7
+FROM docker.io/gradle:9.8.1-jdk27-resolute@sha256:9e3408632d5c60581aebe1cace88d80de92213cd26e33d1a327a944b16a2d80d
 
 WORKDIR /opt/app
 
