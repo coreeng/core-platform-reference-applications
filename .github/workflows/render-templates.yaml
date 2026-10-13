@@ -90,10 +90,14 @@ jobs:
           dispatch_and_wait() {
             local workflow="$1"
             local run_id=""
+            local run_sha=""
 
             echo "Dispatching $workflow on $DISPATCH_REF for commit $REF"
             for attempt in {1..12}; do
-              if gh workflow run "$workflow" --repo "$REPO" --ref "$DISPATCH_REF"; then
+              if run_id="$(gh api --method POST "repos/$REPO/actions/workflows/$workflow/dispatches" \
+                -f ref="$DISPATCH_REF" \
+                -F return_run_details=true \
+                --jq '.workflow_run_id')"; then
                 break
               fi
               if [[ "$attempt" == "12" ]]; then
@@ -103,20 +107,14 @@ jobs:
               sleep 10
             done
 
-            for attempt in {1..30}; do
-              run_id="$(gh run list \
-                --repo "$REPO" \
-                --workflow "$workflow" \
-                --json databaseId,event,headSha \
-                --jq "[.[] | select(.event == \"workflow_dispatch\" and .headSha == \"$REF\")][0].databaseId // \"\"")"
-              if [[ -n "$run_id" ]]; then
-                break
-              fi
-              sleep 10
-            done
+            if [[ ! "$run_id" =~ ^[1-9][0-9]*$ ]]; then
+              echo "Dispatch did not return a run ID for $workflow"
+              exit 1
+            fi
 
-            if [[ -z "$run_id" ]]; then
-              echo "Could not find workflow_dispatch run for $workflow at $REF"
+            run_sha="$(gh run view "$run_id" --repo "$REPO" --json headSha --jq '.headSha')"
+            if [[ "$run_sha" != "$REF" ]]; then
+              echo "$workflow run $run_id is at $run_sha, expected $REF. Start a new render run."
               exit 1
             fi
 
