@@ -14,7 +14,7 @@ cat > "$fixture_dir/bin/corectl" <<'CORECTL'
 set -euo pipefail
 case "$1 $2" in
   'template list')
-    printf '%s\n' portal-app disabled-app public-app monitoring infra
+    printf '%s\n' portal-app disabled-app legacy-app monitoring infra
     ;;
   'template render')
     template=$3
@@ -37,11 +37,10 @@ esac
 CORECTL
 chmod +x "$fixture_dir/bin/corectl"
 
-for template in portal-app disabled-app public-app; do
+for template in portal-app disabled-app legacy-app; do
   enabled=true
   type=portal
   [[ "$template" == disabled-app ]] && enabled=false
-  [[ "$template" == public-app ]] && type=public
   cat > "$fixture_dir/templates/$template.yaml" <<YAML
 name: reference-$template
 config:
@@ -51,6 +50,7 @@ config:
   replicas: 3
 YAML
 done
+yq -i 'del(.config.ingress.type)' "$fixture_dir/templates/legacy-app.yaml"
 printf 'name: reference-monitoring\nconfig: {}\n' > "$fixture_dir/templates/monitoring.yaml"
 printf 'name: reference-infra\n' > "$fixture_dir/templates/infra.yaml"
 printf 'working_directory: ./\n' > "$fixture_dir/args.yaml"
@@ -66,15 +66,15 @@ render() {
 }
 render
 
-yq -e '.config.ingress.enabled == true and .config.ingress.type == "public" and .config.replicas == 3' \
+yq -e '.config.ingress.enabled == true and (.config.ingress | has("type") | not) and .config.replicas == 3' \
   reference-apps/reference-portal-app/app.yaml > /dev/null
 yq -e '.config.ingress.enabled == false and .config.ingress.type == "portal"' \
   reference-apps/reference-disabled-app/app.yaml > /dev/null
 cmp templates/disabled-app.yaml reference-apps/reference-disabled-app/app.yaml
-cmp templates/public-app.yaml reference-apps/reference-public-app/app.yaml
+cmp templates/legacy-app.yaml reference-apps/reference-legacy-app/app.yaml
 cmp templates/monitoring.yaml reference-apps/reference-monitoring/app.yaml
 cmp templates/infra.yaml reference-apps/reference-infra/app.yaml
-jq -e 'sort == ["disabled-app", "infra", "monitoring", "portal-app", "public-app"]' changed.json > /dev/null
+jq -e 'sort == ["disabled-app", "infra", "legacy-app", "monitoring", "portal-app"]' changed.json > /dev/null
 
 # A second render must preserve the override and produce no new changes.
 git -C reference-apps -c commit.gpgsign=false commit --quiet -m 'Initial render'

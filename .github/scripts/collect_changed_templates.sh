@@ -56,10 +56,10 @@ for t in "${all_templates[@]}"; do
     -a "version_prefix=$reference_t/v"
 
   # Reference tenants use legacy P2P authentication without Context-allocated hostnames.
-  # Preserve their public ingress when templates default to Portal access.
+  # Leave the ingress type unset to preserve their legacy ingress configuration.
   app_file="./$reference_apps_dir/$reference_t/app.yaml"
   if [[ "$(yq '.config.ingress.enabled == true and .config.ingress.type == "portal"' "$app_file")" == "true" ]]; then
-    yq -i '.config.ingress.type = "public"' "$app_file"
+    yq -i 'del(.config.ingress.type)' "$app_file"
   fi
 
   if [[ -d "./$reference_apps_dir/$reference_t/.github/workflows" ]]; then
