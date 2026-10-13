@@ -21,6 +21,7 @@ import java.util.UUID;
 import static io.restassured.RestAssured.given;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assume.assumeTrue;
 
 public class Stepdefs {
     private static final Logger LOG = LoggerFactory.getLogger(Stepdefs.class);
@@ -38,6 +39,13 @@ public class Stepdefs {
     public void i_call_the_hello_world_endpoint() {
         System.out.printf("Hitting endpoint: %s%n", baseUri);
         response = request.when().get("/hello");
+    }
+
+    @When("^I call the ingress hello world endpoint$")
+    public void i_call_the_ingress_hello_world_endpoint() {
+        String ingressBaseUri = SystemUtils.getEnvironmentVariable("INGRESS_ENDPOINT", "");
+        assumeTrue("Ingress is disabled", !ingressBaseUri.isEmpty());
+        response = request.baseUri(ingressBaseUri).when().get("/hello");
     }
 
     @When("^I call the swagger endpoint$")

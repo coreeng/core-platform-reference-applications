@@ -5,3 +5,8 @@ Feature: Greeting
     Given a rest service
     When I call the hello world endpoint
     Then an ok response is returned
+
+  Scenario: ingress url hello world returns ok
+    Given a rest service
+    When I call the ingress hello world endpoint
+    Then an ok response is returned
