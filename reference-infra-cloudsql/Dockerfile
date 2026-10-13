@@ -16,6 +16,7 @@ ARG JQ_VERSION
 # hadolint ignore=DL3008
 RUN --mount=type=cache,target=/var/cache/apt \
  apt-get update \
+ && apt-get upgrade -y \
  && apt-get install --no-install-recommends -y \
   ca-certificates \
   curl \
