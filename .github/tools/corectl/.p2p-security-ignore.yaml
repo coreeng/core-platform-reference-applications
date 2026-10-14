@@ -1,0 +1,6 @@
+version: 1
+source:
+  secrets:
+    - id: 2d27b3afed1c70fac4f23b5910decbcccfb2ca7e3ea153198b033aa653c8b23f
+      path: corectl
+      reason: Unverified Box pattern in the vendored legacy corectl v0.66.3 binary; accepted until the binary is retired.
