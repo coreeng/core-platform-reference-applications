@@ -1,4 +1,4 @@
-FROM docker.io/node:26.11.1-alpine3.24 AS base
+FROM docker.io/node:26.12.1-alpine3.24 AS base
 ENV YARN_NODE_LINKER=node-modules \
     YARN_ENABLE_GLOBAL_CACHE=true \
     YARN_ENABLE_SCRIPTS=true

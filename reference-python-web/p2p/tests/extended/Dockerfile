@@ -1,4 +1,4 @@
-FROM docker.io/python:3.15.0-slim
+FROM docker.io/python:3.15.2-slim
 
 RUN rm -rf /usr/local/bin/pip* /usr/local/lib/python3.15/site-packages/pip*
 

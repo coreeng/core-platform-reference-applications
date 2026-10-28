@@ -14,7 +14,7 @@ ARG JQ_VERSION
 
 # Install dependencies
 # hadolint ignore=DL3008
-RUN --mount=type=cache,target=/var/cache/apt \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
  apt-get update \
  && apt-get upgrade -y \
  && apt-get install --no-install-recommends -y \
@@ -32,7 +32,7 @@ RUN --mount=type=cache,target=/var/cache/apt \
 # Install gcloud CLI
 ARG GCLOUD_CLI_VERSION=589.0.0
 VOLUME ["/root/.config/gcloud"]
-RUN --mount=type=cache,target=/var/cache/apt \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
  echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
  && curl -Ls https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg \
  && apt-get update \

@@ -14,7 +14,7 @@ ARG JQ_VERSION
 
 # Install dependencies
 # hadolint ignore=DL3008
-RUN --mount=type=cache,target=/var/cache/apt \
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
  apt-get update \
  && apt-get upgrade -y \
  && apt-get install --no-install-recommends -y \

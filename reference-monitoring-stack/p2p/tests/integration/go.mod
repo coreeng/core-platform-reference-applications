@@ -1,3 +1,3 @@
 module github.com/coreeng/reference/monitoring-stack-integration
 
-go 1.27.2
+go 1.27.3

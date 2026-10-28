@@ -1,6 +1,6 @@
 module github.com/coreeng/idp-reference-app-go
 
-go 1.27.2
+go 1.27.3
 
 require (
 	github.com/gin-gonic/gin v1.12.0

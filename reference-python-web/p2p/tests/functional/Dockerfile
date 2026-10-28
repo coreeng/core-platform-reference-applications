@@ -1,4 +1,4 @@
-FROM docker.io/python:3.15.0-slim
+FROM docker.io/python:3.15.2-slim
 
 # hadolint ignore=DL3013
 RUN pip install --no-cache-dir 'behave==1.3.3' 'requests==2.34.2' \

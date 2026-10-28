@@ -1,4 +1,4 @@
-FROM docker.io/node:26.11.1-alpine3.24 AS base
+FROM docker.io/node:26.12.1-alpine3.24 AS base
 RUN npm install --global yarn@1.22.22
 
 # Install dependencies only when needed
@@ -8,7 +8,8 @@ WORKDIR /app
 
 # Install dependencies
 COPY package.json yarn.lock* ./
-RUN yarn --frozen-lockfile --ignore-scripts;
+COPY scripts/ ./scripts/
+RUN yarn --frozen-lockfile --ignore-scripts && yarn run postinstall
 
 # Rebuild the source code only when needed
 FROM base AS build

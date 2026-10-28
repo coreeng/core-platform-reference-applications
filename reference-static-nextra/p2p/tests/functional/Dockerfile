@@ -1,4 +1,4 @@
-FROM docker.io/node:26.11.1-bookworm-slim AS node-runtime
+FROM docker.io/node:26.12.1-bookworm-slim AS node-runtime
 
 FROM mcr.microsoft.com/playwright:v1.64.0-noble
 

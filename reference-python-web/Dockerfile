@@ -1,4 +1,4 @@
-FROM python:3.15.0-slim AS builder
+FROM python:3.15.2-slim AS builder
 
 COPY --from=docker.io/astral/uv:0.13.0 /uv /uvx /bin/
 
@@ -10,7 +10,7 @@ RUN uv sync --frozen --no-dev --no-install-project
 COPY src/ ./src/
 RUN uv sync --frozen --no-dev
 
-FROM python:3.15.0-slim
+FROM python:3.15.2-slim
 
 WORKDIR /app
 
