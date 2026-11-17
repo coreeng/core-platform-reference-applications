@@ -10,6 +10,7 @@ include .p2p.mk
 p2p_portal_ingress_args = $(if $(filter portal,$(p2p_app_config_ingress_type)),--set-string ingress.hostname="$(P2P_INGRESS_HOSTNAME)")
 
 # Define required p2p targets
+p2p-showcase:      deploy-showcase
 p2p-build:         build-app           push-app
 p2p-functional:    build-functional    push-functional    deploy-functional    run-functional
 # p2p-nft:           build-nft           push-nft           deploy-nft           run-nft
@@ -33,7 +34,7 @@ lint-dockerfile: ## Run dockerfile lint checks
 
 .PHONY: lint-app
 lint-app: ## Run app lint checks
-	docker run --rm --mount type=bind,source=.,target=/app -w /app ghcr.io/astral-sh/ruff:0.17.0 check src/ tests/
+	docker run --rm --mount type=bind,source=.,target=/app -w /app ghcr.io/astral-sh/ruff:0.17.5 check src/ tests/
 
 .PHONY: lint
 lint: lint-config lint-dockerfile lint-app ## Run all lint checks

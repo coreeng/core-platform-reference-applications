@@ -1,5 +1,5 @@
-ARG OPENTOFU_VERSION=1.13.1
-ARG TERRAGRUNT_VERSION=1.1.6
+ARG OPENTOFU_VERSION=1.13.9
+ARG TERRAGRUNT_VERSION=1.2.2
 ARG JQ_VERSION=1.8.2
 
 FROM docker.io/debian:trixie AS tooling
@@ -29,7 +29,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
  && rm -f /var/lib/dpkg/info/*.md5sums
 
 # Install gcloud CLI
-ARG GCLOUD_CLI_VERSION=589.0.0
+ARG GCLOUD_CLI_VERSION=593.0.0
 VOLUME ["/root/.config/gcloud"]
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
  echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
@@ -70,7 +70,7 @@ RUN curl -Lsfo terragrunt "https://github.com/gruntwork-io/terragrunt/releases/d
  && terragrunt -version
 
 # Install yq
-ARG YQ_VERSION=4.54.1
+ARG YQ_VERSION=4.54.3
 RUN curl -Lso yq "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_$(uname -m | sed -e "s/aarch64/arm64/" -e "s/x86_64/amd64/")" \
  && install -o root -g root -m 0755 yq /usr/local/bin/ \
  && rm yq \

@@ -1,17 +1,19 @@
-FROM docker.io/golang:1.27.3-alpine3.24 AS build
+FROM docker.io/golang:1.27.4-alpine3.24 AS build
 WORKDIR $GOPATH/src/go.k6.io/k6
 
 # hadolint ignore=DL3018
 RUN apk add --no-cache git && \
-    go install go.k6.io/xk6@v1.4.14 && \
-    xk6 build v1.8.2 \
+    go install go.k6.io/xk6@v1.5.1 && \
+    xk6 build v1.8.3 \
       --replace github.com/gorilla/schema=github.com/gorilla/schema@v1.4.1 \
-      --replace golang.org/x/crypto=golang.org/x/crypto@v0.58.0 \
-      --replace google.golang.org/grpc=google.golang.org/grpc@v1.84.0 \
+      --replace golang.org/x/crypto=golang.org/x/crypto@v0.59.0 \
+      --replace google.golang.org/grpc=google.golang.org/grpc@v1.85.0 \
+      --replace go.opentelemetry.io/otel/sdk=go.opentelemetry.io/otel/sdk@v1.47.0 \
+      --replace go.opentelemetry.io/otel/trace=go.opentelemetry.io/otel/trace@v1.47.0 \
       --with github.com/coreeng/xk6-prometheus@v1.0.2 \
       --output /tmp/k6
 
-FROM docker.io/alpine:3.24.2
+FROM docker.io/alpine:3.24.4
 
 RUN apk upgrade --no-cache
 

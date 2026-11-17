@@ -1,6 +1,6 @@
 FROM python:3.15.2-slim AS builder
 
-COPY --from=docker.io/astral/uv:0.13.0 /uv /uvx /bin/
+COPY --from=docker.io/astral/uv:0.13.9 /uv /uvx /bin/
 
 WORKDIR /app
 
@@ -11,6 +11,11 @@ COPY src/ ./src/
 RUN uv sync --frozen --no-dev
 
 FROM python:3.15.2-slim
+
+RUN apt-get update \
+ && apt-get upgrade -y \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 

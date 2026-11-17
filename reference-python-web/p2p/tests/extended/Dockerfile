@@ -1,5 +1,10 @@
 FROM docker.io/python:3.15.2-slim
 
+RUN apt-get update \
+ && apt-get upgrade -y \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+
 RUN rm -rf /usr/local/bin/pip* /usr/local/lib/python3.15/site-packages/pip*
 
 # Extended tests are not yet implemented.

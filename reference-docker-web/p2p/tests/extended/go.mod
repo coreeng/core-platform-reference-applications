@@ -1,6 +1,6 @@
 module github.com/coreeng/idp-reference-app-go/extended
 
-go 1.27.3
+go 1.27.4
 
 require (
 	github.com/cucumber/godog v0.16.0
@@ -15,7 +15,7 @@ require (
 	github.com/hashicorp/go-immutable-radix v1.3.1 // indirect
 	github.com/hashicorp/go-memdb v1.3.5 // indirect
 	github.com/hashicorp/golang-lru v1.0.2 // indirect
-	github.com/spf13/pflag v1.0.10 // indirect
-	golang.org/x/net v0.61.0 // indirect
-	golang.org/x/sys v0.49.0 // indirect
+	github.com/spf13/pflag v1.1.0 // indirect
+	golang.org/x/net v0.62.0 // indirect
+	golang.org/x/sys v0.50.0 // indirect
 )
