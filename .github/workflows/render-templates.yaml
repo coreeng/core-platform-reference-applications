@@ -91,6 +91,8 @@ jobs:
             local workflow="$1"
             local run_id=""
             local run_sha=""
+            local run_info run_status run_conclusion
+            local api_failures=0
 
             echo "Dispatching $workflow on $DISPATCH_REF for commit $REF"
             for attempt in {1..12}; do
@@ -112,14 +114,34 @@ jobs:
               exit 1
             fi
 
-            run_sha="$(gh run view "$run_id" --repo "$REPO" --json headSha --jq '.headSha')"
-            if [[ "$run_sha" != "$REF" ]]; then
-              echo "$workflow run $run_id is at $run_sha, expected $REF. Start a new render run."
-              exit 1
-            fi
+            while true; do
+              if run_info="$(gh api "repos/$REPO/actions/runs/$run_id" \
+                --jq '[.head_sha, .status, .conclusion] | @tsv')"; then
+                api_failures=0
+              else
+                api_failures=$((api_failures + 1))
+                if (( api_failures >= 5 )); then
+                  echo "Failed to read $workflow run $run_id after 5 consecutive API errors" >&2
+                  return 1
+                fi
+                echo "Retrying $workflow run $run_id after API error $api_failures" >&2
+                sleep "$((60 * api_failures))"
+                continue
+              fi
 
-            echo "Watching $workflow run $run_id"
-            gh run watch "$run_id" --repo "$REPO" --exit-status
+              IFS=$'\t' read -r run_sha run_status run_conclusion <<< "$run_info"
+              if [[ "$run_sha" != "$REF" ]]; then
+                echo "$workflow run $run_id is at $run_sha, expected $REF. Start a new render run."
+                return 1
+              fi
+
+              echo "$workflow run $run_id: $run_status $run_conclusion"
+              if [[ "$run_status" == "completed" ]]; then
+                [[ "$run_conclusion" == "success" ]] && return 0
+                return 1
+              fi
+              sleep 60
+            done
           }
 
           dispatch_and_wait "reference-$APP-fast-feedback.yaml"
