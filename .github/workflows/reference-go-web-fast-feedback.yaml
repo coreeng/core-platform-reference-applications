@@ -2,6 +2,12 @@
 name: reference-go-web Fast Feedback
 on:
   workflow_dispatch:
+    inputs:
+      showcase:
+        description: Deploy the built application to Showcase
+        type: boolean
+        required: false
+        default: false
   push:
     branches:
       - main
@@ -31,6 +37,7 @@ jobs:
       slack_webhook_url: ${{ secrets.P2P_SLACK_WEBHOOK_URL }}
       env_vars: ${{ secrets.env_vars }}
     with:
+      showcase: ${{ github.event_name == 'workflow_dispatch' && inputs.showcase }}
       app-name: reference-go-web
       tenant-name: reference-go-web
       version: ${{ needs.version.outputs.version }}
