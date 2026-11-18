@@ -15,3 +15,15 @@ images:
       - id: p2psec_d653005e4d23cf91
         expires: 2026-12-31
         reason: "Unverified PrivateKey pattern in an upstream runtime binary, dependency source, or package metadata; no credential material is present."
+      - id: p2psec_3761afcf43766487
+        path: "/var/lib/dpkg/info/libc-gconv-modules-extra:amd64.md5sums"
+        expires: 2026-12-31
+        reason: "Box false positive in Ubuntu libc-gconv-modules-extra package checksums, not an application credential."
+      - id: p2psec_7b5a2074d6d782b5
+        path: "/var/lib/dpkg/info/libc-gconv-modules-extra:amd64.md5sums"
+        expires: 2026-12-31
+        reason: "Box false positive in Ubuntu libc-gconv-modules-extra package checksums, not an application credential."
+      - id: p2psec_8ecd98050035e18d
+        path: "/usr/bin/coreutils"
+        expires: 2026-12-31
+        reason: "TLy false positive from UTF16 decoding of the Ubuntu coreutils binary, not an application credential."

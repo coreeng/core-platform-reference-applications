@@ -250,3 +250,31 @@ images:
       - id: p2psec_c8ec69349eff19dd
         expires: 2026-12-31
         reason: "Unverified URI pattern in upstream binary, package metadata, or Google Cloud SDK source; no credential material is present."
+      - id: p2psec_6fdf87636da65cc1
+        path: "/usr/lib/google-cloud-sdk/lib/googlecloudsdk/generated_clients/apis/oracledatabase/v1/oracledatabase_v1_messages.py"
+        expires: 2026-12-31
+        reason: "JDBC false positive in Google Cloud SDK Oracle Database generated-client docstrings: an example Snowflake connection URL, with no password."
+      - id: p2psec_6fdf87636da65cc1
+        path: "/usr/lib/google-cloud-sdk/lib/googlecloudsdk/generated_clients/apis/oracledatabase/v1alpha/oracledatabase_v1alpha_messages.py"
+        expires: 2026-12-31
+        reason: "JDBC false positive in Google Cloud SDK Oracle Database generated-client docstrings: an example Snowflake connection URL, with no password."
+      - id: p2psec_d73fda8cd68bc9b0
+        path: "/usr/lib/google-cloud-sdk/lib/surface/oracle_database/goldengate_connections/_partials/_create_alpha.yaml"
+        expires: 2026-12-31
+        reason: "JDBC false positive in Google Cloud SDK Oracle Database command help: an example Databricks connection URL, with no password."
+      - id: p2psec_a0c3b5120e1bd946
+        path: "/usr/lib/google-cloud-sdk/lib/surface/oracle_database/goldengate_connections/_partials/_create_alpha.yaml"
+        expires: 2026-12-31
+        reason: "JDBC false positive in Google Cloud SDK Oracle Database command help: an example Redshift connection URL, with no password."
+      - id: p2psec_d73fda8cd68bc9b0
+        path: "/usr/lib/google-cloud-sdk/lib/surface/oracle_database/goldengate_connections/_partials/_create_ga.yaml"
+        expires: 2026-12-31
+        reason: "JDBC false positive in Google Cloud SDK Oracle Database command help: an example Databricks connection URL, with no password."
+      - id: p2psec_a0c3b5120e1bd946
+        path: "/usr/lib/google-cloud-sdk/lib/surface/oracle_database/goldengate_connections/_partials/_create_ga.yaml"
+        expires: 2026-12-31
+        reason: "JDBC false positive in Google Cloud SDK Oracle Database command help: an example Redshift connection URL, with no password."
+      - id: p2psec_f51472d4a183bc1f
+        path: "/usr/lib/google-cloud-sdk/lib/third_party/fancy_urllib/__init__.py"
+        expires: 2026-12-31
+        reason: "URI false positive in Google Cloud SDK fancy_urllib doctests: joe/password on proxy.example.com:3128 is a documented example."
