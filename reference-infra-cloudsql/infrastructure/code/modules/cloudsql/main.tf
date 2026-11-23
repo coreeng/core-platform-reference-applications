@@ -23,7 +23,7 @@ module "cloudsql-psa" {
   count = local.any_psa_enabled && local.manage_psa_resources ? 1 : 0
 
   source  = "terraform-google-modules/sql-db/google//modules/private_service_access"
-  version = "28.3.1"
+  version = "28.4.0"
 
   depends_on  = [module.project-services, google_compute_network.psa]
   project_id  = var.infrastructure_project_id
@@ -34,7 +34,7 @@ module "cloudsql-psa" {
 module "cloudsql-postgresql" {
   for_each   = local.postgresql_clusters_map
   source     = "terraform-google-modules/sql-db/google//modules/postgresql"
-  version    = "28.3.1"
+  version    = "28.4.0"
   depends_on = [module.project-services, module.cloudsql-psa]
   project_id = var.infrastructure_project_id
   region     = var.region

@@ -29,7 +29,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
  && rm -f /var/lib/dpkg/info/*.md5sums
 
 # Install gcloud CLI
-ARG GCLOUD_CLI_VERSION=593.0.0
+ARG GCLOUD_CLI_VERSION=594.0.1
 VOLUME ["/root/.config/gcloud"]
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
  echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list \
