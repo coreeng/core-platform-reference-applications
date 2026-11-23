@@ -16,13 +16,18 @@ p2p-prod:                                                 deploy-prod
 
 
 
+# The image contains yamllint 1.38.0.
+YAMLLINT_IMAGE := docker.io/pipelinecomponents/yamllint:0.35.27@sha256:f7f7b4f8824839e33690a880dbe20944128b0dc9c55522a0b92a29b3a905cecf
+HADOLINT_IMAGE := docker.io/hadolint/hadolint:v2.15.1
+
 .PHONY: lint-config
 lint-config: ## Run config lint checks
-	docker run --rm --mount type=bind,source=./p2p/config,target=/data docker.io/cytopia/yamllint -s .
+	docker run --rm --mount "type=bind,source=$(CURDIR)/p2p/config,target=/data,readonly" \
+		--workdir /data --entrypoint yamllint $(YAMLLINT_IMAGE) -s .
 
 .PHONY: lint-dockerfile
 lint-dockerfile: ## Run dockerfile lint checks
-	docker run --rm -i docker.io/hadolint/hadolint < Dockerfile
+	docker run --rm -i $(HADOLINT_IMAGE) < Dockerfile
 
 .PHONY: lint-app
 lint-app: ## Run app lint checks
