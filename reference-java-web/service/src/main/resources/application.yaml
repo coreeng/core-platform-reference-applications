@@ -27,9 +27,6 @@ server:
   drainingMs: 0
 
 spring:
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
   lifecycle:
     timeout-per-shutdown-phase: 30s
 
