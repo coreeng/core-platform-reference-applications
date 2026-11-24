@@ -42,8 +42,8 @@ lint-app: ## Run app lint checks
 	docker run --rm --mount type=bind,source=.,target=/app -w /app \
 		--mount type=volume,target=/app/node_modules \
 		-e YARN_INSTALL_STATE_PATH=/tmp/install-state.gz \
-		docker.io/node:26.13.1-alpine3.24 sh -c \
-		"npm install --global @yarnpkg/cli-dist@4.18.1 && yarn install --immutable --mode=skip-build && yarn lint"
+		docker.io/node:26.13.1-alpine3.24@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5 sh -c \
+		"npm install --global npm@12.2.3 && npm install --global @yarnpkg/cli-dist@4.19.0 && yarn install --immutable --mode=skip-build && yarn lint"
 
 .PHONY: lint
 lint: lint-config lint-dockerfile lint-app ## Run all lint checks

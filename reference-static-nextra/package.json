@@ -24,7 +24,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4.3.5",
     "@testing-library/dom": "^10.4.2",
-    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/jest-dom": "^8.0.0",
     "@testing-library/react": "^16.3.3",
     "@types/jest": "^30.0.0",
     "@types/node": "^26.6.6",
@@ -43,21 +43,24 @@
     "node": "26.13.1"
   },
   "resolutions": {
-    "minimatch/brace-expansion": "5.0.13",
-    "**/glob/minimatch": "11.0.9",
+    "minimatch/brace-expansion": "5.1.0",
     "**/test-exclude/minimatch": "11.0.9",
     "**/@ts-morph/common/minimatch": "11.0.9",
     "brace-expansion": "2.1.8",
     "js-yaml": "4.3.2",
-    "baseline-browser-mapping": "2.11.38",
+    "baseline-browser-mapping": "2.11.39",
     "browserslist": "4.29.6",
     "tar": "7.5.23",
-    "undici": "8.12.4",
+    "undici": "8.13.1",
     "@xmldom/xmldom": "0.9.12",
-    "dompurify": "3.4.18",
+    "dompurify": "3.5.0",
     "katex": "0.19.1",
     "mermaid": "11.17.2",
     "postcss": "8.5.33",
-    "zod": "4.6.7"
+    "zod": "4.6.7",
+    "**/@jest/reporters/glob": "14.0.6",
+    "**/jest-config/glob": "14.0.6",
+    "**/jest-runtime/glob": "14.0.6",
+    "**/test-exclude/glob": "14.0.6"
   }
 }

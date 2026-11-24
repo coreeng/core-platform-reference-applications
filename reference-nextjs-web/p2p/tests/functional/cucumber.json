@@ -1,6 +1,6 @@
 {
   "default": {
-    "requireModule": ["ts-node/register"],
+    "requireModule": ["tsx/cjs"],
     "paths": ["tests/features/"],
     "require": ["tests/steps/*.ts"],
     "formatOptions": {

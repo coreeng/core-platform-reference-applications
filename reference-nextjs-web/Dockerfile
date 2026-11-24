@@ -1,8 +1,9 @@
-FROM docker.io/node:26.13.1-alpine3.24 AS base
+FROM docker.io/node:26.13.1-alpine3.24@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5 AS base
 ENV YARN_NODE_LINKER=node-modules \
     YARN_ENABLE_GLOBAL_CACHE=true \
     YARN_ENABLE_SCRIPTS=true
-RUN npm install --global @yarnpkg/cli-dist@4.18.1
+RUN npm install --global npm@12.2.3 \
+    && npm install --global @yarnpkg/cli-dist@4.19.0
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -10,7 +11,7 @@ RUN apk add --no-cache gcompat=1.1.0-r4
 WORKDIR /app
 
 # Install dependencies
-COPY package.json yarn.lock* ./
+COPY package.json yarn.lock .yarnrc.yml ./
 RUN yarn install --immutable --mode=skip-build \
     && yarn cache clean --all
 
@@ -18,7 +19,7 @@ RUN yarn install --immutable --mode=skip-build \
 FROM base AS build
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY package.json yarn.lock* eslint.config.mjs next.config.ts postcss.config.mjs tsconfig.json jest.config.ts jest.setup.ts components.json ./
+COPY package.json yarn.lock .yarnrc.yml eslint.config.mjs next.config.ts postcss.config.mjs tsconfig.json jest.config.ts jest.setup.ts components.json ./
 COPY public ./public
 COPY src ./src
 
@@ -26,7 +27,7 @@ COPY src ./src
 RUN yarn run lint && yarn run test && yarn run build
 
 # Production image, copy all the files and run next
-FROM docker.io/alpine:3.24.4 AS runner
+FROM docker.io/alpine:3.24.4@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf AS runner
 WORKDIR /app
 
 RUN apk upgrade --no-cache && apk add --no-cache libstdc++=15.2.0-r5 libatomic=15.2.0-r5

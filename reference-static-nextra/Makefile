@@ -41,8 +41,8 @@ lint-dockerfile: ## Run dockerfile lint checks
 lint-app: ## Run app lint checks
 	docker run --rm --mount type=bind,source=.,target=/app -w /app \
 		--mount type=volume,target=/app/node_modules \
-		docker.io/node:26.13.1-alpine3.24 sh -c \
-		"npm install --global yarn@1.22.22 && yarn --frozen-lockfile --ignore-scripts && yarn lint"
+		docker.io/node:26.13.1-alpine3.24@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5 sh -c \
+		"npm install --global npm@12.2.3 && npm install --global yarn@1.22.22 && yarn --frozen-lockfile --ignore-scripts && yarn lint"
 
 .PHONY: lint
 lint: lint-config lint-dockerfile lint-app ## Run all lint checks
