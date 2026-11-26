@@ -14,6 +14,7 @@ RUN gradle service:build --no-daemon
 FROM docker.io/eclipse-temurin:27.0.1.0-jre-resolute
 WORKDIR /
 
+# Java starts directly, so the inherited Pebble supervisor is unnecessary.
 # hadolint ignore=DL3008
 RUN apt-get update \
  && apt-get upgrade -y \
@@ -32,6 +33,8 @@ RUN apt-get update \
   openssl \
   perl-base \
   tar \
+ && apt-get satisfy -y --no-install-recommends 'libexpat1 (>= 2.7.4-1ubuntu0.3)' \
+ && rm -f /usr/bin/pebble \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
