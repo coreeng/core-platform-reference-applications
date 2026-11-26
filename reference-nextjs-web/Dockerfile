@@ -30,7 +30,10 @@ RUN yarn run lint && yarn run test && yarn run build
 FROM docker.io/alpine:3.24.4@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf AS runner
 WORKDIR /app
 
-RUN apk upgrade --no-cache && apk add --no-cache libstdc++=15.2.0-r5 libatomic=15.2.0-r5
+RUN apk upgrade --no-cache \
+ && apk add --no-cache \
+      libstdc++=15.2.0-r5 libatomic=15.2.0-r5 \
+      'libcrypto3>=3.5.9-r1' 'libssl3>=3.5.9-r1'
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
